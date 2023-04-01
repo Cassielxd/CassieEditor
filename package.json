@@ -61,6 +61,7 @@
     "@tiptap/vue-3": "^2.0.1",
     "core-js": "^3.8.3",
     "daisyui": "^2.50.1",
+    "date-fns": "^2.29.3",
     "print-js": "^1.6.0",
     "prosemirror-changeset": "^2.2.0",
     "prosemirror-docx": "^0.1.1",
