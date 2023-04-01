@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .Page {
+        @apply bg-white shadow divide-y divide-gray-400 text-base leading-normal rounded-md transform scale-95
+    }
+
+    .has-focus {
+        border-radius: 1px;
+        box-shadow: 0 0 0 1px blue;
+    }
+}

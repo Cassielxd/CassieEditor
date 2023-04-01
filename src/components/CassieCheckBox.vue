@@ -1,0 +1,87 @@
+<template>
+  <div class="card bg-base-100 shadow-xl">
+    <div class="form-control">
+      <label class="cursor-pointer label" v-for="(item, index) in items" :key="index">
+        <span class="label-text">{{ item.name }}</span>
+        <input type="checkbox" class="checkbox checkbox-xs" @change="(e) => change(e, item)" />
+      </label>
+    </div>
+    <div class="card-actions justify-end">
+      <button class="btn btn-outline btn-success btn-xs" @click="onSubmit">确定</button>
+      <button class="btn btn-ghost btn-xs" @click="quit">取消</button>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    selectItem: {
+      type: Function,
+      required: true
+    },
+    command: {
+      type: Function,
+      required: true
+    },
+    onExit: {
+      type: Function
+    }
+  },
+  mounted() {
+    //根据
+    let selectData = this.selectItem();
+    console.log(selectData);
+  },
+  data() {
+    return {
+      isIndeterminate: true,
+      checkAll: false,
+      checkeditems: [],
+      items: [
+        {
+          id: "1",
+          name: "多选1",
+          checked: false,
+          bustype: "mutselect"
+        },
+        {
+          id: "2",
+          name: "多选2",
+          checked: false,
+          bustype: "mutselect"
+        },
+        {
+          id: "3",
+          name: "多选3",
+          checked: false,
+          bustype: "mutselect"
+        }
+      ]
+    };
+  },
+
+  methods: {
+    change(e, item) {
+      item.checked = e.target.checked;
+    },
+    quit() {
+      this.onExit();
+    },
+    onSubmit() {
+      let checkeditems = this.items.filter((item) => item.checked).map((item) => item.name);
+      if (checkeditems.length > 0) {
+        this.command({ classify: "checkbox", label: checkeditems.join(",") });
+      }
+      if (this.onExit) {
+        this.onExit();
+      }
+    },
+    handleCheckedChange(value) {
+      console.log(value);
+    }
+  }
+};
+</script>
+
+<style lang="scss"></style>
