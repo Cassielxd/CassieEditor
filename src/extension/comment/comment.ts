@@ -48,30 +48,32 @@ export const Comment = Mark.create<CommentOptions>({
   parseHTML() {
     return [
       {
-        tag: "span[data-comment]",
+        tag: "span.comment",
         getAttrs: (el) => !!(el as HTMLSpanElement).getAttribute("data-comment")?.trim() && null
       }
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["span", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+    return ["span", mergeAttributes(this.options.HTMLAttributes, { class: "comment" }, HTMLAttributes), 0];
   },
 
   addCommands() {
     return {
       setComment:
         (comment: string) =>
-        ({ commands }) =>
-          commands.setMark("comment", { comment }),
+        ({ commands }) => {
+          const t = commands.setMark(this.name, { comment });
+          return t;
+        },
       toggleComment:
         () =>
         ({ commands }) =>
-          commands.toggleMark("comment"),
+          commands.toggleMark(this.name),
       unsetComment:
         () =>
         ({ commands }) =>
-          commands.unsetMark("comment")
+          commands.unsetMark(this.name)
     };
   },
 
@@ -84,17 +86,11 @@ export const Comment = Mark.create<CommentOptions>({
         props: {
           handleClick(view, pos) {
             if (!extensionThis.options.isCommentModeOn()) return false;
-
             const { schema, doc, tr } = view.state;
-
             const range = getMarkRange(doc.resolve(pos), schema.marks.comment);
-
             if (!range) return false;
-
             const [$start, $end] = [doc.resolve(range.from), doc.resolve(range.to)];
-
             view.dispatch(tr.setSelection(new TextSelection($start, $end)));
-
             return true;
           }
         }

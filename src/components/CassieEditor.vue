@@ -8,16 +8,11 @@
 import { EditorContent, Extensions, Editor } from "@tiptap/vue-3";
 import { defineComponent, onBeforeUnmount, onMounted, PropType, ref, shallowRef, unref, watchEffect } from "vue";
 import { BuildRender, ContextMenuOptions } from "@/default";
-import { CassieKit, Comment } from "@/extension";
+import { CassieKit } from "@/extension";
 import * as Y from "yjs";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { HocuspocusProvider } from "@hocuspocus/provider";
-interface CommentInstance {
-  uuid?: string;
-  comments?: any[];
-}
-
 export default defineComponent({
   name: "cassie-editor",
   components: {
@@ -87,7 +82,6 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-
     const ydoc = new Y.Doc();
     const editor = shallowRef<Editor>();
     const provider = shallowRef<HocuspocusProvider>();
@@ -134,7 +128,7 @@ export default defineComponent({
           emit("update:content", output);
           emit("onUpdate", output, editor);
         },
-        onSelectionUpdate ({ editor }) {
+        onSelectionUpdate({ editor }) {
           emit("onSelectionUpdate", editor);
         },
         editorProps: {
@@ -163,8 +157,7 @@ export default defineComponent({
             provider: provider.value,
             //这里应该使用当前你的登录用户
             user: props.user
-          }),
-          Comment.configure({ isCommentModeOn: () => true })
+          })
         ]
       });
     });
