@@ -1,14 +1,11 @@
 import { DecorationSet } from "@tiptap/pm/view";
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { DOMSerializer } from "@tiptap/pm/model";
-// import { Change, ChangeSet } from 'prosemirror-changeset'
 import { Change, ChangeSet } from "../changeset";
 
 import { acceptChange, rejectChange } from "./acceptChange";
 import { renderDecorations } from "./renderDecorations";
-import { ExampleSchema } from "./schema";
 import { TrackedChangeType } from "./types";
-import { Editor, Range } from "@tiptap/core";
 import { SuggestionClickProps } from "@/extension/suggestion/mouseSuggestion";
 
 export interface TrackChangesState {
