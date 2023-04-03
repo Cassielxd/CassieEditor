@@ -31,27 +31,17 @@ export const Mention = Node.create<MentionOptions>({
           editor
             .chain()
             .focus()
-            .insertContentAt(
-              range,
-              [
-                {
-                  type: this.name,
-                  attrs: props
-                },
-                {
-                  type: "text",
-                  text: " "
-                }
-              ],
+            .insertContentAt(range, [
               {
-                updateSelection: true,
-                parseOptions: {
-                  preserveWhitespace: "full"
-                }
+                type: this.name,
+                attrs: props
+              },
+              {
+                type: "text",
+                text: " "
               }
-            )
+            ])
             .run();
-
           window.getSelection()?.collapseToEnd();
         }
       }
@@ -62,6 +52,9 @@ export const Mention = Node.create<MentionOptions>({
 
   inline: true,
 
+  selectable: false,
+
+  atom: true,
   addAttributes() {
     return {
       classify: {
@@ -163,7 +156,7 @@ export const Mention = Node.create<MentionOptions>({
                 tr.insertText("", pos, pos + node.nodeSize);
                 isMention = true;
               } else {
-                const after = TextSelection.create(tr.doc, pos - node.nodeSize, pos - node.nodeSize);
+                const after = TextSelection.create(tr.doc, pos - node.nodeSize + 1, pos - node.nodeSize);
                 tr.setSelection(after);
               }
               return false;

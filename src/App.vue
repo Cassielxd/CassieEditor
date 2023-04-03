@@ -94,4 +94,9 @@ export default class App extends Vue {}
   border-radius: 3px 3px 3px 0;
   white-space: nowrap;
 }
+img.ProseMirror-separator {
+  display: inline !important;
+  border: none !important;
+  margin: 0 !important;
+}
 </style>
