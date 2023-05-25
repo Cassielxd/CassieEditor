@@ -5,7 +5,7 @@ import { EXTEND, PAGE } from "@/extension/nodeNames";
 import { Schema, Slice } from "@tiptap/pm/model";
 import { splitPage } from "@/extension/page/splitPage";
 import { getNodeHeight, PageOptions, SplitInfo } from "@/extension/page/core";
-import {  findParentDomRefOfType } from  "@/utils/index"
+import { findParentDomRefOfType } from "@/utils/index";
 import { findChildren } from "@tiptap/vue-3";
 import { ReplaceStep } from "@tiptap/pm/transform";
 
