@@ -88,17 +88,26 @@ export const PageExtension = Extension.create<PageOptions>({
         () => commands.selectNodeBackward(),
         () =>
           commands.command(({ tr }) => {
+            //以上系统所有默认操作 都没有成功的时候会进入这个分支
             const { selection, doc } = tr;
             const { $anchor } = selection;
             const { pos } = $anchor;
+            //如果当前只有一页的情况不做处理
             if (doc.childCount == 1) return false;
+            //如果是最后一页并且删除的点已经是 整个文档的 最后点位 证明最后一页啥都没了直接删除
             if (Selection.atEnd(doc).from === pos) {
               return commands.deleteNode(PAGE);
             }
+            //找到当钱的page
             const pageNode = findParentNode((node) => node.type.name === PAGE)(selection);
             if (pageNode) {
+              //如果光标在在当前页面 的第一个位置
+              //todo 这里需要优化 能走到这肯定是光标的第一个位置 所以不需要判断
               const isAtStart = pageNode.start + Selection.atStart(pageNode.node).from === pos;
               if (isAtStart) {
+                /*
+                 * 获取上一页的 的 最后一点 将光标设置过去
+                 * */
                 const vm = TextSelection.create(doc, pos - 20, pos - 20);
                 const beforePageNode = findParentNode((node) => node.type.name === PAGE)(vm);
                 if (beforePageNode) {
