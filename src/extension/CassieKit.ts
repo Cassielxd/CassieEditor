@@ -29,9 +29,6 @@ import TextAlign, { TextAlignOptions } from "@tiptap/extension-text-align";
 import { PageOptions } from "@/extension/page/core";
 import { ParagraphOptions } from "@tiptap/extension-paragraph";
 import Underline from "@tiptap/extension-underline";
-import { StrikeThrough } from "@/extension/marks/strikethrough";
-import { Insertion } from "@/extension/marks/insertion";
-import { Deletion } from "@/extension/marks/deletion";
 
 export interface CassieKitOptions {
   blockquote: Partial<BlockquoteOptions> | false;
@@ -159,9 +156,6 @@ export const CassieKit = Extension.create<CassieKitOptions>({
       extensions.push(Mention.configure(this.options?.mention));
     }
     extensions.push(Underline);
-    extensions.push(StrikeThrough);
-    extensions.push(Insertion);
-    extensions.push(Deletion);
     return extensions;
   }
 });

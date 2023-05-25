@@ -16,15 +16,6 @@
             <router-link to="/page1">默认模式</router-link>
           </li>
           <li>
-            <router-link to="/collaborativeeditor">多人协作</router-link>
-          </li>
-          <li>
-            <router-link to="/commenteditor">评论/批注</router-link>
-          </li>
-          <li>
-            <router-link to="/changeseteditor">操作记录</router-link>
-          </li>
-          <li>
             <router-link to="/sign">电子签名</router-link>
           </li>
           <li>

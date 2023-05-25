@@ -3,9 +3,6 @@ import BaseEditor from "../views/BaseEditor.vue";
 import PageEditor from "../views/PageEditor.vue";
 import PageEditorDeflate from "../views/PageEditorDeflate.vue";
 import SignEditor from "../views/SignEditor.vue";
-import CommentEditor from "../views/CommentEditor.vue";
-import ChangesetEditor from "../views/ChangesetEditor.vue";
-import CollaborativeEditor from "../views/CollaborativeEditor.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -21,21 +18,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/page1",
     name: "page1",
     component: PageEditorDeflate
-  },
-  {
-    path: "/collaborativeeditor",
-    name: "collaborativeeditor",
-    component: CollaborativeEditor
-  },
-  {
-    path: "/commenteditor",
-    name: "commenteditor",
-    component: CommentEditor
-  },
-  {
-    path: "/changeseteditor",
-    name: "changeseteditor",
-    component: ChangesetEditor
   },
   {
     path: "/sign",

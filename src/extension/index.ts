@@ -1,5 +1,4 @@
 export * from "./commands";
-export * from "./comment/comment";
 export * from "./cursor/cursor";
 export * from "./doc/document";
 export * from "./focus/focus";
