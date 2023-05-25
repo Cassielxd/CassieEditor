@@ -64,11 +64,7 @@ export const PageExtension = Extension.create<PageOptions>({
       });
     const handleBackspace = () =>
       this.editor.commands.first(({ commands }) => [
-        () => {
-          const ok = commands.undoInputRule();
-          console.log(ok);
-          return ok;
-        },
+        () => commands.undoInputRule(),
         // maybe convert first text block node to default node
         () =>
           commands.command(({ tr }) => {
@@ -79,25 +75,11 @@ export const PageExtension = Extension.create<PageOptions>({
             if (!empty || !isAtStart || !parent.type.isTextblock || parent.textContent.length) {
               return false;
             }
-            const ok = commands.clearNodes();
-            console.log(ok);
-            return ok;
+            return commands.clearNodes();
           }),
-        () => {
-          const ok = commands.deleteSelection();
-          console.log(ok);
-          return ok;
-        },
-        () => {
-          const ok = commands.joinBackward();
-          console.log(ok);
-          return ok;
-        },
-        () => {
-          const ok = commands.selectNodeBackward();
-          console.log(ok);
-          return ok;
-        },
+        () => commands.deleteSelection(),
+        () => commands.joinBackward(),
+        () => commands.selectNodeBackward(),
         () =>
           commands.command(({ tr }) => {
             const { selection, doc } = tr;
