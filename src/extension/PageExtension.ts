@@ -64,6 +64,12 @@ export const PageExtension = Extension.create<PageOptions>({
       });
     const handleBackspace = () =>
       this.editor.commands.first(({ commands }) => [
+        () => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.stepStatus = true;
+          return false;
+        },
         () => commands.undoInputRule(),
         // maybe convert first text block node to default node
         () =>
