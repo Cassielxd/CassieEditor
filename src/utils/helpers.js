@@ -1,7 +1,7 @@
-import { NodeSelection } from '@tiptap/pm/state';
-import { Fragment, Node as PMNode } from '@tiptap/pm/model';
-import { setTextSelection } from './transforms';
-import { findParentNodeClosestToPos } from './selection';
+import { NodeSelection } from "@tiptap/pm/state";
+import { Fragment, Node as PMNode } from "@tiptap/pm/model";
+import { setTextSelection } from "./transforms";
+import { findParentNodeClosestToPos } from "./selection";
 
 // :: (selection: Selection) → boolean
 // Checks if current selection is a `NodeSelection`.
@@ -11,22 +11,19 @@ import { findParentNodeClosestToPos } from './selection';
 //   // ...
 // }
 // ```
-export const isNodeSelection = selection => {
+export const isNodeSelection = (selection) => {
   return selection instanceof NodeSelection;
 };
 
 // (nodeType: union<NodeType, [NodeType]>) → boolean
 // Checks if the type a given `node` equals to a given `nodeType`.
 export const equalNodeType = (nodeType, node) => {
-  return (
-    (Array.isArray(nodeType) && nodeType.indexOf(node.type) > -1) ||
-    node.type === nodeType
-  );
+  return (Array.isArray(nodeType) && nodeType.indexOf(node.type) > -1) || node.type === nodeType;
 };
 
 // (tr: Transaction) → Transaction
 // Creates a new transaction object from a given transaction
-export const cloneTr = tr => {
+export const cloneTr = (tr) => {
   return Object.assign(Object.create(tr), tr).setTime(Date.now());
 };
 
@@ -34,7 +31,7 @@ export const cloneTr = tr => {
 // Returns a `replace` transaction that replaces a node at a given position with the given `content`.
 // It will return the original transaction if replacing is not possible.
 // `position` should point at the position immediately before the node.
-export const replaceNodeAtPos = (position, content) => tr => {
+export const replaceNodeAtPos = (position, content) => (tr) => {
   const node = tr.doc.nodeAt(position);
   const $pos = tr.doc.resolve(position);
   if (canReplace($pos, content)) {
@@ -53,18 +50,13 @@ export const replaceNodeAtPos = (position, content) => tr => {
 // Checks if replacing a node at a given `$pos` inside of the `doc` node with the given `content` is possible.
 export const canReplace = ($pos, content) => {
   const node = $pos.node($pos.depth);
-  return (
-    node &&
-    node.type.validContent(
-      content instanceof Fragment ? content : Fragment.from(content)
-    )
-  );
+  return node && node.type.validContent(content instanceof Fragment ? content : Fragment.from(content));
 };
 
 // (position: number) → (tr: Transaction) → Transaction
 // Returns a `delete` transaction that removes a node at a given position with the given `node`.
 // `position` should point at the position immediately before the node.
-export const removeNodeAtPos = position => tr => {
+export const removeNodeAtPos = (position) => (tr) => {
   const node = tr.doc.nodeAt(position);
   return cloneTr(tr.delete(position, position + node.nodeSize));
 };
@@ -92,16 +84,11 @@ export const canInsert = ($pos, content) => {
 
 // (node: ProseMirrorNode) → boolean
 // Checks if a given `node` is an empty paragraph
-export const isEmptyParagraph = node => {
-  return !node || (node.type.name === 'paragraph' && node.nodeSize === 2);
+export const isEmptyParagraph = (node) => {
+  return !node || (node.type.name === "paragraph" && node.nodeSize === 2);
 };
 
-export const checkInvalidMovements = (
-  originIndex,
-  targetIndex,
-  targets,
-  type
-) => {
+export const checkInvalidMovements = (originIndex, targetIndex, targets, type) => {
   const direction = originIndex > targetIndex ? -1 : 1;
   const errorMessage = `Target position is invalid, you can't move the ${type} ${originIndex} to ${targetIndex}, the target can't be split. You could use tryToFit option.`;
 

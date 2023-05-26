@@ -118,7 +118,6 @@ export const PageExtension = Extension.create<PageOptions>({
                 }
               }
             }
-
             return false;
           })
       ]);
