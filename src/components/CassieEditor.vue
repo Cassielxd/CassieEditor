@@ -86,14 +86,16 @@ export default defineComponent({
     const editor = shallowRef<Editor>();
     const provider = shallowRef<HocuspocusProvider>();
     onMounted(() => {
+      //协作编辑 ws url
       provider.value = new HocuspocusProvider({
         url: props.collaborationUrl || "",
-        name: "1",
+        name: "1", //这里需要修改 这里是文旦id
         document: ydoc,
         onStatus: (data) => {
           emit("onStatus", data, editor);
         },
         onSynced: (data) => {
+          //如果当前协作文档 只有一个人 证明是第一个打开文档的 需要添加文档
           if (editor.value && editor.value.storage.collaborationCursor.users.length == 1) {
             if (props.content) {
               editor.value.commands.setContent(props.content);
@@ -101,6 +103,7 @@ export default defineComponent({
           }
         }
       });
+      //如果是协作模式 设置 content需要滞后 否则会重复添加
       editor.value = new Editor({
         content: props.collaborationUrl ? null : props.content,
         onCreate: (options) => {
@@ -144,11 +147,11 @@ export default defineComponent({
               HTMLAttributes: {
                 class: "bg-gray-300"
               },
-              clickSuggestion: BuildRender(props.menuList)
+              clickSuggestion: BuildRender(props.menuList) //编辑器右键菜单
             },
             page: { ...props },
-            focus: { mode: "Node", className: "has-focus" },
-            history: false
+            focus: { mode: "Node", className: "has-focus" }, //选中样式
+            history: false //历史记录回退 协作模式禁止开启
           }),
           Collaboration.configure({
             document: ydoc

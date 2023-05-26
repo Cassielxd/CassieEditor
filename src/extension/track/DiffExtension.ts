@@ -3,7 +3,7 @@ import { trackChangesPlugin } from "@/extension/track/track-changes/track-change
 
 export const DiffExtension = Extension.create({
   name: "DiffExtension",
-  /*添加分页插件*/
+
   addProseMirrorPlugins() {
     return [trackChangesPlugin()];
   }

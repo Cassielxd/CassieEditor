@@ -80,8 +80,7 @@ import "vue3-draggable-resizable/dist/Vue3DraggableResizable.css";
 // @ts-ignore
 import { directive, Contextmenu, ContextmenuItem, ContextmenuDivider, ContextmenuSubmenu } from "v-contextmenu";
 import "v-contextmenu/dist/themes/default.css";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+
 import { onBeforeUnmount, reactive, ref, defineComponent, PropType, defineExpose } from "vue";
 
 let currentId = 1;
