@@ -10,9 +10,6 @@ import { signContent, headerlist, footerlist } from "./content";
 export default {
   components: { CassieEditor },
   setup() {
-    document.oncontextmenu = (e) => {
-      e.preventDefault();
-    };
     const { ctx } = getCurrentInstance();
     const menulist = [
       {

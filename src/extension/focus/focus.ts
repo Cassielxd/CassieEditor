@@ -1,8 +1,7 @@
-import { Extension } from "@tiptap/core";
+import { Extension, findParentNode } from "@tiptap/core";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { CASSIE_BLOCK } from "../nodeNames";
-import { findParentNode } from "@/utils/index";
 
 export interface FocusOptions {
   className: string;
@@ -25,7 +24,7 @@ export const FocusClasses = Extension.create<FocusOptions>({
         key: new PluginKey("focus"),
         props: {
           /**
-           * desc: 点击选中
+           * desc: 点击选中 给边框添加 className样式
            * @param doc
            * @param selection
            */

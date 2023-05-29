@@ -10,9 +10,6 @@ import { baseContent, headerlist, footerlist } from "./content";
 export default {
   components: { CassieEditor },
   setup() {
-    document.oncontextmenu = (e) => {
-      e.preventDefault();
-    };
     const { ctx } = getCurrentInstance();
     const menulist = [
       { classify: "radio", label: "单选", value: "radio" },

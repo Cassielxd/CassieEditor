@@ -22,9 +22,6 @@ import { getRandomColor, getRandomName } from "@/utils";
 export default {
   components: { CassieEditor },
   setup() {
-    document.oncontextmenu = (e) => {
-      e.preventDefault();
-    };
     const { ctx } = getCurrentInstance();
     const menulist = [
       { classify: "radio", label: "单选", value: "radio" },
@@ -41,8 +38,7 @@ export default {
     ];
     let userLenth = ref([]);
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const onUpdate = (output: any, editor: any) => {
-    };
+    const onUpdate = (output: any, editor: any) => {};
     const onStatus = (data: any, editor: any) => {
       userLenth.value = editor.value.storage.collaborationCursor.users;
     };

@@ -11,9 +11,6 @@ const unitConversion = new UnitConversion();
 export default {
   components: { CassieEditor },
   setup() {
-    document.oncontextmenu = (e) => {
-      e.preventDefault();
-    };
     const { ctx } = getCurrentInstance();
     const h = unitConversion.mmConversionPx(148);
     const w = unitConversion.mmConversionPx(210);

@@ -149,9 +149,7 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    document.oncontextmenu = (e) => {
-      e.preventDefault();
-    };
+
     let header = ref(true);
     let currentindex = ref(0);
     //页眉data
