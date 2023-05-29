@@ -22,7 +22,7 @@ export const PageExtension = Extension.create<PageOptions>({
     const plugins: any[] = [];
     if (this.options.design) return plugins;
     if (this.options.isPaging) {
-      plugins.push(paginationPlugin(this.options));
+      plugins.push(paginationPlugin(this.editor, this.options));
     }
     return plugins;
   },
@@ -85,7 +85,12 @@ export const PageExtension = Extension.create<PageOptions>({
           }),
         () => commands.deleteSelection(),
         () => commands.joinBackward(),
-        () => commands.selectNodeBackward(),
+
+        () => {
+          const ok = commands.selectNodeBackward();
+          console.log(ok);
+          return ok;
+        },
         () =>
           commands.command(({ tr }) => {
             //以上系统所有默认操作 都没有成功的时候会进入这个分支

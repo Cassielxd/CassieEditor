@@ -1,13 +1,15 @@
-import { EditorState, Plugin, PluginKey, Transaction } from "@tiptap/pm/state";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import { EditorState, Plugin, PluginKey, Selection, Transaction } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 import { getNodeType } from "@tiptap/core";
 import { EXTEND, PAGE } from "@/extension/nodeNames";
-import { Schema, Slice } from "@tiptap/pm/model";
+import { Node } from "@tiptap/pm/model";
 import { splitPage } from "@/extension/page/splitPage";
 import { getNodeHeight, PageOptions, SplitInfo } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
 import { findChildren } from "@tiptap/vue-3";
-import { ReplaceStep } from "@tiptap/pm/transform";
+import { Editor } from "@tiptap/core";
 
 type PluginState = {
   bodyOptions: PageOptions | null;
@@ -16,7 +18,7 @@ type PluginState = {
 };
 
 export const paginationPluginKey = new PluginKey("pagination");
-export const paginationPlugin = (bodyOption: PageOptions) => {
+export const paginationPlugin = (editor: Editor, bodyOption: PageOptions) => {
   const plugin: Plugin = new Plugin<PluginState>({
     key: paginationPluginKey,
 
@@ -31,8 +33,6 @@ export const paginationPlugin = (bodyOption: PageOptions) => {
           const { selection, schema, tr } = view.state;
           if (view.state.doc.eq(prevState.doc)) return;
           const domAtPos = view.domAtPos.bind(view);
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           const deleting = window.stepStatus ? window.stepStatus : false;
           const pageDOM = findParentDomRefOfType(schema.nodes[PAGE], domAtPos)(selection);
           if (!pageDOM) return;
@@ -44,8 +44,6 @@ export const paginationPlugin = (bodyOption: PageOptions) => {
               if (deleting) {
                 tr.setMeta("deleting", true);
                 /*防止多次触发没完没了的 进行分割处理*/
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 window.stepStatus = false;
               }
               tr.setMeta("bodyOptions", bodyOption);
@@ -95,23 +93,14 @@ export const paginationPlugin = (bodyOption: PageOptions) => {
         return tr.scrollIntoView();
       }
       /*如果当前需要分页的是最后一页 并且是在最后一行*/
-      const cpage = selection.$head.node(1);
-      const cblock = state.selection.$head.node(2);
-      if (cpage == doc.lastChild && cpage.lastChild == cblock && cblock.lastChild === state.selection.$head.node(3) && !deleting) {
+      if (findLastNode(doc, selection.$head.parent) && !deleting) {
+        const $pos = doc.resolve(selection.head);
         const type = getNodeType(PAGE, schema);
         if (tr.selection.$head.parentOffset === 0) {
-          tr = tr.step(new ReplaceStep(tr.selection.head - 2, tr.selection.head, Slice.empty));
-          tr = splitPage({ tr: tr, pos: tr.selection.head, depth: 3, typesAfter: [{ type }], schema: schema });
+          editor.commands.joinBackward();
+          tr = splitPage({ tr: tr, pos: tr.selection.head, depth: $pos.depth, typesAfter: [{ type }], schema: schema });
           return tr.scrollIntoView();
         }
-        return splitPage({
-          tr: tr,
-          pos: tr.selection.head - 1,
-          depth: 2,
-          typesAfter: [{ type }],
-          schema: schema
-        }).scrollIntoView();
-        return tr.scrollIntoView();
       }
       const curNunmber = tr.doc.content.findIndex(selection.head).index + 1;
       //如果只有一页的情况 或者 当前在最后一页的情况
@@ -127,12 +116,8 @@ export const paginationPlugin = (bodyOption: PageOptions) => {
     props: {
       handleKeyDown(view, event) {
         if (event.code == "Backspace") {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           window.stepStatus = true;
         } else {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           window.stepStatus = false;
         }
         return false;
@@ -141,6 +126,19 @@ export const paginationPlugin = (bodyOption: PageOptions) => {
   });
   return plugin;
 };
+
+/**
+ * @description:递归寻找 curnode是不是node 的最后一个节点
+ * @param node 被查找的节点
+ * @param curnode  查找的节点
+ */
+function findLastNode(node: Node, curnode: Node): boolean {
+  if (node.lastChild) {
+    if (node.lastChild == curnode) return true;
+    return findLastNode(node.lastChild, curnode);
+  }
+  return false;
+}
 
 /**
  * @method mergeDocument

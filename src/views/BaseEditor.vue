@@ -1,5 +1,5 @@
 <template>
-  <CassieEditor :content="baseContent" @onCreate="onCreate" @onUpdate="onUpdate" :bodyWidth="750" :menu-list="menulist" />
+  <CassieEditor :content="baseContent" @onCreate="onCreate" @onUpdate="onUpdate" :bodyWidth="750" output="json" :menu-list="menulist" />
 </template>
 
 <script lang="ts">
@@ -25,8 +25,8 @@ export default {
       }
     ];
     const onUpdate = (output: any, editor: any) => {
-      /*      console.log(output);
-            console.log(editor);*/
+      console.log(output);
+      console.log(editor);
     };
     const onCreate = (option: any) => {
       console.log(option);

@@ -13,7 +13,6 @@ export const EmrParagraph = Paragraph.extend({
   },
 
   group: "block",
-
   content: "inline*",
   addAttributes() {
     return {

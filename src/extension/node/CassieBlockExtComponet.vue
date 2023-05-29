@@ -6,7 +6,6 @@
 
 <script>
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from "@tiptap/vue-3";
-import { v4 as uuid } from "uuid";
 
 export default {
   components: {

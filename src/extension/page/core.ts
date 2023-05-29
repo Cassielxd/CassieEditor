@@ -38,6 +38,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 4;
   let curBlock: Node;
   let curPos = 0;
+  const fulldoc = state.doc;
   doc.descendants((node: Node, pos: number) => {
     if (node.type === schema.nodes[PAGE] && node !== lastChild) {
       return false;
@@ -48,18 +49,11 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       accumolatedHeight += pHeight;
       /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
       if (accumolatedHeight > height && skip) {
-        if (curBlock && curBlock.firstChild == node) {
-          pageBoundary = {
-            pos: curPos,
-            depth: 1
-          };
-        } else {
-          pageBoundary = {
-            pos,
-            depth: 2
-          };
-        }
-
+        const $pos = fulldoc.resolve(pos);
+        pageBoundary = {
+          pos,
+          depth: $pos.depth
+        };
         skip = false; //禁止进入下一个循环
       }
       return false;
@@ -69,15 +63,6 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       const pHeight = getBlockHeight(node);
       const h = accumolatedHeight + pHeight;
       if (h > height && skip) {
-        /*如果当前的 块已经超出了 分页高度并且子节点 只有一个 那就me没有分裂的必要了 直接 拆*/
-        if (node.childCount == 1) {
-          pageBoundary = {
-            pos,
-            depth: 1
-          };
-          skip = false;
-          return false;
-        }
         curBlock = node;
         curPos = pos;
         accumolatedHeight += 28;
@@ -90,15 +75,6 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       const pHeight = getBlockHeight(node);
       const h = accumolatedHeight + pHeight;
       if (h > height && skip) {
-        /*如果当前的 块已经超出了 分页高度并且子节点 只有一个 那就me没有分裂的必要了 直接 拆*/
-        if (node.childCount == 1) {
-          pageBoundary = {
-            pos,
-            depth: 1
-          };
-          skip = false;
-          return false;
-        }
         curBlock = node;
         curPos = pos;
         accumolatedHeight += 8;
