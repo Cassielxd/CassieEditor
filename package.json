@@ -6,7 +6,7 @@
     "serve": "vite",
     "build": "vite build",
     "lint": "eslint --ext .ts src",
-    "lint:fix": "npm lint --fix"
+    "lint:fix": "npm run lint --fix"
   },
   "dependencies": {
     "@hocuspocus/provider": "^1.1.1",

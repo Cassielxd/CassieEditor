@@ -51,8 +51,8 @@ export const Mention = Node.create<MentionOptions>({
   group: "inline",
 
   inline: true,
-
-  selectable: false,
+  //是否能选中
+  selectable: true,
 
   atom: true,
   addAttributes() {

@@ -32,7 +32,7 @@ export function SuggestionClick<I = any>({ pluginKey = SuggestionClickPluginKey,
         const { selection, tr } = state;
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const { ranges,node } = selection;
+        const { ranges, node } = selection;
         const from = Math.min(...ranges.map((range) => range.$from.pos));
         const to = Math.max(...ranges.map((range) => range.$to.pos));
         switch (event.button) {
@@ -84,7 +84,7 @@ export function SuggestionClick<I = any>({ pluginKey = SuggestionClickPluginKey,
         }
 
         return false;
-      },
+      }
     }
   });
 
