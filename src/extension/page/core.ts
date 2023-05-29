@@ -117,7 +117,7 @@ export class UnitConversion {
       arr.push(window.screen.deviceYDPI);
     } else {
       const tmpNode: HTMLElement = document.createElement("DIV");
-      tmpNode.style.cssText = "width:1in;height:1in;position:absolute;left:0px;top:0px;z-index:99;visibility:hidden";
+      tmpNode.style.cssText = "width:1in;height:1in;position:absolute;left:0px;top:0px;z-index:-99;visibility:hidden";
       document.body.appendChild(tmpNode);
       arr.push(tmpNode.offsetWidth);
       arr.push(tmpNode.offsetHeight);

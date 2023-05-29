@@ -153,6 +153,7 @@ function mergeDocument(tr: Transaction, count: number): Transaction {
   while (tr.doc.content.childCount > count) {
     const nodesize = tr.doc.content.lastChild ? tr.doc.content.lastChild.nodeSize : 0;
     let depth = 1;
+    //如果 前一页的最后一个node 和后一页的node 是同类 则合并
     if (tr.doc.content.lastChild && tr.doc.content.lastChild.firstChild && tr.doc.content.lastChild.firstChild.type.name.includes(EXTEND)) {
       depth = 2;
     }
