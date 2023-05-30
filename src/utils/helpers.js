@@ -4,7 +4,7 @@ import { setTextSelection } from "./transforms";
 import { findParentNodeClosestToPos } from "./selection";
 
 // :: (selection: Selection) → boolean
-// Checks if current selection is a `NodeSelection`.
+// 验证选中类型是 `NodeSelection`.
 //
 // ```javascript
 // if (isNodeSelection(tr.selection)) {
@@ -16,13 +16,13 @@ export const isNodeSelection = (selection) => {
 };
 
 // (nodeType: union<NodeType, [NodeType]>) → boolean
-// Checks if the type a given `node` equals to a given `nodeType`.
+// 检查给定“node”的类型是否等于给定的`nodeType`.
 export const equalNodeType = (nodeType, node) => {
   return (Array.isArray(nodeType) && nodeType.indexOf(node.type) > -1) || node.type === nodeType;
 };
 
 // (tr: Transaction) → Transaction
-// Creates a new transaction object from a given transaction
+// 从给定事务创建新事务对象
 export const cloneTr = (tr) => {
   return Object.assign(Object.create(tr), tr).setTime(Date.now());
 };
@@ -47,7 +47,7 @@ export const replaceNodeAtPos = (position, content) => (tr) => {
 };
 
 // ($pos: ResolvedPos, doc: ProseMirrorNode, content: union<ProseMirrorNode, Fragment>, ) → boolean
-// Checks if replacing a node at a given `$pos` inside of the `doc` node with the given `content` is possible.
+// 检查是否可以用给定的“content”替换“doc”节点内部给定的“$pos”处的节点。
 export const canReplace = ($pos, content) => {
   const node = $pos.node($pos.depth);
   return node && node.type.validContent(content instanceof Fragment ? content : Fragment.from(content));
@@ -62,7 +62,7 @@ export const removeNodeAtPos = (position) => (tr) => {
 };
 
 // :: ($pos: ResolvedPos, content: union<ProseMirrorNode, Fragment>) → boolean
-// Checks if a given `content` can be inserted at the given `$pos`
+// 检查给定的“内容”是否可以插入到给定的“$pos”`
 //
 // ```javascript
 // const { selection: { $from } } = state;
@@ -83,7 +83,7 @@ export const canInsert = ($pos, content) => {
 };
 
 // (node: ProseMirrorNode) → boolean
-// Checks if a given `node` is an empty paragraph
+// 检查给定的“节点”是否为空段落
 export const isEmptyParagraph = (node) => {
   return !node || (node.type.name === "paragraph" && node.nodeSize === 2);
 };

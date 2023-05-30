@@ -2,7 +2,7 @@ import { Selection } from "@tiptap/pm/state";
 import { equalNodeType, isNodeSelection } from "./helpers";
 
 // :: (predicate: (node: ProseMirrorNode) → boolean) → (selection: Selection) → ?{pos: number, start: number, depth: number, node: ProseMirrorNode}
-// Iterates over parent nodes, returning the closest node and its start position `predicate` returns truthy for. `start` points to the start position of the node, `pos` points directly before the node.
+// 在父节点上迭代，返回最近的节点，根据predicate条件返回 `start’指向节点的起始位置，pos’直接指向节点之前。
 //
 // ```javascript
 // const predicate = node => node.type === schema.nodes.blockquote;
@@ -14,7 +14,7 @@ export const findParentNode =
     findParentNodeClosestToPos($from, predicate);
 
 // :: ($pos: ResolvedPos, predicate: (node: ProseMirrorNode) → boolean) → ?{pos: number, start: number, depth: number, node: ProseMirrorNode}
-// Iterates over parent nodes starting from the given `$pos`, returning the closest node and its start position `predicate` returns truthy for. `start` points to the start position of the node, `pos` points directly before the node.
+// 从给定的“$pos”开始在父节点上迭代，返回最近的节点， 返回值 `start’指向节点的起始位置，pos’直接指向节点之前。
 //
 // ```javascript
 // const predicate = node => node.type === schema.nodes.blockquote;
@@ -35,7 +35,7 @@ export const findParentNodeClosestToPos = ($pos, predicate) => {
 };
 
 // :: (predicate: (node: ProseMirrorNode) → boolean, domAtPos: (pos: number) → {node: dom.Node, offset: number}) → (selection: Selection) → ?dom.Node
-// Iterates over parent nodes, returning DOM reference of the closest node `predicate` returns truthy for.
+// 在父节点上迭代，返回最近节点的 dom
 //
 // ```javascript
 // const domAtPos = view.domAtPos.bind(view);
@@ -50,7 +50,7 @@ export const findParentDomRef = (predicate, domAtPos) => (selection) => {
 };
 
 // :: (predicate: (node: ProseMirrorNode) → boolean) → (selection: Selection) → boolean
-// Checks if there's a parent node `predicate` returns truthy for.
+// 检查是否存在某个父节点
 //
 // ```javascript
 // if (hasParentNode(node => node.type === schema.nodes.table)(selection)) {
@@ -62,7 +62,7 @@ export const hasParentNode = (predicate) => (selection) => {
 };
 
 // :: (nodeType: union<NodeType, [NodeType]>) → (selection: Selection) → ?{pos: number, start: number, depth: number, node: ProseMirrorNode}
-// Iterates over parent nodes, returning closest node of a given `nodeType`. `start` points to the start position of the node, `pos` points directly before the node.
+// 在父节点上迭代，返回给定“nodeType”的最近节点`start’指向节点的起始位置，pos’直接指向节点之前。
 //
 // ```javascript
 // const parent = findParentNodeOfType(schema.nodes.paragraph)(selection);
@@ -72,7 +72,7 @@ export const findParentNodeOfType = (nodeType) => (selection) => {
 };
 
 // :: ($pos: ResolvedPos, nodeType: union<NodeType, [NodeType]>) → ?{pos: number, start: number, depth: number, node: ProseMirrorNode}
-// Iterates over parent nodes starting from the given `$pos`, returning closest node of a given `nodeType`. `start` points to the start position of the node, `pos` points directly before the node.
+// 从给定的“$pos”开始在父节点上迭代，返回给定“nodeType”的最近节点`start’指向节点的起始位置，pos’直接指向节点之前。.
 //
 // ```javascript
 // const parent = findParentNodeOfTypeClosestToPos(state.doc.resolve(10), schema.nodes.paragraph);
@@ -82,7 +82,7 @@ export const findParentNodeOfTypeClosestToPos = ($pos, nodeType) => {
 };
 
 // :: (nodeType: union<NodeType, [NodeType]>) → (selection: Selection) → boolean
-// Checks if there's a parent node of a given `nodeType`.
+// 检查是否存在给定“nodeType”的父节点。
 //
 // ```javascript
 // if (hasParentNodeOfType(schema.nodes.table)(selection)) {
@@ -94,7 +94,7 @@ export const hasParentNodeOfType = (nodeType) => (selection) => {
 };
 
 // :: (nodeType: union<NodeType, [NodeType]>, domAtPos: (pos: number) → {node: dom.Node, offset: number}) → (selection: Selection) → ?dom.Node
-// Iterates over parent nodes, returning DOM reference of the closest node of a given `nodeType`.
+// 在父节点上迭代，返回给定“nodeType”的最近节点的DOM引用。
 //
 // ```javascript
 // const domAtPos = view.domAtPos.bind(view);
@@ -105,7 +105,7 @@ export const findParentDomRefOfType = (nodeType, domAtPos) => (selection) => {
 };
 
 // :: (nodeType: union<NodeType, [NodeType]>) → (selection: Selection) → ?{pos: number, start: number, depth: number, node: ProseMirrorNode}
-// Returns a node of a given `nodeType` if it is selected. `start` points to the start position of the node, `pos` points directly before the node.
+// 如果选择了给定“nodeType”的节点，则返回该节点`start’指向节点的起始位置，pos’直接指向节点之前。
 //
 // ```javascript
 // const { extension, inlineExtension, bodiedExtension } = schema.nodes;
@@ -144,7 +144,7 @@ export const findPositionOfNodeBefore = (selection) => {
 };
 
 // :: (position: number, domAtPos: (pos: number) → {node: dom.Node, offset: number}) → dom.Node
-// Returns DOM reference of a node at a given `position`. If the node type is of type `TEXT_NODE` it will return the reference of the parent node.
+// 返回给定“位置”处节点的DOM引用。如果节点类型为“TEXT_node”类型，它将返回父节点的引用。
 //
 // ```javascript
 // const domAtPos = view.domAtPos.bind(view);

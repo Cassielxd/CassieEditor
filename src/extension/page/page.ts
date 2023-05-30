@@ -14,6 +14,7 @@ export const Page = Node.create<PageOptions>({
   name: `${PAGE}`,
   content: "block+",
   group: "block",
+  isolating: true,
   addOptions() {
     return {
       footerHeight: 100,
