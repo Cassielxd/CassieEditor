@@ -97,7 +97,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
 }
 
 /**
- *
+ *获取段落里最后一个需要分页的地方
  * @param node
  * @param width
  */
@@ -111,12 +111,15 @@ function getBreakPos(node: Node) {
     let strLength = 0;
     let index = 0;
     for (let i = 0; i < test.length; i++) {
-      strLength += getStrPx(test.charAt(i));
-      if (strLength > width) break;
-      index = i + 1;
+      const wordl = getStrPx(test.charAt(i));
+      if (strLength + wordl > width) {
+        strLength = wordl;
+        index = i;
+      } else {
+        strLength += wordl;
+      }
     }
-    if (test.length == index) return null;
-    return index - 1;
+    return index;
   }
   return null;
 }
