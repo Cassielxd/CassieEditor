@@ -36,6 +36,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   let skip = true;
   const { bodyOptions } = paginationPluginKey.getState(state);
   const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 4;
+  const width = bodyOptions.bodyWidth - bodyOptions.bodyPadding * 2;
   let curBlock: Node;
   let curPos = 0;
   const fulldoc = state.doc;
@@ -50,9 +51,17 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
       if (accumolatedHeight > height && skip) {
         const $pos = fulldoc.resolve(pos);
+        let depth = $pos.depth;
+        if (pHeight > 24) {
+          const point = getBreakPos(node);
+          if (point) {
+            depth += 1;
+            pos += point;
+          }
+        }
         pageBoundary = {
           pos,
-          depth: $pos.depth
+          depth: depth
         };
         skip = false; //禁止进入下一个循环
       }
@@ -85,6 +94,41 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
     }
   });
   return pageBoundary ? pageBoundary : null;
+}
+
+/**
+ *
+ * @param node
+ * @param width
+ */
+function getBreakPos(node: Node) {
+  const test = node.textContent;
+  const paragraphDOM = document.getElementById(node.attrs.id);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const width = paragraphDOM.offsetWidth;
+  if (test) {
+    let strLength = 0;
+    let index = 0;
+    for (let i = 0; i < test.length; i++) {
+      strLength += getStrPx(test.charAt(i));
+      if (strLength > width) break;
+      index = i + 1;
+    }
+    if (test.length == index) return null;
+    return index - 1;
+  }
+  return null;
+}
+/**
+ * 系统设置默认fontsize 16px 一个中文字符占16px 一个英文字符占8px
+ * @param text
+ */
+function getStrPx(text: string) {
+  const strlength = text.length;
+  const chinese = text.match(/[\u4e00-\u9fa5]/g); //匹配中文，match返回包含中文的数组
+  const length = strlength + (chinese ? chinese.length : 0);
+  return length ? length * 8 : 0;
 }
 
 /**

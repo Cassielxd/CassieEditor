@@ -4,9 +4,12 @@
 
 @layer components {
     .Page {
-        @apply bg-white shadow divide-y divide-gray-400 text-base leading-normal rounded-md transform scale-95
+        @apply bg-white shadow divide-y divide-gray-400 leading-normal rounded-md transform scale-95
     }
-
+    text-b{
+        font-size: 16px;
+        line-height: 24px;
+    }
     .has-focus {
         border-radius: 1px;
         box-shadow: 0 0 0 1px blue;

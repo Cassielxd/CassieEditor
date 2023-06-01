@@ -5,7 +5,7 @@ import CassieBlock from "@/extension/node/CassieBlock";
 import { PageOptions } from "@/extension/page/core";
 import { CassieBlockExt } from "@/extension/node/CassieBlockExt";
 import * as commands from "@/extension/commands/index";
-import { paginationPlugin } from "@/extension/page/pagePlugn";
+import { pagePlugin } from "@/extension/page/pagePlugn";
 import Image from "@tiptap/extension-image";
 import { Selection, TextSelection } from "@tiptap/pm/state";
 import { PAGE } from "./nodeNames";
@@ -22,7 +22,7 @@ export const PageExtension = Extension.create<PageOptions>({
     const plugins: any[] = [];
     if (this.options.design) return plugins;
     if (this.options.isPaging) {
-      plugins.push(paginationPlugin(this.editor, this.options));
+      plugins.push(pagePlugin(this.editor, this.options));
     }
     return plugins;
   },

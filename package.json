@@ -92,6 +92,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
+    "@types/prosemirror-dev-tools": "^3.0.3",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "@vitejs/plugin-vue": "^3.2.0",

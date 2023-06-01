@@ -18,7 +18,7 @@ type PluginState = {
 };
 
 export const paginationPluginKey = new PluginKey("pagination");
-export const paginationPlugin = (editor: Editor, bodyOption: PageOptions) => {
+export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
   const plugin: Plugin = new Plugin<PluginState>({
     key: paginationPluginKey,
 

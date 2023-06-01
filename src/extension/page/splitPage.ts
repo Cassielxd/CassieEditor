@@ -1,7 +1,7 @@
 import { Fragment, Slice, Schema, Node, NodeType, Attrs } from "@tiptap/pm/model";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Transaction } from "@tiptap/pm/state";
-import { EXTEND } from "@/extension/nodeNames";
+import { EXTEND, PARAGRAPH } from "@/extension/nodeNames";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { v4 as uuid } from "uuid";
@@ -35,11 +35,14 @@ export function splitPage({ tr, pos, depth = 1, typesAfter, schema }: SplitParam
     const n = $pos.node(d);
     let na: Node | null = $pos.node(d).copy(after);
     if (schema.nodes[n.type.name + EXTEND]) {
-      na = schema.nodes[n.type.name + EXTEND].createAndFill({ id: uuid(), ...n.attrs }, after);
-    }
-    //处理id重复的问题
-    if (n.type.name.includes(EXTEND)) {
-      na = schema.nodes[n.type.name].createAndFill({ id: uuid(), ...n.attrs }, after);
+      const attr = Object.assign({}, n.attrs, { id: uuid() });
+      na = schema.nodes[n.type.name + EXTEND].createAndFill(attr, after);
+    } else {
+      //处理id重复的问题
+      if (na && na.attrs.id) {
+        const attr = Object.assign({}, n.attrs, { id: uuid() });
+        na = schema.nodes[n.type.name].createAndFill(attr, after);
+      }
     }
     after = Fragment.from(
       typeAfter
