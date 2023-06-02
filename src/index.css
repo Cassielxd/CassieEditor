@@ -7,8 +7,8 @@
         @apply bg-white shadow divide-y divide-gray-400 leading-normal rounded-md transform scale-95
     }
     text-b{
-        font-size: 16px;
-        line-height: 24px;
+        font-size: 1rem;
+        line-height: 1.5rem;
     }
     .has-focus {
         border-radius: 1px;

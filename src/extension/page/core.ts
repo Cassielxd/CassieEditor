@@ -39,19 +39,20 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   const { bodyOptions } = paginationPluginKey.getState(state);
   const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 4;
   const fulldoc = state.doc;
+  const paragraphDefaultHeight = getDefault();
   doc.descendants((node: Node, pos: number, _: Node | null) => {
     if (node.type === schema.nodes[PAGE] && node !== lastChild) {
       return false;
     }
     if (node.type === schema.nodes[PARAGRAPH]) {
       //如果p标签没有子标签直接返回默认高度 否则计算高度
-      const pHeight = node.childCount > 0 ? getBlockHeight(node) : 24;
+      const pHeight = node.childCount > 0 ? getBlockHeight(node) : paragraphDefaultHeight;
       accumolatedHeight += pHeight;
       /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
       if (accumolatedHeight > height && skip) {
         const $pos = fulldoc.resolve(pos);
         let depth = $pos.depth;
-        if (pHeight > 24) {
+        if (pHeight > paragraphDefaultHeight) {
           const point = getBreakPos(node);
           if (point) {
             depth += 1;
@@ -71,13 +72,14 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       const pHeight = getBlockHeight(node);
       const h = accumolatedHeight + pHeight;
       if (h > height && skip) {
-        accumolatedHeight += 28;
+        const contentHeight = getContentHeight(node);
+        accumolatedHeight = h - contentHeight;
         return true;
       }
       accumolatedHeight += pHeight;
       return false;
     }
-    if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
+    /*if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
       const pHeight = getBlockHeight(node);
       const h = accumolatedHeight + pHeight;
       if (h > height && skip) {
@@ -86,7 +88,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       }
       accumolatedHeight += pHeight;
       return false;
-    }
+    }*/
   });
   return pageBoundary ? pageBoundary : null;
 }
@@ -160,7 +162,11 @@ function getExtentions() {
     })
   ];
 }
-
+function getDefault() {
+  const div = document.getElementById("computedspan");
+  if (!div) return 0;
+  return div.offsetHeight;
+}
 function computedWidth(html: string) {
   const span = document.getElementById("computedspan");
   if (!span) return 0;
@@ -175,12 +181,24 @@ function computedWidth(html: string) {
  * @method getBlockHeight
  */
 function getBlockHeight(node: Node): number {
-  const parsedPoints = 18;
   const paragraphDOM = document.getElementById(node.attrs.id);
   if (paragraphDOM) {
     return paragraphDOM.offsetHeight;
   }
-  return parsedPoints;
+  return 0;
+}
+function getContentHeight(node: Node): number {
+  const nodeDOM = document.getElementById(node.attrs.id);
+  if (nodeDOM) {
+    const content = nodeDOM.querySelector(".content");
+    if (content) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return content.offsetHeight;
+    }
+  }
+
+  return 0;
 }
 
 export class UnitConversion {
