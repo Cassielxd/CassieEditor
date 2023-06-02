@@ -133,11 +133,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
  * @param curnode  查找的节点
  */
 function findLastNode(node: Node, curnode: Node): boolean {
-  if (node.lastChild) {
-    if (node.lastChild == curnode) return true;
-    return findLastNode(node.lastChild, curnode);
-  }
-  return false;
+  return !!node.lastChild && (node.lastChild == curnode || findLastNode(node.lastChild, t));
 }
 
 /**
