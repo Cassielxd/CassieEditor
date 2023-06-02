@@ -1,16 +1,15 @@
-# cassie editor
+# cool editor
 
 #### 介绍
 
 基于prosemirror和tiptap开发的富文本编辑器项目
-
 prosemirror提供最基础的脚手架
 tiptap二次api封装 可以有很大的想象空间
 本项目主要用于 电子病历的预研
 
 #### 演示地址
 
-暂无
+http://emr.cymcar.com/
 
 #### 软件架构
 
@@ -19,7 +18,7 @@ tiptap二次api封装 可以有很大的想象空间
 1. 基础架构  prosemirror和tiptap
 2. 前端框架 vue3
 3. typescript
-4. element ui
+4. tailwindcss
 
 #### 开发计划
 
