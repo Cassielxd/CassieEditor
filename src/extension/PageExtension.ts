@@ -1,5 +1,5 @@
 import { Extension, findParentNode } from "@tiptap/core";
-import { EmrDocument } from "@/extension/doc/document";
+
 import { Page } from "@/extension/page/page";
 import CassieBlock from "@/extension/node/CassieBlock";
 import { PageOptions } from "@/extension/page/core";
@@ -45,8 +45,7 @@ export const PageExtension = Extension.create<PageOptions>({
   /*添加自定义组件*/
   addExtensions() {
     const extensions: any[] = [];
-    /*顶级文档*/
-    extensions.push(EmrDocument);
+
     /*分页*/
     extensions.push(Page.configure(this.options));
     /*自定节点*/

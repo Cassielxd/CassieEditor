@@ -32,7 +32,8 @@ import Underline from "@tiptap/extension-underline";
 import { StrikeThrough } from "@/extension/marks/strikethrough";
 import { Insertion } from "@/extension/marks/insertion";
 import { Deletion } from "@/extension/marks/deletion";
-
+import { EmrDocument } from "@/extension/doc/document";
+import { Document } from "@tiptap/extension-document";
 export interface CassieKitOptions {
   blockquote: Partial<BlockquoteOptions> | false;
   bold: Partial<BoldOptions> | false;
@@ -94,6 +95,10 @@ export const CassieKit = Extension.create<CassieKitOptions>({
 
     if (this.options.page !== false) {
       extensions.push(PageExtension.configure(this.options?.page));
+      /*顶级文档*/
+      extensions.push(EmrDocument);
+    } else {
+      extensions.push(Document);
     }
 
     if (this.options.dropcursor !== false) {

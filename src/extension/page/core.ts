@@ -1,7 +1,9 @@
 import { Node } from "@tiptap/pm/model";
 import { EditorState } from "@tiptap/pm/state";
+import { generateHTML } from "@tiptap/html";
 import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
 import { paginationPluginKey } from "@/extension/page/pagePlugn";
+import { CassieKit } from "@/extension";
 
 export type PageOptions = {
   footerHeight: number;
@@ -36,11 +38,8 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   let skip = true;
   const { bodyOptions } = paginationPluginKey.getState(state);
   const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 4;
-  const width = bodyOptions.bodyWidth - bodyOptions.bodyPadding * 2;
-  let curBlock: Node;
-  let curPos = 0;
   const fulldoc = state.doc;
-  doc.descendants((node: Node, pos: number) => {
+  doc.descendants((node: Node, pos: number, _: Node | null) => {
     if (node.type === schema.nodes[PAGE] && node !== lastChild) {
       return false;
     }
@@ -72,8 +71,6 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       const pHeight = getBlockHeight(node);
       const h = accumolatedHeight + pHeight;
       if (h > height && skip) {
-        curBlock = node;
-        curPos = pos;
         accumolatedHeight += 28;
         return true;
       }
@@ -84,8 +81,6 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       const pHeight = getBlockHeight(node);
       const h = accumolatedHeight + pHeight;
       if (h > height && skip) {
-        curBlock = node;
-        curPos = pos;
         accumolatedHeight += 8;
         return true;
       }
@@ -98,40 +93,81 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
 
 /**
  *获取段落里最后一个需要分页的地方
+ * 行内中文字符和英文字符宽度超过 段落宽度 计算
+ * 没有超过直接返回null
+ * 由于行内有可能含有图片 不需要计算图片
  * @param node
  * @param width
  */
-function getBreakPos(node: Node) {
-  const test = node.textContent;
-  const paragraphDOM = document.getElementById(node.attrs.id);
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+function getBreakPos(cnode: Node) {
+  const paragraphDOM = document.getElementById(cnode.attrs.id);
+  if (!paragraphDOM) return null;
   const width = paragraphDOM.offsetWidth;
-  if (test) {
-    let strLength = 0;
-    let index = 0;
-    for (let i = 0; i < test.length; i++) {
-      const wordl = getStrPx(test.charAt(i));
+  let strLength = 0;
+  let index = 0;
+  cnode.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
+    //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
+    if (node.isText) {
+      const nodeText = node.text;
+      if (nodeText) {
+        for (let i = 0; i < nodeText.length; i++) {
+          const wordl = computedWidth(nodeText.charAt(i));
+          if (strLength + wordl > width) {
+            strLength = wordl;
+            index = pos + i + 1;
+          } else {
+            strLength += wordl;
+          }
+        }
+      }
+    } else {
+      //需要生成dom才能计算出宽度
+      const html = generateHTML(getJsonFromDoc(node), getExtentions());
+      const wordl = computedWidth(html);
       if (strLength + wordl > width) {
         strLength = wordl;
-        index = i;
+        index = pos + 1;
       } else {
         strLength += wordl;
       }
     }
-    return index;
-  }
-  return null;
+  });
+  return index ? index : null;
 }
+
 /**
- * 系统设置默认fontsize 16px 一个中文字符占16px 一个英文字符占8px
- * @param text
+ * 工具类
+ * @param node
  */
-function getStrPx(text: string) {
-  const strlength = text.length;
-  const chinese = text.match(/[\u4e00-\u9fa5]/g); //匹配中文，match返回包含中文的数组
-  const length = strlength + (chinese ? chinese.length : 0);
-  return length ? length * 8 : 0;
+function getJsonFromDoc(node: Node) {
+  return {
+    type: "doc",
+    content: [node.toJSON()]
+  };
+}
+
+function getExtentions() {
+  return [
+    CassieKit.configure({
+      textAlign: { types: ["heading", "paragraph"] },
+      mention: {
+        HTMLAttributes: {
+          class: "bg-gray-300"
+        }
+      },
+      page: false,
+      focus: false,
+      history: false
+    })
+  ];
+}
+
+function computedWidth(html: string) {
+  const span = document.getElementById("computedspan");
+  if (!span) return 0;
+  span.innerHTML = html;
+  const width = span.offsetWidth;
+  return width;
 }
 
 /**
