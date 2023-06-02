@@ -6,6 +6,7 @@ import SignEditor from "../views/SignEditor.vue";
 import CommentEditor from "../views/CommentEditor.vue";
 import ChangesetEditor from "../views/ChangesetEditor.vue";
 import CollaborativeEditor from "../views/CollaborativeEditor.vue";
+import PrintEditor from "../views/PrintEditor.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -36,6 +37,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/changeseteditor",
     name: "changeseteditor",
     component: ChangesetEditor
+  },
+  {
+    path: "/print",
+    name: "print",
+    component: PrintEditor
   },
   {
     path: "/sign",
