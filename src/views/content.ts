@@ -85,9 +85,6 @@ export const pageContent = {
                   text: "气管哮喘病史否认支,按国家计划接种"
                 },
                 {
-                  type: "hardBreak"
-                },
-                {
                   type: "text",
                   text: "卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗."
                 }

@@ -121,7 +121,6 @@ function getBreakPos(cnode: Node) {
         }
       }
     } else {
-      //需要生成dom才能计算出宽度
       const html = generateHTML(getJsonFromDoc(node), getExtentions());
       const wordl = computedWidth(html);
       if (strLength + wordl > width) {
