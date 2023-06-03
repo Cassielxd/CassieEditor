@@ -25,7 +25,7 @@
             <router-link to="/changeseteditor">操作记录</router-link>
           </li>
           <li>
-            <router-link to="/print">打印</router-link>
+            <router-link to="/print">续打</router-link>
           </li>
           <li>
             <router-link to="/sign">电子签名</router-link>

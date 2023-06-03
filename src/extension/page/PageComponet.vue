@@ -11,7 +11,7 @@
         <component class="min-w-full min-h-full" @inpuvalue="(v: any) => updateValue(i, item, v, false)" :is="item.component" :value="item.value" :styles="item.styles" :editor="editor" :node="node" :extension="extension" />
       </div>
     </div>
-    <div class="absolute patterns pt3 flex place-content-center" :style="{ width: '100%', height: maskheight + 'px', top: '0px', left: '0px', opacity: '0.7' }"></div>
+    <div class="absolute patterns pt3 flex place-content-center" v-if="!editor.options.editable" :style="{ width: '100%', height: maskheight + 'px', top: '0px', left: '0px', opacity: '0.7' }"></div>
   </node-view-wrapper>
 </template>
 
