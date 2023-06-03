@@ -18,7 +18,7 @@
 import { getCurrentInstance, ref } from "vue";
 import CassieEditor from "../components/CassieEditor.vue";
 import { pageContent, headerlist, footerlist } from "./content";
-import { getRandomColor, getRandomName } from "@/utils";
+import { getRandomColor, getRandomName } from "@/denoutils";
 export default {
   components: { CassieEditor },
   setup() {
