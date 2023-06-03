@@ -1,5 +1,5 @@
 <template>
-  <node-view-wrapper oncontextmenu="return false;" class="Page text-base" :id="node.attrs.id" :style="{ width: options.bodyWidth + 'px' }">
+  <node-view-wrapper oncontextmenu="return false;" @mousemove="mousemove" @mousedown="mousedown" class="Page text-base relative" :id="node.attrs.id" :style="{ width: options.bodyWidth + 'px' }">
     <div class="relative" :style="{ height: options.headerHeight + 'px', width: options.bodyWidth + 'px' }">
       <div class="absolute" v-for="(item, i) in headerlist" :key="i" :style="{ width: item.w + 'px', height: item.h + 'px', top: item.y + 'px', left: item.x + 'px' }">
         <component class="min-w-full min-h-full" :is="item.component" @inpuvalue="(v: any) => updateValue(i, item, v, true)" :value="item.value" :styles="item.styles" :editor="editor" :node="node" :extension="extension" />
@@ -11,13 +11,14 @@
         <component class="min-w-full min-h-full" @inpuvalue="(v: any) => updateValue(i, item, v, false)" :is="item.component" :value="item.value" :styles="item.styles" :editor="editor" :node="node" :extension="extension" />
       </div>
     </div>
+    <div class="absolute patterns pt3 flex place-content-center" :style="{ width: '100%', height: maskheight + 'px', top: '0px', left: '0px', opacity: '0.7' }"></div>
   </node-view-wrapper>
 </template>
 
 <script lang="ts">
 import { WidgetOptions } from "@/design/config";
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from "@tiptap/vue-3";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 export default {
   components: {
     NodeViewWrapper,
@@ -50,6 +51,19 @@ export default {
         editor.storage.PageExtension.footerData[index] = item;
       }
     };
+    let ok = true;
+    let maskheight = ref(0);
+    let mousemove = (e: any) => {
+      if (!editor.options.editable) {
+        if (!ok) return;
+        let page = document.getElementById(node.attrs.id);
+        if (page) maskheight.value = e.pageY - page.offsetTop;
+      }
+    };
+
+    let mousedown = (e: any) => {
+      if (!editor.options.editable) ok = !ok;
+    };
     return {
       footerlist,
       headerlist,
@@ -58,8 +72,20 @@ export default {
       node,
       decorations,
       extension,
-      updateValue
+      updateValue,
+      mousemove,
+      mousedown,
+      maskheight
     };
   }
 };
 </script>
+<style>
+.patterns {
+  box-shadow: 0 1px 8px #666;
+  background-size: 50px 50px;
+  background-color: #dadfe1;
+  background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+}
+</style>

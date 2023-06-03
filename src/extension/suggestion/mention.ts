@@ -23,6 +23,7 @@ export const Mention = Node.create<MentionOptions>({
       clickSuggestion: {
         pluginKey: MentionClickPluginKey,
         command: ({ editor, range, props }) => {
+          if (!editor.options.editable) return;
           const nodeAfter = editor.view.state.selection.$to.nodeAfter;
           const overrideSpace = nodeAfter?.text?.startsWith(" ");
           if (overrideSpace) {
@@ -168,6 +169,7 @@ export const Mention = Node.create<MentionOptions>({
     };
   },
   addProseMirrorPlugins() {
+    if (!this.editor.options.editable) return [];
     return [
       SuggestionClick({
         editor: this.editor,

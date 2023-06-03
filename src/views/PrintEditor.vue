@@ -1,5 +1,5 @@
 <template>
-  <CassieEditor :body-height="h - 100" :body-width="w" footer-height="50" :content="pageContent" @onCreate="onCreate" :is-paging="true" @onUpdate="onUpdate" :bodyWidth="750" :menu-list="menulist" :header-data="headerlist" :footer-data="footerlist" />
+  <CassieEditor :body-height="h - 100" :editable="false" :body-width="w" footer-height="50" :content="pageContent" @onCreate="onCreate" :is-paging="true" @onUpdate="onUpdate" :bodyWidth="750" :menu-list="menulist" :header-data="headerlist" :footer-data="footerlist" />
 </template>
 
 <script lang="ts">

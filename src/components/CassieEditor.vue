@@ -72,6 +72,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    editable: {
+      type: Boolean,
+      default: true
+    },
     collaborationUrl: {
       type: String,
       default: undefined
@@ -106,6 +110,7 @@ export default defineComponent({
       });
       //如果是协作模式 设置 content需要滞后 否则会重复添加
       editor.value = new Editor({
+        editable: props.editable,
         content: props.collaborationUrl ? null : props.content,
         onCreate: (options) => {
           emit("onCreate", options);
