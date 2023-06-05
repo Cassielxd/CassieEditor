@@ -34,6 +34,7 @@ import { Insertion } from "@/extension/marks/insertion";
 import { Deletion } from "@/extension/marks/deletion";
 import { EmrDocument } from "@/extension/doc/document";
 import { Document } from "@tiptap/extension-document";
+import { PrintExtension } from "@/extension/print/PrintExtension";
 export interface CassieKitOptions {
   blockquote: Partial<BlockquoteOptions> | false;
   bold: Partial<BoldOptions> | false;
@@ -167,6 +168,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     extensions.push(StrikeThrough);
     extensions.push(Insertion);
     extensions.push(Deletion);
+    extensions.push(PrintExtension);
     return extensions;
   }
 });

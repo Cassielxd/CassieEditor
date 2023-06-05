@@ -48,6 +48,7 @@ export function splitPage({ tr, pos, depth = 1, typesAfter, schema }: SplitParam
       typeAfter
         ? typeAfter.type.create(
             {
+              id: uuid(),
               pageNumber: na?.attrs.pageNumber + 1
             },
             after

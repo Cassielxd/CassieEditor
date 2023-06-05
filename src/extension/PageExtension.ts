@@ -9,6 +9,7 @@ import { pagePlugin } from "@/extension/page/pagePlugn";
 import Image from "@tiptap/extension-image";
 import { Selection, TextSelection } from "@tiptap/pm/state";
 import { PAGE } from "./nodeNames";
+let computedDiv: HTMLElement;
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
   /*添加自定义命令*/
