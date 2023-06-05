@@ -5,7 +5,7 @@
         <component class="min-w-full min-h-full" :is="item.component" @inpuvalue="(v: any) => updateValue(i, item, v, true)" :value="item.value" :styles="item.styles" :editor="editor" :node="node" :extension="extension" />
       </div>
     </div>
-    <node-view-content class="PageContent" :style="{ minHeight: options.bodyHeight - options.bodyPadding * 2 + 'px', padding: options.bodyPadding + 'px' }" />
+    <node-view-content class="PageContent" :style="{ minHeight: options.bodyHeight + 'px', padding: options.bodyPadding + 'px' }" />
     <div class="relative" :style="{ height: options.footerHeight + 'px', width: options.bodyWidth + 'px' }">
       <div class="absolute" v-for="(item, i) in footerlist" :key="i" :style="{ width: item.w + 'px', height: item.h + 'px', top: item.y + 'px', left: item.x + 'px' }">
         <component class="min-w-full min-h-full" @inpuvalue="(v: any) => updateValue(i, item, v, false)" :is="item.component" :value="item.value" :styles="item.styles" :editor="editor" :node="node" :extension="extension" />
