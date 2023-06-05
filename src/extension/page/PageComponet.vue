@@ -11,7 +11,7 @@
         <component class="min-w-full min-h-full" @inpuvalue="(v: any) => updateValue(i, item, v, false)" :is="item.component" :value="item.value" :styles="item.styles" :editor="editor" :node="node" :extension="extension" />
       </div>
     </div>
-    <div class="absolute patterns pt3 flex place-content-center" v-if="openPrint" :style="{ width: '100%', height: maskheight + 'px', top: '0px', left: '0px', opacity: '0.7' }"></div>
+    <div class="absolute flex place-content-center" v-if="openPrint" :style="{ background: '#ffffff', width: '100%', height: maskheight + 'px', top: '0px', left: '0px'}"></div>
   </node-view-wrapper>
 </template>
 
@@ -64,12 +64,14 @@ export default {
     // @ts-ignore
     emitter.on("print", ({ currentNumber }) => {
       let pageNumber = node.attrs.pageNumber;
+      //如果还是可编辑模式 直接返回
       if (editor.isEditable || currentNumber == pageNumber) return;
-
       let pageh = options.bodyHeight + options.footerHeight + options.headerHeight;
+      //当前的页面比  续打的页面 小 直接全覆盖
       if (pageNumber < currentNumber) {
         maskheight.value = pageh;
       }
+      //当前的页面比  续打的页面 大 直接不管
       if (pageNumber > currentNumber) {
         maskheight.value = 0;
       }
@@ -78,7 +80,9 @@ export default {
       if (openPrint.value) {
         let page = document.getElementById(node.attrs.id);
         if (page) maskheight.value = e.pageY - page.offsetTop;
+        //续打起始高度
         editor.storage.PrintExtension.height = maskheight.value;
+        //续打页数 从第几页开始续打
         editor.storage.PrintExtension.currentNumber = node.attrs.pageNumber;
         emitter.emit("print", editor.storage.PrintExtension);
       }
@@ -99,12 +103,3 @@ export default {
   }
 };
 </script>
-<style>
-.patterns {
-  box-shadow: 0 1px 8px #666;
-  background-size: 50px 50px;
-  background-color: #dadfe1;
-  background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-}
-</style>

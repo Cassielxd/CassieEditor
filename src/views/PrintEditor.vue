@@ -22,6 +22,7 @@ import { CassieKit } from "@/extension";
 import { pageContent, headerlist, footerlist } from "./content";
 import { UnitConversion } from "@/extension/page/core";
 import emitter from "@/coolmitt";
+import printJS from "print-js";
 const unitConversion = new UnitConversion();
 export default {
   components: { EditorContent, VueFileToolbarMenu },
@@ -88,14 +89,20 @@ export default {
           {
             icon: "print",
             text: "打印",
-            title: "保存页眉页脚",
+            title: "打印机打印",
             click() {
-              console.log("");
+              let id = editor.value?.state.doc.lastChild?.attrs.id;
+              printJS({
+                printable: id,
+                type: "html",
+                targetStyles: ["*"],
+                style: `@page {margin:0 10mm};`
+              });
             }
           }
         ]
       ];
-      applyDevTools(editor.value.view);
+      //applyDevTools(editor.value.view);
     });
     onBeforeUnmount(() => {
       editor.value?.destroy();
