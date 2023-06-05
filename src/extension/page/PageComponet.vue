@@ -80,6 +80,8 @@ export default {
       if (openPrint.value) {
         let page = document.getElementById(node.attrs.id);
         if (page) maskheight.value = e.pageY - page.offsetTop;
+        //起始打印页
+        editor.storage.PrintExtension.pageId = node.attrs.id;
         //续打起始高度
         editor.storage.PrintExtension.height = maskheight.value;
         //续打页数 从第几页开始续打

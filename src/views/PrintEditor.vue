@@ -91,12 +91,15 @@ export default {
             text: "打印",
             title: "打印机打印",
             click() {
-              let id = editor.value?.state.doc.lastChild?.attrs.id;
+              let pageId = editor.value?.storage.PrintExtension.pageId;
+              if (!pageId) {
+                pageId = editor.value?.state.doc.firstChild?.attrs.id;
+              }
               printJS({
-                printable: id,
+                printable: pageId,
                 type: "html",
                 targetStyles: ["*"],
-                style: `@page {margin:0 10mm};`
+                style: `@page {margin:5mm 10mm};`
               });
             }
           }

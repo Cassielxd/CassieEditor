@@ -5,6 +5,7 @@ type Events = {
     currentNumber: number;
     height: number;
     openSet: boolean;
+    pageId: string;
   };
 };
 
