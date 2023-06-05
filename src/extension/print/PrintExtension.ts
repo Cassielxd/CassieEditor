@@ -5,8 +5,8 @@ export const PrintExtension = Extension.create({
     return {
       currentNumber: 0,
       height: 0,
-      openSet: false,
-      pageId:""
+      print: false,
+      pageId: ""
     };
   }
 });

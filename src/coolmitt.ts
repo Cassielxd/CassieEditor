@@ -1,7 +1,7 @@
 import mitt, { Emitter } from "mitt";
 
 type Events = {
-  print: {
+  printSet: {
     currentNumber: number;
     height: number;
     openSet: boolean;

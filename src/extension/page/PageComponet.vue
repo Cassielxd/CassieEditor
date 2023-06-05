@@ -11,7 +11,17 @@
         <component class="min-w-full min-h-full" @inpuvalue="(v: any) => updateValue(i, item, v, false)" :is="item.component" :value="item.value" :styles="item.styles" :editor="editor" :node="node" :extension="extension" />
       </div>
     </div>
-    <div class="absolute flex place-content-center" v-if="openPrint" :style="{ background: '#ffffff', width: '100%', height: maskheight + 'px', top: '0px', left: '0px'}"></div>
+    <div
+      class="absolute flex place-content-center"
+      v-if="openPrint"
+      :style="{
+        background: '#ffffff',
+        width: '100%',
+        height: maskheight + 'px',
+        top: '0px',
+        left: '0px'
+      }"
+    ></div>
   </node-view-wrapper>
 </template>
 
@@ -54,6 +64,7 @@ export default {
       }
     };
     let maskheight = ref(0);
+    let borderBottomText = ref("1px solid");
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     let printSetting = ({ editor }) => {
@@ -62,7 +73,7 @@ export default {
     editor.on("update", printSetting);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    emitter.on("print", ({ currentNumber }) => {
+    emitter.on("printSet", ({ currentNumber }) => {
       let pageNumber = node.attrs.pageNumber;
       //如果还是可编辑模式 直接返回
       if (editor.isEditable || currentNumber == pageNumber) return;
@@ -86,7 +97,7 @@ export default {
         editor.storage.PrintExtension.height = maskheight.value;
         //续打页数 从第几页开始续打
         editor.storage.PrintExtension.currentNumber = node.attrs.pageNumber;
-        emitter.emit("print", editor.storage.PrintExtension);
+        emitter.emit("printSet", editor.storage.PrintExtension);
       }
     };
     return {

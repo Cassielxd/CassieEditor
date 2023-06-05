@@ -6,7 +6,7 @@
       </div>
       <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
-          <li>
+          <li >
             <router-link to="/">基础编辑器</router-link>
           </li>
           <li>
