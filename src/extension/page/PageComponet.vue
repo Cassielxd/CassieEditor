@@ -76,11 +76,11 @@ export default {
     });
     let mousedown = (e: any) => {
       if (openPrint.value) {
-        editor.storage.PrintExtension.currentNumber = node.attrs.pageNumber;
-        emitter.emit("print", editor.storage.PrintExtension);
         let page = document.getElementById(node.attrs.id);
         if (page) maskheight.value = e.pageY - page.offsetTop;
         editor.storage.PrintExtension.height = maskheight.value;
+        editor.storage.PrintExtension.currentNumber = node.attrs.pageNumber;
+        emitter.emit("print", editor.storage.PrintExtension);
       }
     };
     return {

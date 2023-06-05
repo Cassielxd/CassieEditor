@@ -27,8 +27,8 @@ export default {
   components: { EditorContent, VueFileToolbarMenu },
   setup() {
     const { ctx } = getCurrentInstance();
+    const h = unitConversion.mmConversionPx(148);
     const w = unitConversion.mmConversionPx(210);
-    const h = unitConversion.mmConversionPx(297);
     let bodyWidth = w;
     const menulist = [
       { classify: "radio", label: "单选", value: "radio" },
@@ -83,14 +83,6 @@ export default {
             title: "连续打印设置",
             click() {
               editor.value?.setEditable(false, true);
-            }
-          },
-          {
-            icon: "preview",
-            text: "打印预览",
-            title: "打印预览",
-            click() {
-              console.log("");
             }
           },
           {
