@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import BaseEditor from "../views/BaseEditor.vue";
 import PageEditor from "../views/PageEditor.vue";
 import PageEditorDeflate from "../views/PageEditorDeflate.vue";
@@ -59,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 });
 
