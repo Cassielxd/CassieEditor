@@ -63,7 +63,7 @@ export default {
             page: {
               footerHeight: 100,
               headerHeight: 100,
-              bodyHeight: h - 100,
+              bodyHeight: h - 200,
               bodyWidth: bodyWidth,
               bodyPadding: 10,
               isPaging: true,
@@ -99,7 +99,7 @@ export default {
                 printable: pageId,
                 type: "html",
                 targetStyles: ["*"],
-                style: `@page {margin:5mm 10mm};`
+                style: `@page {margin:0 10mm};`
               });
             }
           }
