@@ -51,9 +51,6 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       //如果p标签没有子标签直接返回默认高度 否则计算高度
       const pHeight = node.childCount > 0 ? getBlockHeight(node) : paragraphDefaultHeight;
       accumolatedHeight += pHeight;
-      const $pos = fulldoc.resolve(pos);
-      console.log($pos);
-      console.log(node.textContent + ":" + $pos.depth);
       /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
       if (accumolatedHeight > height && skip) {
         skip = false; //禁止进入下一个循环
