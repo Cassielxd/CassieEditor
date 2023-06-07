@@ -43,7 +43,13 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   const paragraphDefaultHeight = getDefault();
   let curBolck: Node;
   let curPos: ResolvedPos;
-  doc.descendants((node: Node, pos: number, _: Node | null) => {
+  let crudDepth = 0; //深度计数
+  let pNode: Node | null;
+  doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
+    if (pNode != null && pNode != parentNode) {
+      crudDepth += 1;
+    }
+    pNode = parentNode;
     if (node.type === schema.nodes[PAGE] && node !== lastChild) {
       return false;
     }
@@ -53,28 +59,30 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       accumolatedHeight += pHeight;
       /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
       if (accumolatedHeight > height && skip) {
-        skip = false; //禁止进入下一个循环
-
+        skip = false; //禁止进入下一个循
+        //判断段落是否需要拆分
         if (pHeight > paragraphDefaultHeight) {
           const point = getBreakPos(node);
           if (point) {
             pageBoundary = {
               pos: pos + point,
-              depth: 3
+              depth: crudDepth + 1
             };
             return false;
           }
         }
+        //如果段落是当前块的第一个节点直接返回上一层级的切割点
         if (curBolck.firstChild == node) {
           pageBoundary = {
             pos: curPos.pos,
-            depth: 1
+            depth: crudDepth - 1
           };
           return false;
         }
+        //直接返回当前段落
         pageBoundary = {
           pos,
-          depth: 2
+          depth: crudDepth
         };
       }
       return false;
