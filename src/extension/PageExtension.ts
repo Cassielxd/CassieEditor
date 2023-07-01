@@ -8,7 +8,8 @@ import * as commands from "@/extension/commands/index";
 import { pagePlugin } from "@/extension/page/pagePlugn";
 import Image from "@tiptap/extension-image";
 import { Selection, TextSelection } from "@tiptap/pm/state";
-import { PAGE } from "./nodeNames";
+import { PAGE, PARAGRAPH } from "./nodeNames";
+import { deletePlugin } from "@/extension/page/deletePlugn";
 let computedDiv: HTMLElement;
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
@@ -24,6 +25,7 @@ export const PageExtension = Extension.create<PageOptions>({
     if (this.options.design) return plugins;
     if (this.options.isPaging) {
       plugins.push(pagePlugin(this.editor, this.options));
+      plugins.push(deletePlugin(this.editor));
     }
     return plugins;
   },
@@ -92,7 +94,7 @@ export const PageExtension = Extension.create<PageOptions>({
           return ok;
         },
         () =>
-          commands.command(({ tr }) => {
+          commands.command(({ tr, view }) => {
             //以上系统所有默认操作 都没有成功的时候会进入这个分支
             const { selection, doc } = tr;
             const { $anchor } = selection;
@@ -110,17 +112,8 @@ export const PageExtension = Extension.create<PageOptions>({
               //todo 这里需要优化 能走到这肯定是光标的第一个位置 所以不需要判断
               const isAtStart = pageNode.start + Selection.atStart(pageNode.node).from === pos;
               if (isAtStart) {
-                /*
-                 * 获取上一页的 的 最后一点 将光标设置过去
-                 * */
-                const vm = TextSelection.create(doc, pos - 20, pos - 20);
-                const beforePageNode = findParentNode((node) => node.type.name === PAGE)(vm);
-                if (beforePageNode) {
-                  const pos1 = Selection.atEnd(beforePageNode.node).from + beforePageNode.start;
-                  const after = TextSelection.create(doc, pos1, pos1);
-                  tr.setSelection(after);
-                  return true;
-                }
+                view.dispatch(tr.setMeta("specialdelete", true));
+                return true;
               }
             }
             return false;
