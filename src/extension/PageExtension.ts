@@ -8,8 +8,9 @@ import * as commands from "@/extension/commands/index";
 import { pagePlugin } from "@/extension/page/pagePlugn";
 import Image from "@tiptap/extension-image";
 import { Selection, TextSelection } from "@tiptap/pm/state";
-import { PAGE, PARAGRAPH } from "./nodeNames";
-import { deletePlugin } from "@/extension/page/deletePlugn";
+import { PAGE } from "./nodeNames";
+import { ReplaceStep } from "@tiptap/pm/transform";
+import { Slice } from "@tiptap/pm/model";
 let computedDiv: HTMLElement;
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
@@ -25,7 +26,6 @@ export const PageExtension = Extension.create<PageOptions>({
     if (this.options.design) return plugins;
     if (this.options.isPaging) {
       plugins.push(pagePlugin(this.editor, this.options));
-      plugins.push(deletePlugin(this.editor));
     }
     return plugins;
   },
@@ -94,7 +94,7 @@ export const PageExtension = Extension.create<PageOptions>({
           return ok;
         },
         () =>
-          commands.command(({ tr, view }) => {
+          commands.command(({ tr }) => {
             //以上系统所有默认操作 都没有成功的时候会进入这个分支
             const { selection, doc } = tr;
             const { $anchor } = selection;
@@ -112,7 +112,13 @@ export const PageExtension = Extension.create<PageOptions>({
               //todo 这里需要优化 能走到这肯定是光标的第一个位置 所以不需要判断
               const isAtStart = pageNode.start + Selection.atStart(pageNode.node).from === pos;
               if (isAtStart) {
-                view.dispatch(tr.setMeta("specialdelete", true));
+                const vm = TextSelection.create(doc, pos - 20, pos - 20);
+                const beforePageNode = findParentNode((node) => node.type.name === PAGE)(vm);
+                //找到上一个page 获取到最后一个点 然后设置 光标选中
+                if (beforePageNode) {
+                  const pos1 = Selection.atEnd(beforePageNode.node).from + beforePageNode.start;
+                  tr.step(new ReplaceStep(pos1, pos, Slice.empty));
+                }
                 return true;
               }
             }
