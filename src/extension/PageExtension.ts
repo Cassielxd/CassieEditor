@@ -109,7 +109,6 @@ export const PageExtension = Extension.create<PageOptions>({
             const pageNode = findParentNode((node) => node.type.name === PAGE)(selection);
             if (pageNode) {
               //如果光标在在当前页面 的第一个位置
-              //todo 这里需要优化 能走到这肯定是光标的第一个位置 所以不需要判断
               const isAtStart = pageNode.start + Selection.atStart(pageNode.node).from === pos;
               if (isAtStart) {
                 const vm = TextSelection.create(doc, pos - 20, pos - 20);
