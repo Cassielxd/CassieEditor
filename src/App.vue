@@ -25,6 +25,9 @@
             <router-link to="/changeseteditor">操作记录</router-link>
           </li>
           <li>
+            <router-link to="/diff">版本比较</router-link>
+          </li>
+          <li>
             <router-link to="/print">续打</router-link>
           </li>
           <li>

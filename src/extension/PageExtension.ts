@@ -11,7 +11,6 @@ import { Selection, TextSelection } from "@tiptap/pm/state";
 import { PAGE } from "./nodeNames";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
-let computedDiv: HTMLElement;
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
   /*添加自定义命令*/
@@ -88,11 +87,7 @@ export const PageExtension = Extension.create<PageOptions>({
         () => commands.deleteSelection(),
         () => commands.joinBackward(),
 
-        () => {
-          const ok = commands.selectNodeBackward();
-          console.log(ok);
-          return ok;
-        },
+        () => commands.selectNodeBackward(),
         () =>
           commands.command(({ tr }) => {
             //以上系统所有默认操作 都没有成功的时候会进入这个分支

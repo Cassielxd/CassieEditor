@@ -7,6 +7,7 @@ import CommentEditor from "../views/CommentEditor.vue";
 import ChangesetEditor from "../views/ChangesetEditor.vue";
 import CollaborativeEditor from "../views/CollaborativeEditor.vue";
 import PrintEditor from "../views/PrintEditor.vue";
+import DiffEditor from "../views/DiffEditor.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -42,6 +43,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/print",
     name: "print",
     component: PrintEditor
+  },
+  {
+    path: "/diff",
+    name: "diff",
+    component: DiffEditor
   },
   {
     path: "/sign",

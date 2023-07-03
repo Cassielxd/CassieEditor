@@ -203,12 +203,89 @@ export const pageContent = {
               content: [
                 {
                   type: "text",
-                  text: "胸廓双侧对称正常，胸壁无压痛。呼吸运动自如，语音震颤双侧对称正常胸廓双侧对称正常，胸壁无压痛。"
+                  text: "胸廓双侧对称正常，胸壁无压痛。呼吸运动自如，语音震颤双侧对称，胸壁无压痛。"
                 }
               ]
             }
           ]
         }
+      ]
+    }
+  ]
+};
+
+export const newContent = {
+  type: "doc",
+  content: [
+    {
+      type: "page",
+      attrs: {
+        HTMLAttributes: null,
+        pageNumber: 1,
+      },
+      content: [
+        {
+          type: "Node",
+          attrs: {
+            id: "pid_3954397982",
+            title: "既往史",
+            group: "body_before"
+          },
+          content: [
+            {
+              type: "paragraph",
+              attrs: {
+                textAlign: "left",
+                group: "p2"
+              },
+              content: [
+                {
+                  type: "text",
+                  text: "这是一测试文" //"这是一个测试文"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+export const pageOldContent = {
+  type: "doc",
+  content: [
+    {
+      type: "page",
+      attrs: {
+        HTMLAttributes: null,
+        pageNumber: 1,
+      },
+      content: [
+        {
+          type: "Node",
+          attrs: {
+            id: "pid_3954397982",
+            title: "既往史",
+            group: "body_before"
+          },
+          content: [
+            {
+              type: "paragraph",
+              attrs: {
+                textAlign: "left",
+                group: "p2"
+              },
+              content: [
+                {
+                  type: "text",
+                  text: "这是一个测试文"
+                }
+              ]
+            }
+          ]
+        }
+
       ]
     }
   ]
