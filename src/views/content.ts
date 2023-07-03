@@ -241,7 +241,7 @@ export const newContent = {
               content: [
                 {
                   type: "text",
-                  text: "这是一测试文" //"这是一个测试文"
+                  text: "这是一测试文啵啵啵啵啵啵" //"这是一个测试文"
                 }
               ]
             }
@@ -279,7 +279,7 @@ export const pageOldContent = {
               content: [
                 {
                   type: "text",
-                  text: "这是一个测试文"
+                  text: "这是一个测试文啊啊啊啊啊啊"
                 }
               ]
             }

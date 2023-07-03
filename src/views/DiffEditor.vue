@@ -26,10 +26,11 @@ import { newContent, pageOldContent, headerlist, footerlist } from "./content";
 import { CVExtension } from "@/extension/track/CompareVersionExtension";
 import { getSchema } from "@tiptap/core";
 import { Node } from "@tiptap/pm/model";
-import { recreateTransform } from "@manuscripts/prosemirror-recreate-steps";
+import { recreateTransform } from "@/extension/track/recreate-steps";
 import { ChangeSet } from "@/extension/track/changeset";
 import applyDevTools from "prosemirror-dev-tools";
 import { Editor } from "@tiptap/vue-3";
+import { EditorState } from "@tiptap/pm/state";
 const unitConversion = new UnitConversion();
 export default {
   components: {
@@ -80,9 +81,10 @@ export default {
     onMounted(() => {
       editor1.value = new Editor(Object.assign({}, option, { content: newContent, extensions: extensions }));
       editor2.value = new Editor(Object.assign({}, option, { content: pageOldContent, extensions: extensions }));
-      diff.value = new Editor(Object.assign({}, option, { content: tr.doc.toJSON(), extensions: extensions.concat([CVExtension.configure({ change: changeSet, doc: tr.doc })]) }));
+      let startState = EditorState.create({ doc: oldD });
+
+      diff.value = new Editor(Object.assign({}, option, { content: tr.doc.toJSON(), extensions: extensions.concat([CVExtension.configure({ change: changeSet, doc: tr.doc, startState })]) }));
       applyDevTools(diff.value.view);
-      debugger;
     });
 
     onBeforeUnmount(() => {
