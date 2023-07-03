@@ -17,20 +17,21 @@
 <script lang="ts">
 import { CassieKit } from "@/extension/CassieKit";
 
-import { useEditor, EditorContent } from "@tiptap/vue-3";
+import { EditorContent } from "@tiptap/vue-3";
 
-import { onBeforeUnmount, onMounted, reactive, ref, shallowRef } from "vue";
+import { onBeforeUnmount, onMounted, ref, shallowRef } from "vue";
 import { UnitConversion } from "@/extension/page/core";
 
 import { newContent, pageOldContent, headerlist, footerlist } from "./content";
-import { CVExtension } from "@/extension/track/CompareVersionExtension";
 import { getSchema } from "@tiptap/core";
-import { Node } from "@tiptap/pm/model";
+import { DOMSerializer, Node } from "@tiptap/pm/model";
 import { recreateTransform } from "@/extension/track/recreate-steps";
 import { ChangeSet } from "@/extension/track/changeset";
 import applyDevTools from "prosemirror-dev-tools";
 import { Editor } from "@tiptap/vue-3";
-import { EditorState } from "@tiptap/pm/state";
+import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
+import { renderDecorations } from "@/extension/track/track-changes/renderDecorations";
+import { DecorationSet } from "@tiptap/pm/view";
 const unitConversion = new UnitConversion();
 export default {
   components: {
@@ -77,13 +78,30 @@ export default {
     const editor1 = shallowRef<Editor>();
     const editor2 = shallowRef<Editor>();
     const diff = shallowRef<Editor>();
-
+    const colorScheme: [string, string][] = [
+      ["greenyellow", "#ffa4a4"],
+      ["#10c727", "#ff0707"],
+      ["#7adcb8", "#f93aa2"]
+    ];
     onMounted(() => {
       editor1.value = new Editor(Object.assign({}, option, { content: newContent, extensions: extensions }));
       editor2.value = new Editor(Object.assign({}, option, { content: pageOldContent, extensions: extensions }));
       let startState = EditorState.create({ doc: oldD });
-
-      diff.value = new Editor(Object.assign({}, option, { content: tr.doc.toJSON(), extensions: extensions.concat([CVExtension.configure({ change: changeSet, doc: tr.doc, startState })]) }));
+      let domSerializer: DOMSerializer;
+      diff.value = new Editor(Object.assign({}, option, { content: tr.doc.toJSON(), extensions: extensions }));
+      diff.value.registerPlugin(
+        new Plugin({
+          props: {
+            decorations(state) {
+              domSerializer = state.schema.cached?.domSerializer || DOMSerializer.fromSchema(state.schema);
+              const userColors = new Map();
+              userColors.set("1", colorScheme[userColors.size]);
+              const decorations = renderDecorations(changeSet, userColors, domSerializer, startState);
+              return DecorationSet.create(tr.doc, decorations);
+            }
+          }
+        })
+      );
       applyDevTools(diff.value.view);
     });
 
