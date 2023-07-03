@@ -8,8 +8,8 @@
       </div>
 
       <editor-content v-show="active == 1" :editor="diff" />
-      <editor-content v-show="active == 2" :editor="editor1" />
-      <editor-content v-show="active == 3" :editor="editor2" />
+      <editor-content v-show="active == 2" :editor="newEditor" />
+      <editor-content v-show="active == 3" :editor="oldEditor" />
     </div>
   </div>
 </template>
@@ -75,17 +75,13 @@ export default {
     const newD = Node.fromJSON(schema, newContent);
     const tr = recreateTransform(oldD, newD);
     const changeSet = ChangeSet.create(oldD).addSteps(oldD, tr.doc, tr.steps, { userID: "1" });
-    const editor1 = shallowRef<Editor>();
-    const editor2 = shallowRef<Editor>();
+    const newEditor = shallowRef<Editor>();
+    const oldEditor = shallowRef<Editor>();
     const diff = shallowRef<Editor>();
-    const colorScheme: [string, string][] = [
-      ["greenyellow", "#ffa4a4"],
-      ["#10c727", "#ff0707"],
-      ["#7adcb8", "#f93aa2"]
-    ];
+
     onMounted(() => {
-      editor1.value = new Editor(Object.assign({}, option, { content: newContent, extensions: extensions }));
-      editor2.value = new Editor(Object.assign({}, option, { content: pageOldContent, extensions: extensions }));
+      newEditor.value = new Editor(Object.assign({}, option, { content: newContent, extensions: extensions }));
+      oldEditor.value = new Editor(Object.assign({}, option, { content: pageOldContent, extensions: extensions }));
       let startState = EditorState.create({ doc: oldD });
       let domSerializer: DOMSerializer;
       diff.value = new Editor(Object.assign({}, option, { content: tr.doc.toJSON(), extensions: extensions }));
@@ -95,7 +91,7 @@ export default {
             decorations(state) {
               domSerializer = state.schema.cached?.domSerializer || DOMSerializer.fromSchema(state.schema);
               const userColors = new Map();
-              userColors.set("1", colorScheme[userColors.size]);
+              userColors.set("1", ["greenyellow", "#ffa4a4"]);
               const decorations = renderDecorations(changeSet, userColors, domSerializer, startState);
               return DecorationSet.create(tr.doc, decorations);
             }
@@ -106,14 +102,14 @@ export default {
     });
 
     onBeforeUnmount(() => {
-      editor1.value?.destroy();
-      editor2.value?.destroy();
+      newEditor.value?.destroy();
+      oldEditor.value?.destroy();
       diff.value?.destroy();
     });
     return {
       diff,
-      editor1,
-      editor2,
+      newEditor,
+      oldEditor,
       active,
       change
     };
