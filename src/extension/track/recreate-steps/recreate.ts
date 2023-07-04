@@ -47,12 +47,11 @@ class RecreateTransform {
 
   init() {
     if (this.complexSteps) {
-      // For First steps: we create versions of the documents without marks as
-      // these will only confuse the diffing mechanism and marks won't cause
-      // any mapping changes anyway.
+      // 先去除掉所有的mark标记
       this.currentJSON = this.marklessDoc(this.fromDoc).toJSON();
       this.finalJSON = this.marklessDoc(this.toDoc).toJSON();
       this.ops = createPatch(this.currentJSON, this.finalJSON);
+      //生成 Steps
       this.recreateChangeContentSteps();
       this.recreateChangeMarkSteps();
     } else {
@@ -69,7 +68,7 @@ class RecreateTransform {
   }
 
   recreateChangeContentSteps() {
-    // First step: find content changing steps.
+    // 找到所有的不同点steps.
     let ops = [];
     while (this.ops.length) {
       let op = this.ops.shift(),
@@ -94,11 +93,11 @@ class RecreateTransform {
       }
 
       if (this.complexSteps && ops.length === 1 && (pathParts.includes("attrs") || pathParts.includes("type"))) {
-        // Node markup is changing
+        // 处理标记
         this.addSetNodeMarkup();
         ops = [];
       } else if (ops.length === 1 && op.op === "replace" && pathParts[pathParts.length - 1] === "text") {
-        // Text is being replaced, we apply text diffing to find the smallest possible diffs.
+        // 文本处理
         this.addReplaceTextSteps(op, afterStepJSON);
         ops = [];
       } else {
@@ -250,6 +249,13 @@ class RecreateTransform {
   }
 }
 
+/**
+ * 比较fromDoc和toDoc生成Transform
+ * @param fromDoc
+ * @param toDoc
+ * @param complexSteps
+ * @param wordDiffs
+ */
 export function recreateTransform(fromDoc: Node, toDoc: Node, complexSteps = true, wordDiffs = false) {
   const recreator = new RecreateTransform(fromDoc, toDoc, complexSteps, wordDiffs);
   return recreator.init();

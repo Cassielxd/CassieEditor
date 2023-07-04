@@ -73,6 +73,7 @@ export default {
     const schema = getSchema(extensions);
     const oldD = Node.fromJSON(schema, pageOldContent);
     const newD = Node.fromJSON(schema, newContent);
+    //核心方法 比较两个文档 并根据oldDoc 一步步生成 tr  steps 就是 痕迹
     const tr = recreateTransform(oldD, newD);
     const changeSet = ChangeSet.create(oldD).addSteps(oldD, tr.doc, tr.steps, { userID: "1" });
     const newEditor = shallowRef<Editor>();

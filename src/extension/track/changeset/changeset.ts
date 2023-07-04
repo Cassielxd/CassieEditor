@@ -53,6 +53,7 @@ export class ChangeSet {
     // For each change that was touched by the new steps, we recompute
     // a diff to try to minimize the change by dropping matching
     // pieces of the old and new document from the change.
+    ////---------------------------------------------start-----------------------------------------
     let stepChanges: IChange[] = []
     // Add spans for new steps.
     for (let i = 0; i < steps.length; i++) {
@@ -99,6 +100,7 @@ export class ChangeSet {
         console.error('Unknown step type! Change not tracked and possibly current changes have become inconsistent', step)
       }
     }
+    ////---------------------------------------------end-----------------------------------------
     if (stepChanges.length == 0) return this
 
     let newChanges = mergeAll(stepChanges, this.config.combine)
