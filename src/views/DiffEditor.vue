@@ -6,7 +6,6 @@
         <a class="tab tab-lifted" :class="active == 2 ? 'tab-active' : ''" @click="change(2)">新版</a>
         <a class="tab tab-lifted" :class="active == 3 ? 'tab-active' : ''" @click="change(3)">旧版</a>
       </div>
-
       <editor-content v-show="active == 1" :editor="diff" />
       <editor-content v-show="active == 2" :editor="newEditor" />
       <editor-content v-show="active == 3" :editor="oldEditor" />
@@ -99,7 +98,7 @@ export default {
           }
         })
       );
-      applyDevTools(diff.value.view);
+      //applyDevTools(diff.value.view);
     });
 
     onBeforeUnmount(() => {
