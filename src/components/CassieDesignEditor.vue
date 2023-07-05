@@ -15,7 +15,7 @@
         <vue-file-toolbar-menu v-for="(content, index) in menus" :key="'bar-' + index" :content="content" />
       </div>
       <div class="Page" :style="{ width: bodyWidth + 'px' }">
-        <div class="relative" @mousedown.stop="unFocus(true)" v-contextmenu:contextmenu :style="{ height: headerHeight + 'px' }">
+        <div class="relative header" @mousedown.stop="unFocus(true)" v-contextmenu:contextmenu :style="{ height: headerHeight + 'px' }">
           <Vue3DraggableResizable
             v-for="(item, i) in headerlist"
             :key="i"
@@ -37,7 +37,7 @@
           </Vue3DraggableResizable>
         </div>
         <editor-content :editor="editor" />
-        <div class="relative" @mousedown.stop="unFocus(false)" v-contextmenu:contextmenu :style="{ height: footerHeight + 'px' }">
+        <div class="relative footer" @mousedown.stop="unFocus(false)" v-contextmenu:contextmenu :style="{ height: footerHeight + 'px' }">
           <Vue3DraggableResizable
             v-for="(item, i) in footerlist"
             :key="i"
@@ -301,5 +301,11 @@ export default defineComponent({
 </script>
 <style scoped>
 .ProseMirror-focused {
+}
+.header {
+  border-bottom: 1px solid;
+}
+.footer {
+  border-top: 1px solid;
 }
 </style>
