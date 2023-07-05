@@ -149,7 +149,6 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-
     let header = ref(true);
     let currentindex = ref(0);
     //页眉data
