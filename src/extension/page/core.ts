@@ -105,7 +105,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       const pHeight = getBlockHeight(node);
       const h = accumolatedHeight + pHeight;
       if (h > height && skip) {
-        accumolatedHeight += 8;
+        //accumolatedHeight += 8; 没有前后间隔
         curBolck = node;
         curPos = fulldoc.resolve(pos);
         return true;
