@@ -101,16 +101,18 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       accumolatedHeight += pHeight;
       return false;
     }
-    /*if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
+    if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
       const pHeight = getBlockHeight(node);
       const h = accumolatedHeight + pHeight;
       if (h > height && skip) {
         accumolatedHeight += 8;
+        curBolck = node;
+        curPos = fulldoc.resolve(pos);
         return true;
       }
       accumolatedHeight += pHeight;
       return false;
-    }*/
+    }
   });
   return pageBoundary ? pageBoundary : null;
 }
