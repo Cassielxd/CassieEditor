@@ -19,7 +19,7 @@ export const baseContent = {
           content: [
             {
               type: "text",
-              text: "这是一个富文本编辑器编写分页效果"
+              text: "这是一个基础编辑器"
             }
           ]
         }

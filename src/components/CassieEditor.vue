@@ -6,7 +6,7 @@
 
 <script lang="ts">
 //import applyDevTools from "prosemirror-dev-tools";
-import { EditorContent, Extensions, Editor } from "@tiptap/vue-3";
+import { EditorContent, Editor } from "@tiptap/vue-3";
 import { defineComponent, onBeforeUnmount, onMounted, PropType, ref, shallowRef, unref, watchEffect } from "vue";
 import { BuildRender, ContextMenuOptions } from "@/default";
 import { CassieKit } from "@/extension";
