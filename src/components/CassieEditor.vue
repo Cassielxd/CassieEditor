@@ -156,7 +156,7 @@ export default defineComponent({
               clickSuggestion: BuildRender(props.menuList) //编辑器右键菜单
             },
             page: { ...props },
-            focus: { mode: "Node", className: "has-focus" }, //选中样式
+            focus: false, //选中样式
             history: false //历史记录回退 协作模式禁止开启
           }),
           Collaboration.configure({

@@ -188,6 +188,7 @@ function splitDocument(tr: Transaction, state: EditorState): Transaction {
   /*获取最后一个page计算高度 如果返回值存在的话证明需要分割*/
   const splitInfo: SplitInfo | null = getNodeHeight(tr.doc, state);
   if (!splitInfo) return tr;
+  console.log("aaaa");
   const type = getNodeType(PAGE, schema);
   const newTr = splitPage({
     tr: tr,

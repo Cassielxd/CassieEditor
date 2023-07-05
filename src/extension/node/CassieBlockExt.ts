@@ -13,6 +13,17 @@ export const CassieBlockExt = Node.create({
   content: "block*",
   addAttributes() {
     return {
+      id: {
+        parseHTML: (element) => element.getAttribute("id"),
+        renderHTML: (attributes) => {
+          if (!attributes.id) {
+            return {};
+          }
+          return {
+            id: attributes.id
+          };
+        }
+      },
       group: {
         default: null,
         parseHTML: (element) => element.getAttribute("group"),

@@ -34,7 +34,7 @@ export type SplitInfo = {
 export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   const { schema } = state;
   const { lastChild } = doc;
-  let accumolatedHeight = 5;
+  let accumolatedHeight = 0;
   let pageBoundary = null;
   let skip = true;
   const { bodyOptions } = paginationPluginKey.getState(state);
@@ -131,6 +131,12 @@ function getBreakPos(cnode: Node) {
   const width = paragraphDOM.offsetWidth;
   let strLength = 0;
   let index = 0;
+  const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
+  const wordl = computedWidth(html);
+  //如果高度超过默认了 但是宽度没有超过 证明 只有一行 只是里面有 行内元素 比如 图片
+  if (width >= wordl) {
+    return null;
+  }
   cnode.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
     //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
     if (node.isText) {

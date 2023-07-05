@@ -8,7 +8,7 @@ import * as commands from "@/extension/commands/index";
 import { pagePlugin } from "@/extension/page/pagePlugn";
 import Image from "@tiptap/extension-image";
 import { Selection, TextSelection } from "@tiptap/pm/state";
-import { PAGE } from "./nodeNames";
+import { EXTEND, PAGE } from "./nodeNames";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
 export const PageExtension = Extension.create<PageOptions>({
@@ -103,6 +103,7 @@ export const PageExtension = Extension.create<PageOptions>({
             //找到当钱的page
             const pageNode = findParentNode((node) => node.type.name === PAGE)(selection);
             if (pageNode) {
+              const curBlock = findParentNode((node) => node.type.name.endsWith(EXTEND))(selection);
               //如果光标在在当前页面 的第一个位置
               const isAtStart = pageNode.start + Selection.atStart(pageNode.node).from === pos;
               if (isAtStart) {
@@ -111,7 +112,12 @@ export const PageExtension = Extension.create<PageOptions>({
                 //找到上一个page 获取到最后一个点 然后设置 光标选中
                 if (beforePageNode) {
                   const pos1 = Selection.atEnd(beforePageNode.node).from + beforePageNode.start;
-                  tr.step(new ReplaceStep(pos1, pos, Slice.empty));
+                  if (curBlock) {
+                    tr.step(new ReplaceStep(pos1, pos, Slice.empty));
+                  } else {
+                    const selection1 = TextSelection.create(doc, pos1, pos1);
+                    tr.setSelection(selection1);
+                  }
                 }
                 return true;
               }
