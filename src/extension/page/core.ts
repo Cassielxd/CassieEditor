@@ -179,16 +179,26 @@ function getExtentions() {
     })
   ];
 }
+//计算缓存 对于重复key可缓存 不参与计算
+const cached = new Map();
 const gspan = document.getElementById("computedspan");
 function getDefault() {
+  if (cached.has("defaultHeight")) {
+    return cached.get("defaultHeight");
+  }
   if (!gspan) return 0;
-  return gspan.offsetHeight;
+  const defaultHeight = gspan.offsetHeight;
+  cached.set("defaultHeight", defaultHeight);
+  return defaultHeight;
 }
-
 function computedWidth(html: string) {
+  if (cached.has(html)) {
+    return cached.get(html);
+  }
   if (!gspan) return 0;
   gspan.innerHTML = html;
   const width = gspan.getBoundingClientRect().width;
+  cached.set(html, width);
   return width;
 }
 
