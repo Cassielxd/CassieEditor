@@ -78,7 +78,7 @@ export default {
           })
         ]
       });
-      applyDevTools(editor.value.view);
+      //applyDevTools(editor.value.view);
     });
 
     onBeforeUnmount(() => {

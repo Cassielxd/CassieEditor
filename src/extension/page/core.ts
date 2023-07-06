@@ -130,12 +130,12 @@ function getBreakPos(cnode: Node) {
       const nodeText = node.text;
       if (nodeText) {
         for (let i = 0; i < nodeText.length; i++) {
-          const wordl = computedWidth(nodeText.charAt(i));
-          if (strLength + wordl > width) {
-            strLength = wordl;
+          const wl = computedWidth(nodeText.charAt(i));
+          if (strLength + wl > width) {
+            strLength = wl;
             index = pos + i + 1;
           } else {
-            strLength += wordl;
+            strLength += wl;
           }
         }
       }
@@ -188,7 +188,7 @@ function computedWidth(html: string) {
   const span = document.getElementById("computedspan");
   if (!span) return 0;
   span.innerHTML = html;
-  const width = span.offsetWidth;
+  const width = span.getBoundingClientRect().width;
   return width;
 }
 
