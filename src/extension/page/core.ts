@@ -101,6 +101,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
       return true;
     }
   });
+
   return pageBoundary ? pageBoundary : null;
 }
 
