@@ -6,7 +6,9 @@
     .Page {
         @apply bg-white   divide-gray-400 leading-normal rounded-md transform scale-95
     }
-
+    p{
+        word-break: break-all
+    }
     .text-b{
         font-size: 1rem;
         line-height: 1.5rem;
