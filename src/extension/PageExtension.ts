@@ -112,12 +112,14 @@ export const PageExtension = Extension.create<PageOptions>({
                 //找到上一个page 获取到最后一个点 然后设置 光标选中
                 if (beforePageNode) {
                   const pos1 = Selection.atEnd(beforePageNode.node).from + beforePageNode.start;
+                  //EXTEND 是扩展类型 是可以删除并合并的
+                  const selection1 = TextSelection.create(doc, pos1, pos1);
                   if (curBlock) {
-                    tr.step(new ReplaceStep(pos1, pos, Slice.empty));
-                  } else {
-                    const selection1 = TextSelection.create(doc, pos1, pos1);
-                    tr.setSelection(selection1);
+                    const parentOffset = selection1.$anchor.parentOffset;
+                    tr.step(new ReplaceStep(parentOffset > 0 ? pos1 - 1 : pos1, pos, Slice.empty));
+                    return true;
                   }
+                  tr.setSelection(selection1);
                 }
                 return true;
               }
