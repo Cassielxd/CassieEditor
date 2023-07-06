@@ -179,16 +179,16 @@ function getExtentions() {
     })
   ];
 }
+const gspan = document.getElementById("computedspan");
 function getDefault() {
-  const div = document.getElementById("computedspan");
-  if (!div) return 0;
-  return div.offsetHeight;
+  if (!gspan) return 0;
+  return gspan.offsetHeight;
 }
+
 function computedWidth(html: string) {
-  const span = document.getElementById("computedspan");
-  if (!span) return 0;
-  span.innerHTML = html;
-  const width = span.getBoundingClientRect().width;
+  if (!gspan) return 0;
+  gspan.innerHTML = html;
+  const width = gspan.getBoundingClientRect().width;
   return width;
 }
 
