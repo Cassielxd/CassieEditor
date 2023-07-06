@@ -155,14 +155,6 @@ function mergeDocument(tr: Transaction, count: number): Transaction {
     }
     tr.join(tr.doc.content.size - nodesize, depth);
   }
-  if (tr.doc.lastChild) {
-    let nodes = findChildren(tr.doc.lastChild, (child) => child.type.name.includes(EXTEND));
-    while (nodes.length > 1) {
-      const n = nodes[1];
-      tr.join(n.pos, 1);
-      nodes = findChildren(tr.doc, (child) => child.type.name.includes(EXTEND));
-    }
-  }
   return tr;
 }
 

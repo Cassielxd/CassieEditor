@@ -594,7 +594,7 @@ export const headerlist = [
     w: 180,
     h: 26,
     focused: false,
-    value: "烟台市口腔医院病历",
+    value: "XXXXXXXXXXXXX",
     label: "文字",
     component: "custom-text",
     type: "text",

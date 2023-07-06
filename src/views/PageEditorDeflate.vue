@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+import applyDevTools from "prosemirror-dev-tools";
 import { getCurrentInstance } from "vue";
 import { pageContent, headerlist, footerlist } from "./content";
 import { UnitConversion } from "@/extension/page/core";
@@ -77,7 +78,7 @@ export default {
           })
         ]
       });
-      //applyDevTools(editor.value.view);
+      applyDevTools(editor.value.view);
     });
 
     onBeforeUnmount(() => {

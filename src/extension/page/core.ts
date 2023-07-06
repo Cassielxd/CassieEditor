@@ -43,16 +43,12 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   const paragraphDefaultHeight = getDefault();
   let curBolck: Node;
   let curPos: ResolvedPos;
-  let crudDepth = 0; //深度计数
-  let pNode: Node | null;
+  let contentH = 0;
   doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
-    if (pNode != null && pNode != parentNode) {
-      crudDepth += 1;
-    }
-    pNode = parentNode;
     if (node.type === schema.nodes[PAGE] && node !== lastChild) {
       return false;
     }
+
     if (node.type === schema.nodes[PARAGRAPH]) {
       //如果p标签没有子标签直接返回默认高度 否则计算高度
       const pHeight = node.childCount > 0 ? getBlockHeight(node) : paragraphDefaultHeight;
@@ -66,7 +62,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
           if (point) {
             pageBoundary = {
               pos: pos + point,
-              depth: crudDepth + 1
+              depth: 3
             };
             return false;
           }
@@ -75,43 +71,34 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
         if (curBolck.firstChild == node) {
           pageBoundary = {
             pos: curPos.pos,
-            depth: crudDepth - 1
+            depth: 1
           };
           return false;
         }
         //直接返回当前段落
         pageBoundary = {
           pos,
-          depth: crudDepth
+          depth: 2
         };
       }
       return false;
     }
     //如果是以 CASSIE_BLOCK块为节点的话则 拆分到最细 以pp标签为单位进行拆分
     if (node.type === schema.nodes[CASSIE_BLOCK]) {
-      const pHeight = getBlockHeight(node);
-      const h = accumolatedHeight + pHeight;
-      if (h > height && skip) {
+      if (contentH == 0 && node.attrs.title) {
+        const pHeight = getBlockHeight(node);
         const contentHeight = getContentHeight(node);
-        accumolatedHeight = h - contentHeight;
-        curBolck = node;
-        curPos = fulldoc.resolve(pos);
-        return true;
+        contentH = pHeight - contentHeight;
       }
-      accumolatedHeight += pHeight;
-      return false;
+      accumolatedHeight += contentH;
+      curBolck = node;
+      curPos = fulldoc.resolve(pos);
+      return true;
     }
     if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
-      const pHeight = getBlockHeight(node);
-      const h = accumolatedHeight + pHeight;
-      if (h > height && skip) {
-        //accumolatedHeight += 8; 没有前后间隔
-        curBolck = node;
-        curPos = fulldoc.resolve(pos);
-        return true;
-      }
-      accumolatedHeight += pHeight;
-      return false;
+      curBolck = node;
+      curPos = fulldoc.resolve(pos);
+      return true;
     }
   });
   return pageBoundary ? pageBoundary : null;

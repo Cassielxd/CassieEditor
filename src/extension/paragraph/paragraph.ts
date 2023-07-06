@@ -32,13 +32,7 @@ export const EmrParagraph = Paragraph.extend({
     };
   },
   renderHTML({ node, HTMLAttributes }) {
-    const pid = uuid();
-    if (!node.attrs.id) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      node.attrs.id = pid;
-    }
-    return ["p", mergeAttributes(this.options.HTMLAttributes, { id: pid }, HTMLAttributes), 0];
+    return ["p", mergeAttributes(this.options.HTMLAttributes, { id: node.attrs.id ? node.attrs.id : uuid() }, HTMLAttributes), 0];
   },
 
   addKeyboardShortcuts() {

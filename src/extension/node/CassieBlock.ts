@@ -59,13 +59,7 @@ export default Node.create({
   },
 
   renderHTML({ node, HTMLAttributes }) {
-    const pid = uuid();
-    if (!node.attrs.id) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      node.attrs.id = pid;
-    }
-    return ["Node", mergeAttributes(HTMLAttributes, { id: pid }), 0];
+    return ["Node", mergeAttributes(HTMLAttributes, { id: node.attrs.id ? node.attrs.id : uuid() }), 0];
   },
   addNodeView() {
     return VueNodeViewRenderer(CassieBlockComponet);
