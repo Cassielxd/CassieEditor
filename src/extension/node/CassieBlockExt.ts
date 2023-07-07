@@ -17,7 +17,7 @@ export const CassieBlockExt = Node.create({
         parseHTML: (element) => element.getAttribute("id"),
         renderHTML: (attributes) => {
           if (!attributes.id) {
-            return {};
+            return { id: uuid() };
           }
           return {
             id: attributes.id
@@ -47,7 +47,12 @@ export const CassieBlockExt = Node.create({
   },
 
   renderHTML({ node, HTMLAttributes }) {
-    return ["node-extend", mergeAttributes(HTMLAttributes, { id: node.attrs.id ? node.attrs.id : uuid() }), 0];
+    if (HTMLAttributes.id) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      node.attrs.id = HTMLAttributes.id;
+    }
+    return ["node-extend", HTMLAttributes, 0];
   },
   addNodeView() {
     return VueNodeViewRenderer(CassieBlockExtComponet);
