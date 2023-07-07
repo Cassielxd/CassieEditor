@@ -16,7 +16,17 @@ export const EmrParagraph = Paragraph.extend({
   content: "inline*",
   addAttributes() {
     return {
-      id: null,
+      id: {
+        parseHTML: (element) => element.getAttribute("id"),
+        renderHTML: (attributes) => {
+          if (!attributes.id) {
+            return { id: uuid() };
+          }
+          return {
+            id: attributes.id
+          };
+        }
+      },
       group: {
         default: null,
         parseHTML: (element) => element.getAttribute("data-group"),
@@ -32,7 +42,12 @@ export const EmrParagraph = Paragraph.extend({
     };
   },
   renderHTML({ node, HTMLAttributes }) {
-    return ["p", mergeAttributes(this.options.HTMLAttributes, { id: node.attrs.id ? node.attrs.id : uuid() }, HTMLAttributes), 0];
+    if (HTMLAttributes.id) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      node.attrs.id = HTMLAttributes.id;
+    }
+    return ["p", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
   },
 
   addKeyboardShortcuts() {

@@ -98,6 +98,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
     if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
       curBolck = node;
       curPos = fulldoc.resolve(pos);
+      accumolatedHeight += contentH;
       return true;
     }
   });
