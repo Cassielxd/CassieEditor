@@ -85,11 +85,9 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
     }
     //如果是以 CASSIE_BLOCK块为节点的话则 拆分到最细 以pp标签为单位进行拆分
     if (node.type === schema.nodes[CASSIE_BLOCK]) {
-      if (contentH == 0 && node.attrs.title) {
-        const pHeight = getBlockHeight(node);
-        const contentHeight = getContentHeight(node);
-        contentH = pHeight - contentHeight;
-      }
+      const pHeight = getBlockHeight(node);
+      const contentHeight = getContentHeight(node);
+      contentH = pHeight - contentHeight;
       accumolatedHeight += contentH;
       curBolck = node;
       curPos = fulldoc.resolve(pos);
@@ -98,7 +96,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
     if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
       curBolck = node;
       curPos = fulldoc.resolve(pos);
-      accumolatedHeight += contentH;
+      accumolatedHeight += 8;
       return true;
     }
   });
