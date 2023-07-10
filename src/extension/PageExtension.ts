@@ -7,10 +7,6 @@ import { CassieBlockExt } from "@/extension/node/CassieBlockExt";
 import * as commands from "@/extension/commands/index";
 import { pagePlugin } from "@/extension/page/pagePlugn";
 import Image from "@tiptap/extension-image";
-import { Selection, TextSelection } from "@tiptap/pm/state";
-import { EXTEND, PAGE } from "./nodeNames";
-import { ReplaceStep } from "@tiptap/pm/transform";
-import { Slice } from "@tiptap/pm/model";
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
   /*添加自定义命令*/
