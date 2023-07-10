@@ -38,7 +38,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   let pageBoundary = null;
   let skip = true;
   const { bodyOptions } = paginationPluginKey.getState(state);
-  const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 4;
+  const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2;
   const fulldoc = state.doc;
   const paragraphDefaultHeight = getDefault();
   let curBolck: Node;
