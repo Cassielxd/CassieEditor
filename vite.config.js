@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 const path = require("path");
-
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -15,6 +14,8 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     minify: "terser",
+    brotliSize: false,
+    sourcemap: false,
     terserOptions: {
       compress: {
         drop_console: true,
