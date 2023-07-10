@@ -15,6 +15,7 @@ export const Page = Node.create<PageOptions>({
   content: `(${CASSIE_BLOCK}|${CASSIE_BLOCK_EXTEND})+`,
   group: "block",
   isolating: true,
+  selectable: false,
   addOptions() {
     return {
       footerHeight: 100,

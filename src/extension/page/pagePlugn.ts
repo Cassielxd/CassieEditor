@@ -4,11 +4,10 @@ import { EditorState, Plugin, PluginKey, Selection, Transaction } from "@tiptap/
 import { EditorView } from "@tiptap/pm/view";
 import { getNodeType } from "@tiptap/core";
 import { EXTEND, PAGE } from "@/extension/nodeNames";
-import { Node } from "@tiptap/pm/model";
+import { Node, Slice } from "@tiptap/pm/model";
 import { splitPage } from "@/extension/page/splitPage";
 import { getNodeHeight, PageOptions, SplitInfo } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
-import { findChildren } from "@tiptap/vue-3";
 import { Editor } from "@tiptap/core";
 
 type PluginState = {
@@ -91,16 +90,6 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       /*如果是删除并且在最后一页 则不做任何处理*/
       if (!inserting && deleting && selection.$head.node(1) === doc.lastChild) {
         return tr.scrollIntoView();
-      }
-      /*如果当前需要分页的是最后一页 并且是在最后一行*/
-      if (findLastNode(doc, selection.$head.parent) && !deleting) {
-        const $pos = doc.resolve(selection.head);
-        const type = getNodeType(PAGE, schema);
-        if (tr.selection.$head.parentOffset === 0) {
-          editor.commands.joinBackward();
-          tr = splitPage({ tr: tr, pos: tr.selection.head, depth: $pos.depth, typesAfter: [{ type }], schema: schema });
-          return tr.scrollIntoView();
-        }
       }
       const curNunmber = tr.doc.content.findIndex(selection.head).index + 1;
       //如果只有一页的情况 或者 当前在最后一页的情况

@@ -1,9 +1,10 @@
 import { Extension, findParentNode } from "@tiptap/core";
-
+import { getJsonFromDoc, getExtentions, computedWidth } from "@/extension/page/core";
 import { Selection, TextSelection } from "@tiptap/pm/state";
 import { EXTEND, PAGE } from "@/extension/nodeNames";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
+import { generateHTML } from "@tiptap/html";
 export const CoolKeyMap = Extension.create({
   name: "CoolKeyMap",
   addKeyboardShortcuts() {
@@ -64,8 +65,16 @@ export const CoolKeyMap = Extension.create({
                   //EXTEND 是扩展类型 是可以删除并合并的
                   const selection1 = TextSelection.create(doc, pos1, pos1);
                   if (curBlock) {
-                    const parentOffset = selection1.$anchor.parentOffset;
-                    tr.step(new ReplaceStep(parentOffset > 0 ? pos1 - 1 : pos1, pos, Slice.empty));
+                    /*const parent = selection1.$anchor.parent;
+                    const paragraphDOM = document.getElementById(parent.attrs.id);
+                    const html = generateHTML(getJsonFromDoc(parent), getExtentions());
+                    const wordl = computedWidth(html);
+                    if (paragraphDOM && wordl >= paragraphDOM.offsetWidth) {
+                      tr.setSelection(selection1);
+                    } else {
+                      tr.step(new ReplaceStep(pos1, pos, Slice.empty));
+                    }*/
+                    tr.step(new ReplaceStep(pos1, pos, Slice.empty));
                     return true;
                   }
                   tr.setSelection(selection1);

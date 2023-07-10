@@ -157,14 +157,14 @@ function getBreakPos(cnode: Node) {
  * 工具类
  * @param node
  */
-function getJsonFromDoc(node: Node) {
+export function getJsonFromDoc(node: Node) {
   return {
     type: "doc",
     content: [node.toJSON()]
   };
 }
 
-function getExtentions() {
+export function getExtentions() {
   return [
     CassieKit.configure({
       textAlign: { types: ["heading", "paragraph"] },
@@ -191,11 +191,12 @@ function getDefault() {
   cached.set("defaultHeight", defaultHeight);
   return defaultHeight;
 }
-function computedWidth(html: string) {
+export function computedWidth(html: string) {
   if (cached.has(html)) {
     return cached.get(html);
   }
   if (!gspan) return 0;
+  if (html == " ") html = "&nbsp;";
   gspan.innerHTML = html;
   const width = gspan.getBoundingClientRect().width;
   cached.set(html, width);

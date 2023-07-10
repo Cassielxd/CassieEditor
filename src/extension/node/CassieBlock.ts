@@ -10,6 +10,7 @@ export default Node.create({
   group: "block",
   isolating: true,
   content: "block*",
+  selectable: false,
   addAttributes() {
     return {
       id: {
