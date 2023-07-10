@@ -1,5 +1,5 @@
 import { mergeAttributes, Node } from "@tiptap/core";
-import { PAGE } from "../nodeNames";
+import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, PAGE } from "../nodeNames";
 import { PageOptions } from "@/extension/page/core";
 import PageComponet from "@/extension/page/PageComponet.vue";
 import PageDesignComponet from "@/extension/page/PageDesignComponet.vue";
@@ -12,7 +12,7 @@ export const Page = Node.create<PageOptions>({
   priority: 2,
   /* 标签名称 */
   name: `${PAGE}`,
-  content: "block+",
+  content: `(${CASSIE_BLOCK}|${CASSIE_BLOCK_EXTEND})+`,
   group: "block",
   isolating: true,
   addOptions() {
