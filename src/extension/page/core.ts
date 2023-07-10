@@ -43,7 +43,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   const paragraphDefaultHeight = getDefault();
   let curBolck: Node;
   let curPos: ResolvedPos;
-  let contentH = 0;
+  const contentH = 0;
   doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
     if (node.type === schema.nodes[PAGE] && node !== lastChild) {
       return false;
@@ -85,10 +85,8 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
     }
     //如果是以 CASSIE_BLOCK块为节点的话则 拆分到最细 以pp标签为单位进行拆分
     if (node.type === schema.nodes[CASSIE_BLOCK]) {
-      const pHeight = getBlockHeight(node);
-      const contentHeight = getContentHeight(node);
-      contentH = pHeight - contentHeight;
-      accumolatedHeight += contentH;
+      const contentHeight = getContentSpacing(node);
+      accumolatedHeight += contentHeight;
       curBolck = node;
       curPos = fulldoc.resolve(pos);
       return true;
@@ -215,15 +213,27 @@ function getBlockHeight(node: Node): number {
   }
   return 0;
 }
-function getContentHeight(node: Node): number {
+function getContentSpacing(node: Node): number {
   const nodeDOM = document.getElementById(node.attrs.id);
   if (nodeDOM) {
     const content = nodeDOM.querySelector(".content");
-    if (content) {
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const style = window.getComputedStyle(content, null);
+    let spacing = 0;
+    if (content && style) {
+      const paddingTop = parseFloat(style.getPropertyValue("padding-top")); //获取左侧内边距
+      const paddingBottom = parseFloat(style.getPropertyValue("padding-bottom")); //获取右侧内边距
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      return content.offsetHeight;
+      spacing = paddingTop + paddingBottom;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      spacing += nodeDOM.offsetHeight - content.offsetHeight;
     }
+
+    return spacing;
   }
 
   return 0;

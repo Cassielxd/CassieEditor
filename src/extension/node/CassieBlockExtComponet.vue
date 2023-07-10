@@ -17,9 +17,7 @@ export default {
 </script>
 <style>
 .content {
-  margin-block-start: 4px;
-  margin-block-end: 4px;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 </style>

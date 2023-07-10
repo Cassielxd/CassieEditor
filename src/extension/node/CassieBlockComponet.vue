@@ -1,6 +1,6 @@
 <template>
   <node-view-wrapper class="node" :id="this.node.attrs.id" :title="this.node.attrs.title" :group="this.node.attrs.group">
-    <span class="font-black" contenteditable="false">{{ this.node.attrs.title }}</span>
+    <span class="font-black title" contenteditable="false">{{ this.node.attrs.title }}</span>
     <node-view-content class="content" />
   </node-view-wrapper>
 </template>
@@ -25,9 +25,7 @@ export default {
 }
 
 .node > .content {
-  margin-block-start: 4px;
-  margin-block-end: 4px;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 </style>

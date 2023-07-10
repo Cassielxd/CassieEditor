@@ -65,16 +65,17 @@ export const CoolKeyMap = Extension.create({
                   //EXTEND 是扩展类型 是可以删除并合并的
                   const selection1 = TextSelection.create(doc, pos1, pos1);
                   if (curBlock) {
-                    /*const parent = selection1.$anchor.parent;
+                    const parent = selection1.$anchor.parent;
                     const paragraphDOM = document.getElementById(parent.attrs.id);
                     const html = generateHTML(getJsonFromDoc(parent), getExtentions());
                     const wordl = computedWidth(html);
-                    if (paragraphDOM && wordl >= paragraphDOM.offsetWidth) {
+                    computedWidth(" ");
+                    if (paragraphDOM && wordl >= paragraphDOM.getBoundingClientRect().width) {
                       tr.setSelection(selection1);
                     } else {
                       tr.step(new ReplaceStep(pos1, pos, Slice.empty));
-                    }*/
-                    tr.step(new ReplaceStep(pos1, pos, Slice.empty));
+                    }
+                    //tr.step(new ReplaceStep(pos1, pos, Slice.empty));
                     return true;
                   }
                   tr.setSelection(selection1);
