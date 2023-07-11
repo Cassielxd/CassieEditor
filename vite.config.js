@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 const path = require("path");
+import wasm from "vite-plugin-wasm";
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -11,7 +12,7 @@ export default defineConfig({
       }
     ]
   },
-  plugins: [vue()],
+  plugins: [vue(), wasm()],
   build: {
     minify: "terser",
     brotliSize: false,

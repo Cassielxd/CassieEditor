@@ -4,7 +4,7 @@
       <a class="btn btn-ghost normal-case text-xl">Cassie电子病历</a>
     </div>
     <div class="flex-none">
-      <ul class="menu menu-horizontal px-1">
+      <ul class="menu menu-horizontal px-1" @click="handleSelect">
         <li>
           <router-link to="/">基础编辑器</router-link>
         </li>
@@ -53,8 +53,6 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { useRoute } from "vue-router";
-
 @Options({
   data() {
     return {

@@ -79,6 +79,7 @@
     "v-calendar": "^3.0.0-alpha.8",
     "v-contextmenu": "^3.0.0",
     "vite-plugin-dts": "^1.2.1",
+    "vite-plugin-wasm": "^3.2.2",
     "vite-svg-loader": "^3.1.2",
     "vue": "^3.2.5",
     "vue-class-component": "^8.0.0-0",
