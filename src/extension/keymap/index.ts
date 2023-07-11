@@ -1,7 +1,7 @@
 import { Extension, findParentNode } from "@tiptap/core";
 import { getJsonFromDoc, getExtentions, computedWidth } from "@/extension/page/core";
 import { Selection, TextSelection } from "@tiptap/pm/state";
-import { EXTEND, PAGE } from "@/extension/nodeNames";
+import { EXTEND, PAGE, CASSIE_BLOCK } from "@/extension/nodeNames";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
@@ -96,10 +96,32 @@ export const CoolKeyMap = Extension.create({
 
     const handleDelete = () =>
       this.editor.commands.first(({ commands }) => [
-        () => commands.deleteSelection(),
-        //() => commands.deleteCurrentNode(),
-        () => commands.joinForward(),
-        () => commands.selectNodeForward(),
+        () => {
+          const a = commands.deleteSelection();
+          console.log(a);
+          return a;
+        },
+        () =>
+          commands.command(({ tr }) => {
+            const { selection, doc } = tr;
+            const { $anchor } = selection;
+            const currentNode = $anchor.node();
+            const blockNode = findParentNode((node) => node.type.name === CASSIE_BLOCK)(selection);
+            if (blockNode) {
+              const isBlockStart = blockNode.start + Selection.atStart(blockNode.node).from === $anchor.pos;
+              if (isBlockStart && blockNode.node.childCount == 1) {
+                if (currentNode.content.size == 0) {
+                  return true;
+                }
+              }
+            }
+            return commands.joinForward();
+          }),
+        () => {
+          const a = commands.selectNodeForward();
+          console.log(a);
+          return a;
+        },
         () =>
           commands.command(({ tr }) => {
             //以上系统所有默认操作 都没有成功的时候会进入这个分支
