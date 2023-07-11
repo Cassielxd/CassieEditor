@@ -90,7 +90,7 @@ export const CoolKeyMap = Extension.create({
     const handleDelete = () =>
       this.editor.commands.first(({ commands }) => [
         () => commands.deleteSelection(),
-        () => commands.deleteCurrentNode(),
+        //() => commands.deleteCurrentNode(),
         () => commands.joinForward(),
         () => commands.selectNodeForward(),
         () =>
@@ -101,6 +101,10 @@ export const CoolKeyMap = Extension.create({
             const { pos } = $anchor;
             //如果当前只有一页的情况不做处理
             if (doc.childCount == 1) return false;
+            //如果是最后一页并且删除的点已经是 整个文档的 最后点位 证明最后一页啥都没了直接删除
+            if (Selection.atEnd(doc).from === pos) {
+              return commands.deleteNode(PAGE);
+            }
             //找到当钱的page
             const pageNode = findParentNode((node) => node.type.name === PAGE)(selection);
             if (pageNode) {
