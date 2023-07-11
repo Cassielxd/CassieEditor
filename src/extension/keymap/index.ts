@@ -1,4 +1,4 @@
-import { Extension, findParentNode } from "@tiptap/core";
+import { Extension, findChildrenInRange, findParentNode } from "@tiptap/core";
 import { getJsonFromDoc, getExtentions, computedWidth } from "@/extension/page/core";
 import { Selection, TextSelection } from "@tiptap/pm/state";
 import { EXTEND, PAGE, CASSIE_BLOCK } from "@/extension/nodeNames";
@@ -6,6 +6,7 @@ import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import * as commands from "@/extension/commands";
+import { CommandProps } from "@tiptap/core/dist/packages/core/src/types";
 export const CoolKeyMap = Extension.create({
   name: "CoolKeyMap",
   /*添加自定义命令*/
@@ -41,7 +42,7 @@ export const CoolKeyMap = Extension.create({
             }
             return commands.clearNodes();
           }),
-        () => commands.deleteSelection(),
+        () => deleteSelection(commands),
         () => commands.joinBackward(),
 
         () => commands.selectNodeBackward(),
@@ -96,11 +97,7 @@ export const CoolKeyMap = Extension.create({
 
     const handleDelete = () =>
       this.editor.commands.first(({ commands }) => [
-        () => {
-          const a = commands.deleteSelection();
-          console.log(a);
-          return a;
-        },
+        () => deleteSelection(commands),
         () =>
           commands.command(({ tr }) => {
             const { selection, doc } = tr;
@@ -165,3 +162,24 @@ export const CoolKeyMap = Extension.create({
     };
   }
 });
+
+//处理Delete 和Backspace 选中时的删除逻辑
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const deleteSelection = (commands) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return commands.command(({ tr }) => {
+    const { selection, doc } = tr;
+    //查找选中范围内的所有块
+    const nodesInChangedRanges = findChildrenInRange(doc, { from: selection.from, to: selection.to }, (node) => node.type.name == CASSIE_BLOCK);
+    for (let i = 0; i < nodesInChangedRanges.length; i++) {
+      const node = nodesInChangedRanges[i];
+      const endPos = node.pos + node.node.nodeSize;
+      if (selection.from < node.pos || selection.to > endPos) {
+        return true;
+      }
+    }
+    return commands.deleteSelection();
+  });
+};
