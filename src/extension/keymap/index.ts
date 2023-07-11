@@ -5,8 +5,15 @@ import { EXTEND, PAGE } from "@/extension/nodeNames";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
+import * as commands from "@/extension/commands";
 export const CoolKeyMap = Extension.create({
   name: "CoolKeyMap",
+  /*添加自定义命令*/
+  addCommands() {
+    return {
+      ...commands
+    };
+  },
   addKeyboardShortcuts() {
     /*修改系统默认的 回车拆分逻辑*/
     const handleEnter = () =>

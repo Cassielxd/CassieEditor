@@ -72,15 +72,14 @@ export const splitCBlock: RawCommands["splitCBlock"] =
 
       const deflt = $from.depth === 0 ? undefined : defaultBlockAt($from.node(-1).contentMatchAt($from.indexAfter(-1)));
 
-      let types =
-        atEnd && deflt
-          ? [
-              {
-                type: deflt,
-                attrs: newAttributes
-              }
-            ]
-          : undefined;
+      let types = deflt
+        ? [
+            {
+              type: deflt,
+              attrs: newAttributes
+            }
+          ]
+        : undefined;
 
       let can = canSplit(tr.doc, tr.mapping.map($from.pos), 1, types);
 

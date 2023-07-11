@@ -1,20 +1,14 @@
-import { Extension, findParentNode } from "@tiptap/core";
+import { Extension } from "@tiptap/core";
 
 import { Page } from "@/extension/page/page";
 import CassieBlock from "@/extension/node/CassieBlock";
 import { PageOptions } from "@/extension/page/core";
 import { CassieBlockExt } from "@/extension/node/CassieBlockExt";
-import * as commands from "@/extension/commands/index";
 import { pagePlugin } from "@/extension/page/pagePlugn";
 import Image from "@tiptap/extension-image";
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
-  /*添加自定义命令*/
-  addCommands() {
-    return {
-      ...commands
-    };
-  },
+
   /*添加分页插件*/
   addProseMirrorPlugins() {
     const plugins: any[] = [];
