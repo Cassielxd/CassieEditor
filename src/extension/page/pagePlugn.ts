@@ -4,7 +4,7 @@ import { EditorState, Plugin, PluginKey, Selection, Transaction } from "@tiptap/
 import { EditorView } from "@tiptap/pm/view";
 import { getNodeType } from "@tiptap/core";
 import { EXTEND, PAGE } from "@/extension/nodeNames";
-import { Node, Slice } from "@tiptap/pm/model";
+import { Node } from "@tiptap/pm/model";
 import { splitPage } from "@/extension/page/splitPage";
 import { getNodeHeight, PageOptions, SplitInfo } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";

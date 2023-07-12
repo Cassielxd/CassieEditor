@@ -5,7 +5,7 @@ import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, PAGE, PARAGRAPH } from "@/extension/
 import { paginationPluginKey } from "@/extension/page/pagePlugn";
 import { CassieKit } from "@/extension";
 import { ResolvedPos } from "prosemirror-model";
-import * as wasm from "@/../pkg";
+import { getDefault, getContentSpacing, computedWidth } from "@/../pkg";
 export type PageOptions = {
   footerHeight: number;
   headerHeight: number;
@@ -40,7 +40,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   const { bodyOptions } = paginationPluginKey.getState(state);
   const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2;
   const fulldoc = state.doc;
-  const paragraphDefaultHeight: number = wasm.getDefault();
+  const paragraphDefaultHeight: number = getDefault();
   let curBolck: Node;
   let curPos: ResolvedPos;
   const contentH = 0;
@@ -84,7 +84,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
     }
     //如果是以 CASSIE_BLOCK块为节点的话则 拆分到最细 以pp标签为单位进行拆分
     if (node.type === schema.nodes[CASSIE_BLOCK]) {
-      const contentHeight = getContentSpacing(node);
+      const contentHeight = getContentSpacing(node.attrs.id);
       accumolatedHeight += contentHeight;
       curBolck = node;
       curPos = fulldoc.resolve(pos);
@@ -116,7 +116,7 @@ function getBreakPos(cnode: Node) {
   let strLength = 0;
   let index = 0;
   const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
-  const wordl = wasm.computedWidth(html);
+  const wordl = computedWidth(html);
   //如果高度超过默认了 但是宽度没有超过 证明 只有一行 只是里面有 行内元素 比如 图片
   if (width >= wordl) {
     return null;
@@ -127,7 +127,7 @@ function getBreakPos(cnode: Node) {
       const nodeText = node.text;
       if (nodeText) {
         for (let i = 0; i < nodeText.length; i++) {
-          const wl = wasm.computedWidth(nodeText.charAt(i));
+          const wl = computedWidth(nodeText.charAt(i));
           if (strLength + wl > width) {
             strLength = wl;
             index = pos + i + 1;
@@ -138,7 +138,7 @@ function getBreakPos(cnode: Node) {
       }
     } else {
       const html = generateHTML(getJsonFromDoc(node), getExtentions());
-      const wordl = wasm.computedWidth(html);
+      const wordl = computedWidth(html);
       if (strLength + wordl > width) {
         strLength = wordl;
         index = pos + 1;
@@ -177,7 +177,6 @@ export function getExtentions() {
   ];
 }
 
-
 /**
  * @description 获取节点高度 根据id获取dom高度
  * @author Cassie
@@ -188,31 +187,6 @@ function getBlockHeight(node: Node): number {
   if (paragraphDOM) {
     return paragraphDOM.offsetHeight;
   }
-  return 0;
-}
-function getContentSpacing(node: Node): number {
-  const nodeDOM = document.getElementById(node.attrs.id);
-  if (nodeDOM) {
-    const content = nodeDOM.querySelector(".content");
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const style = window.getComputedStyle(content, null);
-    let spacing = 0;
-    if (content && style) {
-      const paddingTop = parseFloat(style.getPropertyValue("padding-top")); //获取左侧内边距
-      const paddingBottom = parseFloat(style.getPropertyValue("padding-bottom")); //获取右侧内边距
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      spacing = paddingTop + paddingBottom;
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      spacing += nodeDOM.offsetHeight - content.offsetHeight;
-    }
-
-    return spacing;
-  }
-
   return 0;
 }
 

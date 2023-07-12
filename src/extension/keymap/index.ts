@@ -7,7 +7,6 @@ import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import * as commands from "@/extension/commands";
-import { CommandProps } from "@tiptap/core/dist/packages/core/src/types";
 export const CoolKeyMap = Extension.create({
   name: "CoolKeyMap",
   /*添加自定义命令*/
