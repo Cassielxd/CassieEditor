@@ -5,7 +5,8 @@ import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, PAGE, PARAGRAPH } from "@/extension/
 import { paginationPluginKey } from "@/extension/page/pagePlugn";
 import { CassieKit } from "@/extension";
 import { ResolvedPos } from "prosemirror-model";
-import { getDefault, getContentSpacing, computedWidth } from "@/../pkg";
+// @ts-ignore
+import { getDefault, getContentSpacing, computedWidth } from "emr_wasm";
 export type PageOptions = {
   footerHeight: number;
   headerHeight: number;

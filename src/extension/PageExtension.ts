@@ -1,5 +1,6 @@
 import { Extension } from "@tiptap/core";
-import { init_plugn } from "@/../pkg";
+// @ts-ignore
+import { init_plugn } from "emr_wasm";
 import { Page } from "@/extension/page/page";
 import CassieBlock from "@/extension/node/CassieBlock";
 import { PageOptions } from "@/extension/page/core";
