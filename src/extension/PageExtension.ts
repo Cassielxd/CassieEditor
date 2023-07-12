@@ -1,4 +1,5 @@
 import { Extension } from "@tiptap/core";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { init_plugn } from "emr_wasm";
 import { Page } from "@/extension/page/page";

@@ -2,13 +2,31 @@ mod utils;
 
 use std::{sync::{Mutex}, collections::HashMap};
 
-use utils::set_panic_hook;
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::{prelude::*, JsObject};
 use web_sys::HtmlElement;
 use lazy_static::lazy_static;
 lazy_static! {
     pub static ref CACHE_HASHMAP: Mutex<HashMap<String, f64>> = Mutex::new(HashMap::new());
 }
+
+
+#[wasm_bindgen(module = "node_nodules/@tiptap/core/dist/index.js")]
+extern "C" {
+   type Extension; 
+
+   #[wasm_bindgen(constructor)]
+    fn new(config:&JsValue) -> Extension;
+
+    fn create(config:&JsValue) -> Extension;
+
+    #[wasm_bindgen(method)]
+    fn configure(this: &Extension,options:&JsValue) -> Extension;
+
+    #[wasm_bindgen(method)]
+    fn extend(this: &Extension,extendedConfig:&JsValue) -> Extension;
+    
+}
+
 #[wasm_bindgen]
 extern "C" {
     // Use `js_namespace` here to bind `console.log(..)` instead of just
@@ -40,6 +58,7 @@ pub fn getDefault() -> Result<f64, JsValue>{
         console_log!("Hit cache");
         return Ok(*value);
     }
+
     let window = web_sys::window().expect("window 对象不存在");
     let document = window.document().expect(" a document 对象不存在");
     let computedp =document.get_element_by_id("computedspan").expect("computedspan 没找到");
@@ -51,10 +70,9 @@ pub fn getDefault() -> Result<f64, JsValue>{
 
 #[wasm_bindgen]
 pub fn getContentSpacing(id:&str) -> Result<i32, JsValue>{
-    set_panic_hook();
-    let window = web_sys::window().expect("window 对象不存在");
+    let window = web_sys::window().expect("window not found");
     let mut spacing = 0;
-    let document = window.document().expect(" a document 对象不存在");
+    let document = window.document().expect("  document not found");
     let dom =document.get_element_by_id(id).expect("id对应dom 没找到");
     {
         let content = dom.query_selector(".content").expect("找不到content").expect("找不到content");
