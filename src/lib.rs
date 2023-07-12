@@ -86,11 +86,10 @@ pub fn computedWidth(html:&str) -> Result<f64, JsValue>{
     hashmap.insert(format!("{}", html), rect.width());
     return Ok(rect.width());
 }
-
-
-#[wasm_bindgen(start)]
-fn run() -> Result<(), JsValue> {
-   
+//"opacity: 0;position: absolute;z-index: -88"
+#[wasm_bindgen]
+pub fn init_plugn(css:&str,style:&str) -> Result<(), JsValue>{
+    
     let window = web_sys::window().expect("window 对象不存在");
     let document = window.document().expect(" a document 对象不存在");
     let body = document.body().expect("document 应该包含一个body");
@@ -101,11 +100,16 @@ fn run() -> Result<(), JsValue> {
     // Manufacture the element we're gonna append
     let val = document.create_element("p")?;
     val.set_id("computedspan");
-    val.set_class_name("text-b");
+    val.set_class_name(css);
     val.set_inner_html("t");
-    let _=val.set_attribute("style", "opacity: 0;position: absolute;z-index: -88");
+    let _=val.set_attribute("style", style);
     body.append_child(&val)?;
         }
     }
+    Ok(())
+}
+#[wasm_bindgen(start)]
+fn run() -> Result<(), JsValue> {
+    console_log!("启动插件");
     Ok(())
 }
