@@ -1,5 +1,5 @@
 import { Extension } from "@tiptap/core";
-
+import * as _wasm from "@/../pkg";
 import { Page } from "@/extension/page/page";
 import CassieBlock from "@/extension/node/CassieBlock";
 import { PageOptions } from "@/extension/page/core";

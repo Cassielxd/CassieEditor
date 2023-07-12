@@ -1,5 +1,6 @@
 import { Extension, findChildrenInRange, findParentNode } from "@tiptap/core";
-import { getJsonFromDoc, getExtentions, computedWidth } from "@/extension/page/core";
+import { getJsonFromDoc, getExtentions } from "@/extension/page/core";
+import * as wasm from "@/../pkg";
 import { Selection, TextSelection } from "@tiptap/pm/state";
 import { EXTEND, PAGE, CASSIE_BLOCK } from "@/extension/nodeNames";
 import { ReplaceStep } from "@tiptap/pm/transform";
@@ -76,8 +77,8 @@ export const CoolKeyMap = Extension.create({
                     const parent = selection1.$anchor.parent;
                     const paragraphDOM = document.getElementById(parent.attrs.id);
                     const html = generateHTML(getJsonFromDoc(parent), getExtentions());
-                    const wordl = computedWidth(html);
-                    computedWidth(" ");
+                    const wordl = wasm.computedWidth(html);
+                    wasm.computedWidth(" ");
                     if (paragraphDOM && wordl >= paragraphDOM.getBoundingClientRect().width) {
                       tr.setSelection(selection1);
                     } else {

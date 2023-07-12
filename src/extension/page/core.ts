@@ -5,7 +5,7 @@ import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, PAGE, PARAGRAPH } from "@/extension/
 import { paginationPluginKey } from "@/extension/page/pagePlugn";
 import { CassieKit } from "@/extension";
 import { ResolvedPos } from "prosemirror-model";
-
+import * as wasm from "@/../pkg";
 export type PageOptions = {
   footerHeight: number;
   headerHeight: number;
@@ -40,7 +40,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   const { bodyOptions } = paginationPluginKey.getState(state);
   const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2;
   const fulldoc = state.doc;
-  const paragraphDefaultHeight = getDefault();
+  const paragraphDefaultHeight: number = wasm.getDefault();
   let curBolck: Node;
   let curPos: ResolvedPos;
   const contentH = 0;
@@ -48,7 +48,6 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
     if (node.type === schema.nodes[PAGE] && node !== lastChild) {
       return false;
     }
-
     if (node.type === schema.nodes[PARAGRAPH]) {
       //如果p标签没有子标签直接返回默认高度 否则计算高度
       const pHeight = node.childCount > 0 ? getBlockHeight(node) : paragraphDefaultHeight;
@@ -117,7 +116,7 @@ function getBreakPos(cnode: Node) {
   let strLength = 0;
   let index = 0;
   const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
-  const wordl = computedWidth(html);
+  const wordl = wasm.computedWidth(html);
   //如果高度超过默认了 但是宽度没有超过 证明 只有一行 只是里面有 行内元素 比如 图片
   if (width >= wordl) {
     return null;
@@ -128,7 +127,7 @@ function getBreakPos(cnode: Node) {
       const nodeText = node.text;
       if (nodeText) {
         for (let i = 0; i < nodeText.length; i++) {
-          const wl = computedWidth(nodeText.charAt(i));
+          const wl = wasm.computedWidth(nodeText.charAt(i));
           if (strLength + wl > width) {
             strLength = wl;
             index = pos + i + 1;
@@ -139,7 +138,7 @@ function getBreakPos(cnode: Node) {
       }
     } else {
       const html = generateHTML(getJsonFromDoc(node), getExtentions());
-      const wordl = computedWidth(html);
+      const wordl = wasm.computedWidth(html);
       if (strLength + wordl > width) {
         strLength = wordl;
         index = pos + 1;
@@ -177,29 +176,7 @@ export function getExtentions() {
     })
   ];
 }
-//计算缓存 对于重复key可缓存 不参与计算
-const cached = new Map();
-const gspan = document.getElementById("computedspan");
-function getDefault() {
-  if (cached.has("defaultHeight")) {
-    return cached.get("defaultHeight");
-  }
-  if (!gspan) return 0;
-  const defaultHeight = gspan.offsetHeight;
-  cached.set("defaultHeight", defaultHeight);
-  return defaultHeight;
-}
-export function computedWidth(html: string) {
-  if (cached.has(html)) {
-    return cached.get(html);
-  }
-  if (!gspan) return 0;
-  if (html == " ") html = "&nbsp;";
-  gspan.innerHTML = html;
-  const width = gspan.getBoundingClientRect().width;
-  cached.set(html, width);
-  return width;
-}
+
 
 /**
  * @description 获取节点高度 根据id获取dom高度

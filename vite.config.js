@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 const path = require("path");
 import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -12,7 +13,7 @@ export default defineConfig({
       }
     ]
   },
-  plugins: [vue(), wasm()],
+  plugins: [vue(), wasm(), topLevelAwait()],
   build: {
     minify: "terser",
     brotliSize: false,

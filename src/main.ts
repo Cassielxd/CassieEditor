@@ -26,3 +26,5 @@ app.component(Customlogo.name, Customlogo);
 app.component(CustomSelect.name, CustomSelect);
 app.component(PageCount.name, PageCount);
 app.use(store).use(router).mount("#app");
+
+
