@@ -10,23 +10,6 @@ lazy_static! {
 }
 
 
-#[wasm_bindgen(module = "node_nodules/@tiptap/core/dist/index.js")]
-extern "C" {
-   type Extension; 
-
-   #[wasm_bindgen(constructor)]
-    fn new(config:&JsValue) -> Extension;
-
-    fn create(config:&JsValue) -> Extension;
-
-    #[wasm_bindgen(method)]
-    fn configure(this: &Extension,options:&JsValue) -> Extension;
-
-    #[wasm_bindgen(method)]
-    fn extend(this: &Extension,extendedConfig:&JsValue) -> Extension;
-    
-}
-
 #[wasm_bindgen]
 extern "C" {
     // Use `js_namespace` here to bind `console.log(..)` instead of just
@@ -107,7 +90,6 @@ pub fn computedWidth(html:&str) -> Result<f64, JsValue>{
 //"opacity: 0;position: absolute;z-index: -88"
 #[wasm_bindgen]
 pub fn init_plugn(css:&str,style:&str) -> Result<(), JsValue>{
-    
     let window = web_sys::window().expect("window 对象不存在");
     let document = window.document().expect(" a document 对象不存在");
     let body = document.body().expect("document 应该包含一个body");
