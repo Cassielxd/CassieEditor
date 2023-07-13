@@ -3,17 +3,19 @@
 import { EditorState, Plugin, PluginKey, Selection, Transaction } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 import { getNodeType } from "@tiptap/core";
-import { EXTEND, PAGE } from "@/extension/nodeNames";
-import { Node } from "@tiptap/pm/model";
+import { EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
+import { Node,Slice } from "@tiptap/pm/model";
 import { splitPage } from "@/extension/page/splitPage";
 import { getNodeHeight, PageOptions, SplitInfo } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
 import { Editor } from "@tiptap/core";
+import { ReplaceStep } from "@tiptap/pm/transform";
 
 type PluginState = {
   bodyOptions: PageOptions | null;
   deleting: boolean;
   inserting: boolean;
+  checkNode:boolean;
 };
 
 export const paginationPluginKey = new PluginKey("pagination");
@@ -49,6 +51,13 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
               const state = view.state.apply(tr);
               view.updateState(state);
             }
+
+            if(window.checkNode){
+              window.checkNode = false;
+              tr.setMeta("checkNode", true);
+              const state = view.state.apply(tr);
+              view.updateState(state);
+            }
           }
         }
       };
@@ -57,7 +66,8 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       init: (): PluginState => ({
         bodyOptions: null,
         deleting: false,
-        inserting: false
+        inserting: false,
+        checkNode:false,
       }),
       /*判断标志位是否存在  如果存在 则修改 state 值
        * Meta数据是一个事务级别的 一个事务结束 meta消失
@@ -65,12 +75,14 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
        * */
       apply: (tr, prev): PluginState => {
         const next: PluginState = { ...prev };
+        const checkNode: boolean = tr.getMeta("checkNode");
         const deleting: boolean = tr.getMeta("deleting");
         const inserting: boolean = tr.getMeta("inserting");
         const bodyOptions: PageOptions = tr.getMeta("bodyOptions");
         next.inserting = inserting ? inserting : false;
         next.deleting = deleting ? deleting : false;
         next.bodyOptions = bodyOptions;
+        next.checkNode=   checkNode ? checkNode : false;
         return next;
       }
     },
@@ -85,8 +97,12 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     appendTransaction([newTr], _prevState, state) {
       // eslint-disable-next-line prefer-const
       let { selection, tr, doc, schema } = state;
-      const { inserting, deleting } = this.getState(state);
-      if (!deleting && !inserting) return;
+      const { inserting, deleting,checkNode } = this.getState(state);
+
+      if (!deleting && !inserting) {
+        tr = checkNodeAndFix(tr, state);
+        return tr.scrollIntoView();
+      }
       /*如果是删除并且在最后一页 则不做任何处理*/
       if (!inserting && deleting && selection.$head.node(1) === doc.lastChild) {
         return tr.scrollIntoView();
@@ -100,6 +116,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       //合并当前页和剩下的 页面重新计算
       tr = mergeDocument(tr, curNunmber);
       tr = splitDocument(tr, state);
+      window.checkNode = true;
       return tr.scrollIntoView();
     },
     props: {
@@ -124,7 +141,25 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
 function findLastNode(node: Node, curnode: Node): boolean {
   return !!node.lastChild && (node.lastChild == curnode || findLastNode(node.lastChild, curnode));
 }
-
+function checkNodeAndFix(tr: Transaction, state: EditorState) {
+  const { doc } = tr;
+  const { schema } = state;
+  let beforeBolck: Node = null;
+  let beforePos: number = 0;
+  doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
+    if (node.type === schema.nodes[PARAGRAPH] && node.attrs.extend == "true") {
+      if (beforeBolck == null) {
+        beforeBolck = node;
+        beforePos = pos;
+      }else{
+       let mappedPos  =tr.mapping.map(pos);
+        tr = tr.step(new ReplaceStep(mappedPos-1, mappedPos +1, Slice.empty))
+        return false;
+      }
+    }
+  });
+  return tr;
+}
 /**
  * @method mergeDocument
  * @param tr

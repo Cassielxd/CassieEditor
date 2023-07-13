@@ -43,6 +43,9 @@ export const splitCBlock: RawCommands["splitCBlock"] =
     if (newAttributes.id) {
       newAttributes.id = uuid();
     }
+    if(newAttributes.extend=="true"){
+      newAttributes.extend = "false";
+    }
     if (selection instanceof NodeSelection && selection.node.isBlock) {
       if (!$from.parentOffset || !canSplit(doc, $from.pos)) {
         return false;
