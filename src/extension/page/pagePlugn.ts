@@ -3,7 +3,7 @@
 import { EditorState, Plugin, PluginKey, Selection, Transaction } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 import { getNodeType } from "@tiptap/core";
-import { EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
+import { CASSIE_BLOCK_EXTEND, EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
 import { Node,Slice } from "@tiptap/pm/model";
 import { splitPage } from "@/extension/page/splitPage";
 import { getNodeHeight, PageOptions, SplitInfo } from "@/extension/page/core";
@@ -141,6 +141,12 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
 function findLastNode(node: Node, curnode: Node): boolean {
   return !!node.lastChild && (node.lastChild == curnode || findLastNode(node.lastChild, curnode));
 }
+
+/**
+ * @param desc 检查并修正分页造成的段落分行问题
+ * @param tr
+ * @param state
+ */
 function checkNodeAndFix(tr: Transaction, state: EditorState) {
   const { doc } = tr;
   const { schema } = state;
@@ -156,6 +162,12 @@ function checkNodeAndFix(tr: Transaction, state: EditorState) {
         tr = tr.step(new ReplaceStep(mappedPos-1, mappedPos +1, Slice.empty))
         return false;
       }
+    }
+    //如果进入了新的扩展块 直接 清除 上次的 记录
+    if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
+      beforeBolck=null;
+      beforePos=0;
+      return true;
     }
   });
   return tr;
