@@ -1,12 +1,19 @@
-mod utils;
 
-use std::{collections::HashMap, sync::{Mutex, Arc}};
+pub mod utils;
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex}, ops::Add,
+};
 
 use lazy_static::lazy_static;
 use wasm_bindgen::{prelude::*, JsObject};
 use web_sys::HtmlElement;
+
+
+
 lazy_static! {
-    pub static ref CACHE_HASHMAP: Arc<Mutex<HashMap<String, f64>>> = Arc::new(Mutex::new(HashMap::new()));
+    pub static ref CACHE_HASHMAP: Arc<Mutex<HashMap<String, f64>>> =
+        Arc::new(Mutex::new(HashMap::new()));
 }
 
 #[wasm_bindgen]
@@ -32,7 +39,7 @@ macro_rules! console_log {
     // `bare_bones`
     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 }
-
+#[allow(non_snake_case)]
 #[wasm_bindgen]
 pub fn getDefault() -> Result<f64, JsValue> {
     let mut hashmap = CACHE_HASHMAP.lock().unwrap();
@@ -50,7 +57,7 @@ pub fn getDefault() -> Result<f64, JsValue> {
     hashmap.insert(format!("defaultheight"), offsetHeight);
     return Ok(offsetHeight);
 }
-
+#[allow(non_snake_case)]
 #[wasm_bindgen]
 pub fn getContentSpacing(id: &str) -> Result<i32, JsValue> {
     let window = web_sys::window().expect("window not found");
@@ -87,7 +94,7 @@ pub fn getContentSpacing(id: &str) -> Result<i32, JsValue> {
     }
     return Ok(spacing);
 }
-
+#[allow(non_snake_case)]
 #[wasm_bindgen]
 pub fn computedWidth(html: &str) -> Result<f64, JsValue> {
     let mut hashmap = CACHE_HASHMAP.lock().unwrap();
