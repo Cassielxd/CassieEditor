@@ -92,7 +92,7 @@
     "vue3-draggable-resizable": "^1.6.5",
     "vuex": "^4.0.0",
     "yjs": "^13.5.43",
-    "emr_wasm": "./pkg"
+    "emr_wasm": "./cool_emr_wasm/pkg"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",

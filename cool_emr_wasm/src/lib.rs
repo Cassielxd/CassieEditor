@@ -41,7 +41,6 @@ pub fn getDefault() -> Result<f64, JsValue>{
         console_log!("Hit cache");
         return Ok(*value);
     }
-
     let window = web_sys::window().expect("window 对象不存在");
     let document = window.document().expect(" a document 对象不存在");
     let computedp =document.get_element_by_id("computedspan").expect("computedspan 没找到");
