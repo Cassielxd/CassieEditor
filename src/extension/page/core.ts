@@ -5,7 +5,8 @@ import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, PAGE, PARAGRAPH } from "@/extension/
 import { paginationPluginKey } from "@/extension/page/pagePlugn";
 import { CassieKit } from "@/extension";
 import { ResolvedPos } from "prosemirror-model";
-
+// @ts-ignore
+import { getDefault, getContentSpacing, computedWidth } from "emr_wasm";
 export type PageOptions = {
   footerHeight: number;
   headerHeight: number;
@@ -40,7 +41,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
   const { bodyOptions } = paginationPluginKey.getState(state);
   const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2;
   const fulldoc = state.doc;
-  const paragraphDefaultHeight = getDefault();
+  const paragraphDefaultHeight: number = getDefault();
   let curBolck: Node;
   let curPos: ResolvedPos;
   const contentH = 0;
@@ -48,7 +49,6 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
     if (node.type === schema.nodes[PAGE] && node !== lastChild) {
       return false;
     }
-
     if (node.type === schema.nodes[PARAGRAPH]) {
       //如果p标签没有子标签直接返回默认高度 否则计算高度
       const pHeight = node.childCount > 0 ? getBlockHeight(node) : paragraphDefaultHeight;
@@ -85,7 +85,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
     }
     //如果是以 CASSIE_BLOCK块为节点的话则 拆分到最细 以pp标签为单位进行拆分
     if (node.type === schema.nodes[CASSIE_BLOCK]) {
-      const contentHeight = getContentSpacing(node);
+      const contentHeight = getContentSpacing(node.attrs.id);
       accumolatedHeight += contentHeight;
       curBolck = node;
       curPos = fulldoc.resolve(pos);
@@ -177,29 +177,6 @@ export function getExtentions() {
     })
   ];
 }
-//计算缓存 对于重复key可缓存 不参与计算
-const cached = new Map();
-const gspan = document.getElementById("computedspan");
-function getDefault() {
-  if (cached.has("defaultHeight")) {
-    return cached.get("defaultHeight");
-  }
-  if (!gspan) return 0;
-  const defaultHeight = gspan.offsetHeight;
-  cached.set("defaultHeight", defaultHeight);
-  return defaultHeight;
-}
-export function computedWidth(html: string) {
-  if (cached.has(html)) {
-    return cached.get(html);
-  }
-  if (!gspan) return 0;
-  if (html == " ") html = "&nbsp;";
-  gspan.innerHTML = html;
-  const width = gspan.getBoundingClientRect().width;
-  cached.set(html, width);
-  return width;
-}
 
 /**
  * @description 获取节点高度 根据id获取dom高度
@@ -211,31 +188,6 @@ function getBlockHeight(node: Node): number {
   if (paragraphDOM) {
     return paragraphDOM.offsetHeight;
   }
-  return 0;
-}
-function getContentSpacing(node: Node): number {
-  const nodeDOM = document.getElementById(node.attrs.id);
-  if (nodeDOM) {
-    const content = nodeDOM.querySelector(".content");
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const style = window.getComputedStyle(content, null);
-    let spacing = 0;
-    if (content && style) {
-      const paddingTop = parseFloat(style.getPropertyValue("padding-top")); //获取左侧内边距
-      const paddingBottom = parseFloat(style.getPropertyValue("padding-bottom")); //获取右侧内边距
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      spacing = paddingTop + paddingBottom;
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      spacing += nodeDOM.offsetHeight - content.offsetHeight;
-    }
-
-    return spacing;
-  }
-
   return 0;
 }
 

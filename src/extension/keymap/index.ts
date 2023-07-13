@@ -1,12 +1,12 @@
 import { Extension, findChildrenInRange, findParentNode } from "@tiptap/core";
-import { getJsonFromDoc, getExtentions, computedWidth } from "@/extension/page/core";
+import { getJsonFromDoc, getExtentions } from "@/extension/page/core";
+import { computedWidth } from "emr_wasm";
 import { Selection, TextSelection } from "@tiptap/pm/state";
 import { EXTEND, PAGE, CASSIE_BLOCK } from "@/extension/nodeNames";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import * as commands from "@/extension/commands";
-import { CommandProps } from "@tiptap/core/dist/packages/core/src/types";
 export const CoolKeyMap = Extension.create({
   name: "CoolKeyMap",
   /*添加自定义命令*/

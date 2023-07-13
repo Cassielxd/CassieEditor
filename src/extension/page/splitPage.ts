@@ -40,7 +40,11 @@ export function splitPage({ tr, pos, depth = 1, typesAfter, schema }: SplitParam
     } else {
       //处理id重复的问题
       if (na && na.attrs.id) {
-        const attr = Object.assign({}, n.attrs, { id: uuid() });
+           let extend ={};
+              if(na.attrs.extend=="false"){
+                extend ={extend:"true"};
+              }
+        const attr = Object.assign({}, n.attrs, { ...extend,id: uuid() },);
         na = schema.nodes[n.type.name].createAndFill(attr, after);
       }
     }

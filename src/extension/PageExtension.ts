@@ -1,5 +1,7 @@
 import { Extension } from "@tiptap/core";
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { init_plugn } from "emr_wasm";
 import { Page } from "@/extension/page/page";
 import CassieBlock from "@/extension/node/CassieBlock";
 import { PageOptions } from "@/extension/page/core";
@@ -17,6 +19,9 @@ export const PageExtension = Extension.create<PageOptions>({
       plugins.push(pagePlugin(this.editor, this.options));
     }
     return plugins;
+  },
+  onBeforeCreate() {
+    init_plugn("text-b", "opacity: 0;position: absolute;z-index: -88");
   },
   addStorage() {
     let headerData = [];

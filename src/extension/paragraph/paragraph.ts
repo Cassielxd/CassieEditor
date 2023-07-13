@@ -27,6 +27,9 @@ export const EmrParagraph = Paragraph.extend({
           };
         }
       },
+      extend: {
+        default: "false",
+      },
       group: {
         default: null,
         parseHTML: (element) => element.getAttribute("data-group"),

@@ -1,4 +1,4 @@
-import { mergeAttributes, Node } from "@tiptap/core";
+import { Node } from "@tiptap/core";
 import { CASSIE_BLOCK } from "../nodeNames";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

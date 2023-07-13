@@ -91,7 +91,8 @@
     "vue-template-compiler": "^2.7.14",
     "vue3-draggable-resizable": "^1.6.5",
     "vuex": "^4.0.0",
-    "yjs": "^13.5.43"
+    "yjs": "^13.5.43",
+    "emr_wasm": "./cool_emr_wasm/pkg"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
@@ -130,6 +131,7 @@
     "terser": "^5.17.6",
     "ts-jest": "^27.0.4",
     "typescript": "~4.5.5",
-    "vite": "^3.2.5"
+    "vite": "^3.2.5",
+    "vite-plugin-top-level-await": "^1.3.1"
   }
 }
