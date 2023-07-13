@@ -1,12 +1,12 @@
 mod utils;
 
-use std::{collections::HashMap, sync::Mutex};
+use std::{collections::HashMap, sync::{Mutex, Arc}};
 
 use lazy_static::lazy_static;
 use wasm_bindgen::{prelude::*, JsObject};
 use web_sys::HtmlElement;
 lazy_static! {
-    pub static ref CACHE_HASHMAP: Mutex<HashMap<String, f64>> = Mutex::new(HashMap::new());
+    pub static ref CACHE_HASHMAP: Arc<Mutex<HashMap<String, f64>>> = Arc::new(Mutex::new(HashMap::new()));
 }
 
 #[wasm_bindgen]
