@@ -123,13 +123,13 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     },
     props: {
       handleTextInput(view, chFrom, chTo, text) {
+        //composing == true  证明正在输入中文
         if(view.composing){
+          //如果匹配到了中文 证明是已经中文输入完成然后插入  否则每一次操作都会参与计算
           if(chineseMatches(text)){
             view.dispatch(view.state.tr.insertText(text, chFrom, chTo));
-            return true;
-          }else {
-            return true;
           }
+          return true;
         }
         view.dispatch(view.state.tr.insertText(text, chFrom, chTo));
         return true;
