@@ -4,7 +4,7 @@ import { EditorState, Plugin, PluginKey, Selection, Transaction } from "@tiptap/
 import { EditorView } from "@tiptap/pm/view";
 import { getNodeType } from "@tiptap/core";
 import { CASSIE_BLOCK_EXTEND, EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
-import { Node,Slice } from "@tiptap/pm/model";
+import { Node, Slice } from "@tiptap/pm/model";
 import { splitPage } from "@/extension/page/splitPage";
 import { getNodeHeight, PageOptions, SplitInfo } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
@@ -15,7 +15,7 @@ type PluginState = {
   bodyOptions: PageOptions | null;
   deleting: boolean;
   inserting: boolean;
-  checkNode:boolean;
+  checkNode: boolean;
 };
 
 export const paginationPluginKey = new PluginKey("pagination");
@@ -52,7 +52,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
               view.updateState(state);
             }
 
-            if(window.checkNode){
+            if (window.checkNode) {
               window.checkNode = false;
               tr.setMeta("checkNode", true);
               const state = view.state.apply(tr);
@@ -67,7 +67,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
         bodyOptions: null,
         deleting: false,
         inserting: false,
-        checkNode:false,
+        checkNode: false
       }),
       /*判断标志位是否存在  如果存在 则修改 state 值
        * Meta数据是一个事务级别的 一个事务结束 meta消失
@@ -82,7 +82,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
         next.inserting = inserting ? inserting : false;
         next.deleting = deleting ? deleting : false;
         next.bodyOptions = bodyOptions;
-        next.checkNode=   checkNode ? checkNode : false;
+        next.checkNode = checkNode ? checkNode : false;
         return next;
       }
     },
@@ -97,13 +97,13 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     appendTransaction([newTr], _prevState, state) {
       // eslint-disable-next-line prefer-const
       let { selection, tr, doc, schema } = state;
-      const { inserting, deleting,checkNode } = this.getState(state);
+      const { inserting, deleting, checkNode } = this.getState(state);
       if (!deleting && !inserting) {
-        if(checkNode){
+        if (checkNode) {
           tr = checkNodeAndFix(tr, state);
           return tr.scrollIntoView();
         }
-        return ;
+        return;
       }
       /*如果是删除并且在最后一页 则不做任何处理*/
       if (!inserting && deleting && selection.$head.node(1) === doc.lastChild) {
@@ -122,6 +122,19 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       return tr.scrollIntoView();
     },
     props: {
+      handleTextInput(view, chFrom, chTo, text) {
+        if(view.composing){
+          if(chineseMatches(text)){
+            view.dispatch(view.state.tr.insertText(text, chFrom, chTo));
+            return true;
+          }else {
+            return true;
+          }
+        }
+        view.dispatch(view.state.tr.insertText(text, chFrom, chTo));
+        return true;
+
+      },
       handleKeyDown(view, event) {
         if (event.code == "Backspace") {
           window.stepStatus = true;
@@ -129,12 +142,31 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
           window.stepStatus = false;
         }
         return false;
+      },
+      handleDOMEvents: {
+        compositionstart: () => {
+          status = true;
+          return false;
+        }
       }
     }
   });
   return plugin;
 };
 
+/**
+ * desc:匹配中文
+ * @param text
+ */
+function chineseMatches(text:String){
+  const chineseRegex = /[\u4e00-\u9fa5]/g;
+  const chineseMatches = text.match(chineseRegex);
+  return chineseMatches!=null;
+}
+/*
+*
+*
+* */
 /**
  * @description:递归寻找 curnode是不是node 的最后一个节点
  * @param node 被查找的节点
@@ -159,16 +191,16 @@ function checkNodeAndFix(tr: Transaction, state: EditorState) {
       if (beforeBolck == null) {
         beforeBolck = node;
         beforePos = pos;
-      }else{
-       let mappedPos  =tr.mapping.map(pos);
-        tr = tr.step(new ReplaceStep(mappedPos-1, mappedPos +1, Slice.empty))
+      } else {
+        let mappedPos = tr.mapping.map(pos);
+        tr = tr.step(new ReplaceStep(mappedPos - 1, mappedPos + 1, Slice.empty));
         return false;
       }
     }
     //如果进入了新的扩展块 直接 清除 上次的 记录
     if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
-      beforeBolck=null;
-      beforePos=0;
+      beforeBolck = null;
+      beforePos = 0;
       return true;
     }
   });
