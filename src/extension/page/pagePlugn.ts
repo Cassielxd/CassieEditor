@@ -28,7 +28,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
         /*
          * 1:获取当前鼠标所在的page
          * 2：判断当前的page div高度是否超过了 固定高度
-         * 3：超过固定高度则设置标志位setMeta
+         * 3：超过固定高度则设置标志位setMeta   Meta 只在一个tr有效
          * */
         update: (view: EditorView, prevState: EditorState) => {
           const { selection, schema, tr } = view.state;
@@ -51,7 +51,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
               const state = view.state.apply(tr);
               view.updateState(state);
             }
-
+            /*检验 node节点完整性*/
             if (window.checkNode) {
               window.checkNode = false;
               tr.setMeta("checkNode", true);
@@ -142,12 +142,6 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
           window.stepStatus = false;
         }
         return false;
-      },
-      handleDOMEvents: {
-        compositionstart: () => {
-          status = true;
-          return false;
-        }
       }
     }
   });
@@ -163,10 +157,7 @@ function chineseMatches(text:String){
   const chineseMatches = text.match(chineseRegex);
   return chineseMatches!=null;
 }
-/*
-*
-*
-* */
+
 /**
  * @description:递归寻找 curnode是不是node 的最后一个节点
  * @param node 被查找的节点
