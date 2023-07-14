@@ -122,19 +122,21 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       return tr.scrollIntoView();
     },
     props: {
-      handleTextInput(view, chFrom, chTo, text) {
+    /*  handleTextInput(view, chFrom, chTo, text) {
         //composing == true  证明正在输入中文
         if(view.composing){
           //如果匹配到了中文 证明是已经中文输入完成然后插入  否则每一次操作都会参与计算
           if(chineseMatches(text)){
             view.dispatch(view.state.tr.insertText(text, chFrom, chTo));
+          }else {
+            view.dispatch(view.state.tr);
           }
           return true;
         }
         view.dispatch(view.state.tr.insertText(text, chFrom, chTo));
         return true;
 
-      },
+      },*/
       handleKeyDown(view, event) {
         if (event.code == "Backspace") {
           window.stepStatus = true;

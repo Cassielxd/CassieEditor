@@ -44,7 +44,7 @@ export function splitPage({ tr, pos, depth = 1, typesAfter, schema }: SplitParam
         if (na.attrs.extend == "false") {
           extend = { extend: "true" };
         }
-        const attr = Object.assign({}, n.attrs, { ...extend, id: uuid() });
+        const attr = Object.assign({}, n.attrs, { id: uuid(),...extend });
         na = schema.nodes[n.type.name].createAndFill(attr, after);
       }
     }
