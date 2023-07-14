@@ -98,10 +98,12 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       // eslint-disable-next-line prefer-const
       let { selection, tr, doc, schema } = state;
       const { inserting, deleting,checkNode } = this.getState(state);
-
       if (!deleting && !inserting) {
-        tr = checkNodeAndFix(tr, state);
-        return tr.scrollIntoView();
+        if(checkNode){
+          tr = checkNodeAndFix(tr, state);
+          return tr.scrollIntoView();
+        }
+        return ;
       }
       /*如果是删除并且在最后一页 则不做任何处理*/
       if (!inserting && deleting && selection.$head.node(1) === doc.lastChild) {
