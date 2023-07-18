@@ -1,5 +1,5 @@
 <template>
-  <div class="card join join-vertical border">
+  <div class="card join shadow-xl join-vertical border">
     <template v-if="items">
       <button v-for="(item, index) in items" :key="index" class="btn join-item" @click="onClick(index)">
         {{ item.label }}

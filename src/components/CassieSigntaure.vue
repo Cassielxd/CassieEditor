@@ -1,15 +1,12 @@
 <template>
-  <div class="card w-96 bg-base-100 shadow-xl">
-    <div class="card-body">
-      <VueSignaturePad id="signature" width="400px" height="100px" ref="signaturePad" :options="options" />
-    </div>
-    <div class="card-actions justify-end">
-      <button class="btn btn-accent btn-xs" @click="save">确定</button>
-      <button class="btn btn-ghost btn-xs" @click="quit">取消</button>
+  <div class="card w-96 bg-base-100 shadow-xl border">
+    <figure><VueSignaturePad id="signature" width="400px" height="100px" ref="signaturePad" :options="options" /></figure>
+    <div class="card-actions justify-end px-4 py-2">
+      <div class="badge badge-outline" @click="save">确定</div>
+      <div class="badge badge-outline" @click="quit">取消</div>
     </div>
   </div>
 </template>
-
 <script>
 import { VueSignaturePad } from "vue-signature-pad";
 export default {
