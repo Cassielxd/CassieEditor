@@ -7,7 +7,6 @@ import CassieBlock from "@/extension/node/CassieBlock";
 import { PageOptions } from "@/extension/page/core";
 import { CassieBlockExt } from "@/extension/node/CassieBlockExt";
 import { pagePlugin } from "@/extension/page/pagePlugn";
-import Image from "@tiptap/extension-image";
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
 
@@ -49,7 +48,7 @@ export const PageExtension = Extension.create<PageOptions>({
     extensions.push(CassieBlock);
     /*自定义扩展块*/
     extensions.push(CassieBlockExt);
-    extensions.push(Image.configure({ inline: true, allowBase64: true }));
+
     return extensions;
   }
 });
