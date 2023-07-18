@@ -40,23 +40,23 @@ export function splitPage({ tr, pos, depth = 1, typesAfter, schema }: SplitParam
     } else {
       //处理id重复的问题
       if (na && na.attrs.id) {
-           let extend ={};
-              if(na.attrs.extend=="false"){
-                extend ={extend:"true"};
-              }
-        const attr = Object.assign({}, n.attrs, { ...extend,id: uuid() },);
+        let extend = {};
+        if (na.attrs.extend == "false") {
+          extend = { extend: "true" };
+        }
+        const attr = Object.assign({}, n.attrs, { id: uuid(),...extend });
         na = schema.nodes[n.type.name].createAndFill(attr, after);
       }
     }
     after = Fragment.from(
       typeAfter
         ? typeAfter.type.create(
-            {
-              id: uuid(),
-              pageNumber: na?.attrs.pageNumber + 1
-            },
-            after
-          )
+          {
+            id: uuid(),
+            pageNumber: na?.attrs.pageNumber + 1
+          },
+          after
+        )
         : na
     );
   }
