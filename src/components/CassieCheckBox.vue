@@ -3,7 +3,7 @@
     <div class="form-control">
       <label class="cursor-pointer label" v-for="(item, index) in items" :key="index">
         <span class="label-text">{{ item.name }}</span>
-        <input type="checkbox" class="checkbox checkbox-xs" @change="(e) => change(e, item)" />
+        <input type="checkbox" class="checkbox checkbox-xs join-item" @change="(e) => change(e, item)" />
       </label>
     </div>
     <div class="card-actions justify-end px-4 py-2">
