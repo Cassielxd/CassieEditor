@@ -1,14 +1,14 @@
 <template>
-  <div class="card bg-base-100 shadow-xl">
+  <div class="card bg-base-100 join join-vertical border">
     <div class="form-control">
       <label class="cursor-pointer label" v-for="(item, index) in items" :key="index">
         <span class="label-text">{{ item.name }}</span>
         <input type="checkbox" class="checkbox checkbox-xs" @change="(e) => change(e, item)" />
       </label>
     </div>
-    <div class="card-actions justify-end">
-      <button class="btn btn-outline btn-success btn-xs" @click="onSubmit">确定</button>
-      <button class="btn btn-ghost btn-xs" @click="quit">取消</button>
+    <div class="card-actions justify-end px-4 py-2">
+      <div class="badge badge-outline" @click="onSubmit">确定</div>
+      <div class="badge badge-outline" @click="quit">取消</div>
     </div>
   </div>
 </template>

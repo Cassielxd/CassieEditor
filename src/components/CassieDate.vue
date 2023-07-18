@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-base-100 shadow-xl">
+  <div class="card bg-base-100  border">
     <figure><v-calendar @dayclick="onClick" /></figure>
     <div class="card-actions justify-end px-4 py-2">
       <div class="badge badge-outline" @click="onSubmit">确定</div>

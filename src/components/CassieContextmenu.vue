@@ -1,12 +1,11 @@
 <template>
-  <ul class="card shadow-xl menu menu-compact bg-base-100 rounded-box">
+  <div class="card join join-vertical border">
     <template v-if="items">
-      <li v-for="(item, index) in items" :key="index" @click="onClick(index)">
-        <a>{{ item.label }}</a>
-      </li>
+      <button v-for="(item, index) in items" :key="index" class="btn join-item" @click="onClick(index)">
+        {{ item.label }}
+      </button>
     </template>
-    <li class="item" v-else>没有数据</li>
-  </ul>
+  </div>
 </template>
 
 <script>
