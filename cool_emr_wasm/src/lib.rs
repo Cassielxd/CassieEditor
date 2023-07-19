@@ -1,15 +1,13 @@
-
 pub mod utils;
 use std::{
     collections::HashMap,
-    sync::{Arc, Mutex}, ops::Add,
+    ops::Add,
+    sync::{Arc, Mutex},
 };
 
 use lazy_static::lazy_static;
 use wasm_bindgen::{prelude::*, JsObject};
 use web_sys::HtmlElement;
-
-
 
 lazy_static! {
     pub static ref CACHE_HASHMAP: Arc<Mutex<HashMap<String, f64>>> =
@@ -97,6 +95,7 @@ pub fn getContentSpacing(id: &str) -> Result<i32, JsValue> {
 #[allow(non_snake_case)]
 #[wasm_bindgen]
 pub fn computedWidth(html: &str) -> Result<f64, JsValue> {
+    let mut html: &str = html;
     let mut hashmap = CACHE_HASHMAP.lock().unwrap();
     if let Some(value) = hashmap.get(html) {
         console_log!("Hit cache");
@@ -107,6 +106,9 @@ pub fn computedWidth(html: &str) -> Result<f64, JsValue> {
     let computedp = document
         .get_element_by_id("computedspan")
         .expect("computedspan 没找到");
+    if html == " " {
+        html = "&nbsp;";
+    }
     computedp.set_inner_html(html);
     let rect = computedp.get_bounding_client_rect();
     hashmap.insert(format!("{}", html), rect.width());
