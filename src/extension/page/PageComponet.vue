@@ -1,5 +1,5 @@
 <template>
-  <node-view-wrapper oncontextmenu="return false;" @mousedown="mousedown" class="Page text-base relative" :id="node.attrs.id" :style="{ width: options.bodyWidth + 'px' }">
+  <node-view-wrapper oncontextmenu="return false;" @mousedown="mousedown" class="Page text-editor relative" :id="node.attrs.id" :style="{ width: options.bodyWidth + 'px' }">
     <div class="relative header" :style="{ height: options.headerHeight + 'px', width: options.bodyWidth + 'px' }">
       <div class="absolute" v-for="(item, i) in headerlist" :key="i" :style="{ width: item.w + 'px', height: item.h + 'px', top: item.y + 'px', left: item.x + 'px' }">
         <component class="min-w-full min-h-full" :is="item.component" @inpuvalue="(v: any) => updateValue(i, item, v, true)" :value="item.value" :styles="item.styles" :editor="editor" :node="node" :extension="extension" />
