@@ -7,9 +7,9 @@ import CassieBlock from "@/extension/node/CassieBlock";
 import { PageOptions } from "@/extension/page/core";
 import { CassieBlockExt } from "@/extension/node/CassieBlockExt";
 import { pagePlugin } from "@/extension/page/pagePlugn";
+
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
-
   /*添加分页插件*/
   addProseMirrorPlugins() {
     const plugins: any[] = [];
