@@ -20,7 +20,7 @@ export const PageExtension = Extension.create<PageOptions>({
     return plugins;
   },
   onBeforeCreate() {
-    init_plugn("text-b", "opacity: 0;position: absolute;z-index: -88");
+    init_plugn("text-editor", "opacity: 0;position: absolute;z-index: -88");
   },
   addStorage() {
     let headerData = [];

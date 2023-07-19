@@ -78,8 +78,8 @@ export const CoolKeyMap = Extension.create({
                     const paragraphDOM = document.getElementById(parent.attrs.id);
                     const html = generateHTML(getJsonFromDoc(parent), getExtentions());
                     const wordl = computedWidth(html);
-                    computedWidth(" ");
-                    if (paragraphDOM && wordl >= paragraphDOM.getBoundingClientRect().width) {
+                    const space = computedWidth(" ");
+                    if (paragraphDOM && Math.abs(wordl - paragraphDOM.getBoundingClientRect().width) < space) {
                       tr.setSelection(selection1);
                     } else {
                       tr.step(new ReplaceStep(pos1, pos, Slice.empty));
@@ -156,10 +156,17 @@ export const CoolKeyMap = Extension.create({
             return false;
           })
       ]);
+    const handleTab = () =>
+      this.editor.commands.first(({ commands }) => [
+        () => {
+          return true;
+        }
+      ]);
     return {
       Enter: handleEnter,
       Backspace: handleBackspace,
-      Delete: handleDelete
+      Delete: handleDelete,
+      Tab: handleTab
     };
   }
 });

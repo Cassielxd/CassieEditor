@@ -3,26 +3,26 @@
 @tailwind utilities;
 
 @layer components {
-    .Page {
-        @apply bg-white   divide-gray-400 leading-normal rounded-md transform border-2
-    }
-    p{
-        word-break: break-all;
-    }
-    p >img{
-        display: inline;
-    }
-    img.ProseMirror-separator {
-        display: inline !important;
-        border: none !important;
-        margin: 0 !important;
-    }
-    .text-b{
-        font-size: 1rem;
-        line-height: 1.5rem;
-    }
-    .has-focus {
-        border-radius: 1px;
-        box-shadow: 0 0 0 1px blue;
-    }
+  .Page {
+    @apply bg-white   divide-gray-400 leading-normal rounded-md transform border-2;
+  }
+  p {
+    word-break: break-all;
+  }
+  p > img {
+    display: inline;
+  }
+  img.ProseMirror-separator {
+    display: inline !important;
+    border: none !important;
+    margin: 0 !important;
+  }
+  .text-editor {
+    font-size: 0.8rem;
+    line-height: 1.5rem;
+  }
+  .has-focus {
+    border-radius: 1px;
+    box-shadow: 0 0 0 1px blue;
+  }
 }
