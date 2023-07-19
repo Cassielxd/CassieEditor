@@ -28,7 +28,7 @@ export const EmrParagraph = Paragraph.extend({
         }
       },
       extend: {
-        default: "false",
+        default: "false"
       },
       group: {
         default: null,
