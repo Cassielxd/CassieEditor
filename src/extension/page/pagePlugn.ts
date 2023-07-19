@@ -16,13 +16,12 @@ type PluginState = {
   deleting: boolean;
   inserting: boolean;
   checkNode: boolean;
+  splitPage: boolean;
 };
-
 export const paginationPluginKey = new PluginKey("pagination");
 export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
   const plugin: Plugin = new Plugin<PluginState>({
     key: paginationPluginKey,
-
     view: () => {
       return {
         /*
@@ -47,7 +46,6 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
                 /*防止多次触发没完没了的 进行分割处理*/
                 window.stepStatus = false;
               }
-              tr.setMeta("bodyOptions", bodyOption);
               const state = view.state.apply(tr);
               view.updateState(state);
             }
@@ -67,7 +65,8 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
         bodyOptions: null,
         deleting: false,
         inserting: false,
-        checkNode: false
+        checkNode: false,
+        splitPage: false
       }),
       /*判断标志位是否存在  如果存在 则修改 state 值
        * Meta数据是一个事务级别的 一个事务结束 meta消失
@@ -75,13 +74,14 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
        * */
       apply: (tr, prev): PluginState => {
         const next: PluginState = { ...prev };
+        const splitPage: boolean = tr.getMeta("splitPage");
         const checkNode: boolean = tr.getMeta("checkNode");
         const deleting: boolean = tr.getMeta("deleting");
         const inserting: boolean = tr.getMeta("inserting");
-        const bodyOptions: PageOptions = tr.getMeta("bodyOptions");
+        next.splitPage = splitPage ? splitPage : false;
         next.inserting = inserting ? inserting : false;
         next.deleting = deleting ? deleting : false;
-        next.bodyOptions = bodyOptions;
+        next.bodyOptions = bodyOption;
         next.checkNode = checkNode ? checkNode : false;
         return next;
       }
@@ -97,10 +97,15 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     appendTransaction([newTr], _prevState, state) {
       // eslint-disable-next-line prefer-const
       let { selection, tr, doc, schema } = state;
-      const { inserting, deleting, checkNode } = this.getState(state);
+      const { inserting, deleting, checkNode, splitPage } = this.getState(state);
       if (!deleting && !inserting) {
         if (checkNode) {
           tr = checkNodeAndFix(tr, state);
+          return tr.scrollIntoView();
+        }
+        if (splitPage) {
+          tr = mergeDocument(tr, 1);
+          tr = splitDocument(tr, state);
           return tr.scrollIntoView();
         }
         return;
@@ -122,19 +127,6 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       return tr.scrollIntoView();
     },
     props: {
-/*     handleTextInput(view, chFrom, chTo, text) {
-        //composing == true  证明正在输入中文
-        if(view.composing){
-          console.log("ssss");
-          //如果匹配到了中文 证明是已经中文输入完成然后插入  否则每一次操作都会参与计算
-          if(chineseMatches(text)){
-            view.dispatch(view.state.tr.insertText(text, chFrom, chTo));
-          }
-          return true;
-        }
-        view.dispatch(view.state.tr.insertText(text, chFrom, chTo));
-        return true;
-      },*/
       handleKeyDown(view, event) {
         if (event.code == "Backspace") {
           window.stepStatus = true;
@@ -152,10 +144,10 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
  * desc:匹配中文
  * @param text
  */
-function chineseMatches(text:String){
+function chineseMatches(text: string) {
   const chineseRegex = /[\u4e00-\u9fa5]/g;
   const chineseMatches = text.match(chineseRegex);
-  return chineseMatches!=null;
+  return chineseMatches != null;
 }
 
 /**
@@ -176,14 +168,14 @@ function checkNodeAndFix(tr: Transaction, state: EditorState) {
   const { doc } = tr;
   const { schema } = state;
   let beforeBolck: Node = null;
-  let beforePos: number = 0;
+  let beforePos = 0;
   doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
     if (node.type === schema.nodes[PARAGRAPH] && node.attrs.extend == "true") {
       if (beforeBolck == null) {
         beforeBolck = node;
         beforePos = pos;
       } else {
-        let mappedPos = tr.mapping.map(pos);
+        const mappedPos = tr.mapping.map(pos);
         tr = tr.step(new ReplaceStep(mappedPos - 1, mappedPos + 1, Slice.empty));
         return false;
       }
@@ -197,6 +189,7 @@ function checkNodeAndFix(tr: Transaction, state: EditorState) {
   });
   return tr;
 }
+
 /**
  * @method mergeDocument
  * @param tr
@@ -253,4 +246,3 @@ function splitDocument(tr: Transaction, state: EditorState): Transaction {
   });
   return splitDocument(newTr, state);
 }
-
