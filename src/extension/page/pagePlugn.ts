@@ -219,8 +219,6 @@ function mergeDocument(tr: Transaction, count: number): Transaction {
  * @param bodyOption 需要分页的条件
  */
 const isOverflown = (pageBody: Element, bodyOption: PageOptions) => {
-  console.log(pageBody.scrollHeight + "|" + bodyOption.bodyHeight);
-
   return pageBody.scrollHeight > bodyOption.bodyHeight;
 };
 

@@ -72,23 +72,34 @@ pub fn getContentSpacing(id: &str) -> Result<i32, JsValue> {
             .get_computed_style(&content)
             .expect("沒有Style")
             .expect("沒有Style");
+        
         let paddingTop = contentStyle
             .get_property_value("padding-top")
-            .expect("沒有padding-top");
+            .expect("沒有padding-top").replace("px", "")
+            .parse::<i32>()
+            .expect("数字转换异常");
         let paddingBottom = contentStyle
             .get_property_value("padding-bottom")
-            .expect("沒有padding-bottom");
-        let paddingTop = paddingTop
+            .expect("沒有padding-bottom")
             .replace("px", "")
             .parse::<i32>()
             .expect("数字转换异常");
-        let paddingBottom = paddingBottom
+        let marginTop = contentStyle
+            .get_property_value("margin-top")
+            .expect("沒有margin-top").replace("px", "")
+            .parse::<i32>()
+            .expect("数字转换异常");
+        let marginBottom = contentStyle
+            .get_property_value("margin-bottom")
+            .expect("沒有margin-bottom")
             .replace("px", "")
             .parse::<i32>()
             .expect("数字转换异常");
+        let padding = paddingTop + paddingBottom;
+        let margin = marginTop + marginBottom;
         let dom = dom.dyn_ref::<HtmlElement>().expect("类型不一致");
         let content = content.dyn_ref::<HtmlElement>().expect("类型不一致");
-        spacing = paddingTop + paddingBottom;
+        spacing = padding+margin;
         spacing += dom.offset_height() - content.offset_height();
     }
     return Ok(spacing);

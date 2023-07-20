@@ -4,7 +4,7 @@
 
 @layer components {
   .Page {
-    @apply bg-white   divide-gray-400 leading-normal rounded-md transform border-2;
+    @apply bg-white   divide-gray-400 leading-normal rounded-md transform;
   }
   p {
     word-break: break-all;
