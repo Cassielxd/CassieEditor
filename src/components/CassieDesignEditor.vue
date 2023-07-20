@@ -1,5 +1,5 @@
 <template>
-  <div class="flex place-content-center bg-gray-200">
+  <div class="flex place-content-center bg-gray-200 ">
     <v-contextmenu ref="contextmenu">
       <v-contextmenu-item v-for="(widget, index) in wlist" :key="index" @click="(e: any) => menuclick(e, widget)">
         {{ widget.label }}
@@ -10,11 +10,11 @@
     <v-contextmenu ref="componetmenu">
       <v-contextmenu-divider />
     </v-contextmenu>
-    <div class="my-1">
+    <div class="my-1 ">
       <div class="bg-white shadow p-2 divide-y divide-gray-400">
         <vue-file-toolbar-menu v-for="(content, index) in menus" :key="'bar-' + index" :content="content" />
       </div>
-      <div class="Page" :style="{ width: bodyWidth + 'px' }">
+      <div class="Page text-editor" :style="{ width: bodyWidth + 'px' }">
         <div class="relative header" @mousedown.stop="unFocus(true)" v-contextmenu:contextmenu :style="{ height: headerHeight + 'px' }">
           <Vue3DraggableResizable
             v-for="(item, i) in headerlist"

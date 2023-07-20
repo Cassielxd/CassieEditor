@@ -5,6 +5,7 @@ import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, PAGE, PARAGRAPH } from "@/extension/
 import { paginationPluginKey } from "@/extension/page/pagePlugn";
 import { CassieKit } from "@/extension";
 import { ResolvedPos } from "prosemirror-model";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { getDefault, getContentSpacing, computedWidth } from "emr_wasm";
 export type PageOptions = {
