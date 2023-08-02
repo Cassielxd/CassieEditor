@@ -4,7 +4,7 @@
       <div class="bg-white shadow p-2 divide-y divide-gray-400">
         <vue-file-toolbar-menu v-for="(content, index) in menus" :key="'bar-' + index" :content="content" />
       </div>
-      <editor-content :editor="editor" :style="{ width: bodyWidth + 'px' }" />
+      <editor-content :editor="editor" class="my-2" :style="{ width: bodyWidth + 'px' }" />
     </div>
   </div>
 </template>
@@ -23,6 +23,7 @@ import { pageContent, headerlist, footerlist } from "./content";
 import { UnitConversion } from "@/extension/page/core";
 import emitter from "@/coolmitt";
 import printJS from "print-js";
+
 const unitConversion = new UnitConversion();
 export default {
   components: { EditorContent, VueFileToolbarMenu },

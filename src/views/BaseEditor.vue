@@ -1,5 +1,5 @@
 <template>
-  <CassieEditor :content="baseContent" @onCreate="onCreate" @onUpdate="onUpdate" :bodyWidth="750" output="json" :menu-list="menulist" />
+  <CassieEditor  :content="baseContent" @onCreate="onCreate" @onUpdate="onUpdate" :bodyWidth="750" output="json" :menu-list="menulist" />
 </template>
 
 <script lang="ts">

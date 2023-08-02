@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-full">
     <div class="grid flex-grow card bg-base-300 rounded-box place-items-center">
-      <editor-content :editor="editor" />
+      <editor-content class="my-2" :editor="editor" />
       <BubbleMenu v-if="editor" :tippy-options="{ duration: 100, placement: 'bottom' }" :editor="editor" :should-show="({ editor }) => isCommentModeOn && !editor.state.selection.empty && !activeCommentsInstance.uuid" class="card bg-base-100 shadow-xl">
         <div class="card-body items-center text-center">
           <h2 class="card-title">评论</h2>
@@ -14,7 +14,7 @@
       </BubbleMenu>
     </div>
     <div class="divider divider-horizontal">评论</div>
-    <div class="grid flex-grow card bg-base-300 rounded-box">
+    <div class="grid flex-grow card bg-base-300 rounded-box ">
       <OuterCommentVue :active-comments-instance="activeCommentsInstance" :all-comments="allComments" :format-date="formatDate" :focus-content="focusContent" :is-comment-mode-on="isCommentModeOn" @set-comment="setComment" />
     </div>
   </div>

@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { EditorState, Plugin, PluginKey, Selection, Transaction } from "@tiptap/pm/state";
+import { EditorState, Plugin, PluginKey, Transaction } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 import { getNodeType } from "@tiptap/core";
 import { CASSIE_BLOCK_EXTEND, EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
@@ -96,7 +96,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
      */
     appendTransaction([newTr], _prevState, state) {
       // eslint-disable-next-line prefer-const
-      let { selection, tr, doc, schema } = state;
+      let { selection, tr, doc } = state;
       const { inserting, deleting, checkNode, splitPage } = this.getState(state);
       if (!deleting && !inserting) {
         if (checkNode) {
@@ -127,6 +127,10 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       return tr.scrollIntoView();
     },
     props: {
+      handleTextInput(view, form, to, text) {
+        view.focus();
+        return false;
+      },
       handleKeyDown(view, event) {
         if (event.code == "Backspace") {
           window.stepStatus = true;
@@ -144,6 +148,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
  * desc:匹配中文
  * @param text
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function chineseMatches(text: string) {
   const chineseRegex = /[\u4e00-\u9fa5]/g;
   const chineseMatches = text.match(chineseRegex);
@@ -155,6 +160,7 @@ function chineseMatches(text: string) {
  * @param node 被查找的节点
  * @param curnode  查找的节点
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function findLastNode(node: Node, curnode: Node): boolean {
   return !!node.lastChild && (node.lastChild == curnode || findLastNode(node.lastChild, curnode));
 }
@@ -168,7 +174,7 @@ function checkNodeAndFix(tr: Transaction, state: EditorState) {
   const { doc } = tr;
   const { schema } = state;
   let beforeBolck: Node = null;
-  let beforePos = 0;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
     if (node.type === schema.nodes[PARAGRAPH] && node.attrs.extend == "true") {
       if (beforeBolck == null) {

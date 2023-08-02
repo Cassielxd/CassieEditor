@@ -10,11 +10,11 @@
     <v-contextmenu ref="componetmenu">
       <v-contextmenu-divider />
     </v-contextmenu>
-    <div class="my-1 ">
-      <div class="bg-white shadow p-2 divide-y divide-gray-400">
+    <div class="my-1">
+      <div class="bg-white shadow p-2 divide-y divide-gray-400 bars">
         <vue-file-toolbar-menu v-for="(content, index) in menus" :key="'bar-' + index" :content="content" />
       </div>
-      <div class="Page text-editor" :style="{ width: bodyWidth + 'px' }">
+      <div class="Page text-editor my-2" :style="{ width: bodyWidth + 'px' }">
         <div class="relative header" @mousedown.stop="unFocus(true)" v-contextmenu:contextmenu :style="{ height: headerHeight + 'px' }">
           <Vue3DraggableResizable
             v-for="(item, i) in headerlist"
@@ -306,5 +306,41 @@ export default defineComponent({
 }
 .footer {
   border-top: 1px solid;
+}
+
+:root {
+  --bar-font-color: rgb(32, 33, 36);
+  --bar-font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+  --bar-font-size: 15px;
+  --bar-font-weight: 500;
+  --bar-letter-spacing: 0.2px;
+  --bar-padding: 3px;
+  --bar-button-icon-size: 20px;
+  --bar-button-padding: 4px 6px;
+  --bar-button-radius: 4px;
+  --bar-button-hover-bkg: rgb(241, 243, 244);
+  --bar-button-active-color: rgb(26, 115, 232);
+  --bar-button-active-bkg: rgb(232, 240, 254);
+  --bar-button-open-color: rgb(32, 33, 36);
+  --bar-button-open-bkg: rgb(232, 240, 254);
+  --bar-menu-bkg: white;
+  --bar-menu-border-radius: 0 0 3px 3px;
+  --bar-menu-item-chevron-margin: 0;
+  --bar-menu-item-hover-bkg: rgb(241, 243, 244);
+  --bar-menu-item-padding: 5px 8px 5px 35px;
+  --bar-menu-item-icon-size: 15px;
+  --bar-menu-item-icon-margin: 0 9px 0 -25px;
+  --bar-menu-padding: 6px 1px;
+  --bar-menu-shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+  --bar-menu-separator-height: 1px;
+  --bar-menu-separator-margin: 5px 0 5px 34px;
+  --bar-menu-separator-color: rgb(227, 229, 233);
+  --bar-separator-color: rgb(218, 220, 224);
+  --bar-separator-width: 1px;
+  --bar-sub-menu-border-radius: 3px;
+}
+.bars > .bar:first-child {
+  border-bottom: 1px solid rgb(218, 220, 224);
+  margin-bottom: 3px;
 }
 </style>

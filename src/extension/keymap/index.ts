@@ -1,5 +1,6 @@
 import { Extension, findChildrenInRange, findParentNode } from "@tiptap/core";
 import { getJsonFromDoc, getExtentions } from "@/extension/page/core";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { computedWidth } from "emr_wasm";
 import { Selection, TextSelection } from "@tiptap/pm/state";

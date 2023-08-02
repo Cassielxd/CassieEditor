@@ -1,5 +1,7 @@
 <template>
-  <CassieEditor :user="user" footer-height="50" :content="pageContent" @onCreate="onCreate" :collaboration-url="url" @onStatus="onStatus" @onUpdate="onUpdate" :bodyWidth="750" :menu-list="menulist" :header-data="headerlist" :footer-data="footerlist" />
+  <CassieEditor :user="user" footer-height="50" :content="pageContent" @onCreate="onCreate" :collaboration-url="url"
+                @onStatus="onStatus" @onUpdate="onUpdate" :bodyWidth="750" :menu-list="menulist"
+                :header-data="headerlist" :footer-data="footerlist" />
   <footer class="footer footer-center p-4 bg-base-300 text-base-content">
     <div class="chat chat-start">
       <div class="chat-bubble chat-bubble-primary">在线人数+{{ userLenth.length }}</div>
@@ -19,6 +21,7 @@ import { getCurrentInstance, ref } from "vue";
 import CassieEditor from "../components/CassieEditor.vue";
 import { pageContent, headerlist, footerlist } from "./content";
 import { getRandomColor, getRandomName } from "@/denoutils";
+
 export default {
   components: { CassieEditor },
   setup() {
@@ -38,7 +41,8 @@ export default {
     ];
     let userLenth = ref([]);
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const onUpdate = (output: any, editor: any) => {};
+    const onUpdate = (output: any, editor: any) => {
+    };
     const onStatus = (data: any, editor: any) => {
       userLenth.value = editor.value.storage.collaborationCursor.users;
     };

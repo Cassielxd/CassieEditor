@@ -1,6 +1,6 @@
 <template>
   <div class="flex place-content-center bg-gray-200">
-    <div>
+    <div class="my-2">
       <div class="tabs justify-center">
         <a class="tab tab-lifted" :class="active == 1 ? 'tab-active' : ''" @click="change(1)">差异</a>
         <a class="tab tab-lifted" :class="active == 2 ? 'tab-active' : ''" @click="change(2)">新版</a>

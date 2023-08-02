@@ -1,6 +1,6 @@
 <template>
   <div class="flex place-content-center bg-gray-200">
-    <editor-content :editor="editor" :style="{ width: bodyWidth + 'px' }" />
+    <editor-content :editor="editor" class="my-2" :style="{ width: bodyWidth + 'px' }" />
   </div>
 </template>
 
