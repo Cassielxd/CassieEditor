@@ -7,7 +7,7 @@
     @apply bg-white   divide-gray-400 leading-normal rounded-md transform my-2;
   }
   @media print {
-    .Page {page-break-after: always;}
+    .Page { page-break-after: auto;}
   }
   p {
     word-break: break-all;
