@@ -174,6 +174,7 @@ function checkNodeAndFix(tr: Transaction, state: EditorState) {
   const { doc } = tr;
   const { schema } = state;
   let beforeBolck: Node = null;
+  let beforePos = 0;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
     if (node.type === schema.nodes[PARAGRAPH] && node.attrs.extend == "true") {
