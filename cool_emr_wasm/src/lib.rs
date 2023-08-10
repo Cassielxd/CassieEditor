@@ -4,9 +4,10 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use js_sys::parse_float;
 use lazy_static::lazy_static;
-use wasm_bindgen::{prelude::*};
-use web_sys::{HtmlElement, Element};
+use wasm_bindgen::prelude::*;
+use web_sys::HtmlElement;
 
 lazy_static! {
     pub static ref CACHE_HASHMAP: Arc<Mutex<HashMap<String, f64>>> =
@@ -22,7 +23,6 @@ extern "C" {
     #[wasm_bindgen(js_namespace = console, js_name = log)]
     fn log_u32(a: u32);
 
-
     #[wasm_bindgen(js_namespace = console, js_name = log)]
     fn log_many(a: &str, b: &str);
 }
@@ -37,7 +37,6 @@ macro_rules! console_log {
 pub fn getDefault() -> Result<f64, JsValue> {
     let mut hashmap = CACHE_HASHMAP.lock().unwrap();
     if let Some(value) = hashmap.get("defaultheight") {
-        console_log!("Hit cache");
         return Ok(*value);
     }
     let window = web_sys::window().expect("window 对象不存在");
@@ -52,12 +51,11 @@ pub fn getDefault() -> Result<f64, JsValue> {
 }
 #[allow(non_snake_case)]
 #[wasm_bindgen]
-pub fn getContentSpacing(id: &str) -> Result<i32, JsValue> {
+pub fn getContentSpacing(id: &str) -> Result<f64, JsValue> {
     let window = web_sys::window().expect("window not found");
-    let mut spacing = 0;
     let document = window.document().expect("  document not found");
     let dom = document.get_element_by_id(id).expect("id对应dom 没找到");
-    {
+    let spacing = {
         let content = dom
             .query_selector(".content")
             .expect("找不到content")
@@ -66,36 +64,33 @@ pub fn getContentSpacing(id: &str) -> Result<i32, JsValue> {
             .get_computed_style(&content)
             .expect("沒有Style")
             .expect("沒有Style");
-        
+
         let paddingTop = contentStyle
             .get_property_value("padding-top")
-            .expect("沒有padding-top").replace("px", "")
-            .parse::<i32>()
-            .expect("数字转换异常");
+            .expect("沒有padding-top");
+        let paddingTop = parse_float(&paddingTop);
+
         let paddingBottom = contentStyle
             .get_property_value("padding-bottom")
-            .expect("沒有padding-bottom")
-            .replace("px", "")
-            .parse::<i32>()
-            .expect("数字转换异常");
+            .expect("沒有padding-bottom");
+        let paddingBottom = parse_float(&paddingBottom);
+
         let marginTop = contentStyle
             .get_property_value("margin-top")
-            .expect("沒有margin-top").replace("px", "")
-            .parse::<i32>()
-            .expect("数字转换异常");
+            .expect("沒有margin-top");
+        let marginTop = parse_float(&marginTop);
+
         let marginBottom = contentStyle
             .get_property_value("margin-bottom")
-            .expect("沒有margin-bottom")
-            .replace("px", "")
-            .parse::<i32>()
-            .expect("数字转换异常");
+            .expect("沒有margin-bottom");
+
+        let marginBottom = parse_float(&marginBottom);
         let padding = paddingTop + paddingBottom;
         let margin = marginTop + marginBottom;
         let dom = dom.dyn_ref::<HtmlElement>().expect("类型不一致");
         let content = content.dyn_ref::<HtmlElement>().expect("类型不一致");
-        spacing = padding+margin;
-        spacing += dom.offset_height() - content.offset_height();
-    }
+        padding + margin + (dom.offset_height() - content.offset_height()) as f64
+    };
     return Ok(spacing);
 }
 #[allow(non_snake_case)]
@@ -104,7 +99,6 @@ pub fn computedWidth(html: &str) -> Result<f64, JsValue> {
     let mut html: &str = html;
     let mut hashmap = CACHE_HASHMAP.lock().unwrap();
     if let Some(value) = hashmap.get(html) {
-        console_log!("Hit cache");
         return Ok(*value);
     }
     let window = web_sys::window().expect("window 对象不存在");
@@ -128,7 +122,15 @@ pub fn init_plugn(css: &str, style: &str) -> Result<(), JsValue> {
     let body = document.body().expect("document 应该包含一个body");
     let spanp = body.query_selector("#computedspan")?;
     match spanp {
-        Some(_) => {}
+        Some(q) => {
+            let _ = body.remove_child(&q);
+            let val = document.create_element("p")?;
+            val.set_id("computedspan");
+            val.set_class_name(css);
+            val.set_inner_html("t");
+            let _ = val.set_attribute("style", style);
+            body.append_child(&val)?;
+        }
         None => {
             // Manufacture the element we're gonna append
             let val = document.create_element("p")?;
@@ -143,6 +145,6 @@ pub fn init_plugn(css: &str, style: &str) -> Result<(), JsValue> {
 }
 #[wasm_bindgen(start)]
 fn run() -> Result<(), JsValue> {
-    console_log!("启动插件");
+    console_log!("联系作者：348040933@qq.com");
     Ok(())
 }
