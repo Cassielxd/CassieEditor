@@ -6,7 +6,7 @@ export const TEXT_DATA = {
 };
 
 export const PAGE_COUNT_DATA = {
-  w: 200,
+  w: 100,
   h: 50,
   value: "第一页"
 };

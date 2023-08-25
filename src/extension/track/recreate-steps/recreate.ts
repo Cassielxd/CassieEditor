@@ -207,10 +207,16 @@ class RecreateTransform {
       if (diff.added) {
         if (textDiffs.length && textDiffs[0].removed) {
           const nextDiff = textDiffs.shift();
-          this.tr.replaceWith(offset, offset + nextDiff.value.length, this.schema.nodeFromJSON({
-            type: "text",
-            text: diff.value
-          }).mark(marks));
+          this.tr.replaceWith(
+            offset,
+            offset + nextDiff.value.length,
+            this.schema
+              .nodeFromJSON({
+                type: "text",
+                text: diff.value
+              })
+              .mark(marks)
+          );
         } else {
           this.tr.insert(offset, this.schema.nodeFromJSON({ type: "text", text: diff.value }).mark(marks));
         }
@@ -218,10 +224,16 @@ class RecreateTransform {
       } else if (diff.removed) {
         if (textDiffs.length && textDiffs[0].added) {
           const nextDiff = textDiffs.shift();
-          this.tr.replaceWith(offset, offset + diff.value.length, this.schema.nodeFromJSON({
-            type: "text",
-            text: nextDiff.value
-          }).mark(marks));
+          this.tr.replaceWith(
+            offset,
+            offset + diff.value.length,
+            this.schema
+              .nodeFromJSON({
+                type: "text",
+                text: nextDiff.value
+              })
+              .mark(marks)
+          );
           offset += nextDiff.value.length;
         } else {
           this.tr.delete(offset, offset + diff.value.length);

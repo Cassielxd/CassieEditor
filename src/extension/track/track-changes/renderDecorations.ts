@@ -5,7 +5,9 @@ import { ChangeSet } from "../changeset";
 
 const deletedWidget = (html: DocumentFragment, attrs: { [key: string]: string }) => (view: EditorView, getPos: () => number) => {
   const element = document.createElement("span");
-  element.appendChild(html);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  element.innerHTML=html.textContent;
   Object.keys(attrs).forEach((key) => {
     element.setAttribute(key, attrs[key]);
   });

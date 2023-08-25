@@ -23,18 +23,15 @@ const colorScheme: [string, string][] = [
   ["#10c727", "#ff0707"],
   ["#7adcb8", "#f93aa2"]
 ];
+
 export interface TrackChangesOptions<I = any> {
   // eslint-disable-next-line @typescript-eslint/ban-types
   render?: () => {
     view?: (props: SuggestionClickProps) => boolean;
   };
 }
+
 export const trackChangesPlugin = () => {
-  let renderedPopper:
-    | {
-        destroy: () => void;
-      }
-    | undefined;
   let domSerializer: DOMSerializer;
 
   return new Plugin<TrackChangesState>({
@@ -93,50 +90,6 @@ export const trackChangesPlugin = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return trackChangesPluginKey.getState(state).decorationSet;
-      },
-      handleClickOn(view, _pos, _node, _nodePos, event, _direct) {
-        const el = event.target ? (event.target as HTMLElement) : undefined;
-        const dataChangeIndex = el?.getAttribute("data-change-index");
-        const dataChangeType = el?.getAttribute("data-change-type");
-
-        if (el && dataChangeIndex && dataChangeType) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          const changeSet = trackChangesPluginKey.getState(view.state).changeSet;
-          const changeIndex = Number(dataChangeIndex);
-          const change = changeSet.changes[changeIndex];
-          const changeType = dataChangeType as TrackedChangeType;
-          const inserted = changeType === "insert" || changeType === "insert+delete" ? view.state.doc.textBetween(change.fromB, change.toB) : undefined;
-          const deleted = changeType === "delete" || changeType === "insert+delete" ? changeSet.startDoc.textBetween(change.fromA, change.toA) : undefined;
-
-          const props = {
-            change: {
-              type: changeType,
-              timeStr: "02-13-2019 11:20AM",
-              inserted,
-              deleted,
-              author: {
-                name: "李医生"
-              }
-            },
-            comments: [],
-            onClose: () => {
-              renderedPopper?.destroy();
-            },
-            onAccept: () => {
-              view.dispatch(view.state.tr.setMeta("accept-change", changeIndex));
-              renderedPopper?.destroy();
-            },
-            onReject: () => {
-              view.dispatch(view.state.tr.setMeta("reject-change", changeIndex));
-              renderedPopper?.destroy();
-            },
-            onSubmitReply: (text: string) => {
-              return Promise.resolve();
-            }
-          };
-        }
-        return false;
       }
     }
   });
