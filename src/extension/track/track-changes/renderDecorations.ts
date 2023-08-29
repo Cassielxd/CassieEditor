@@ -7,7 +7,7 @@ const deletedWidget = (html: DocumentFragment, attrs: { [key: string]: string })
   const element = document.createElement("span");
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  element.innerHTML=html.textContent;
+  element.innerHTML = html.textContent;
   Object.keys(attrs).forEach((key) => {
     element.setAttribute(key, attrs[key]);
   });
@@ -28,6 +28,7 @@ export function renderDecorations(changeSet: ChangeSet, userColors: Map<string, 
       if (change.isChange()) {
         const colors = userColors.get(span.data.userID);
         const style = `background: ${colors ? colors[0] : ""};`;
+
         decorations.push(
           Decoration.inline(insertFrom, change.toB, {
             style,

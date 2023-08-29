@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <div class="flex-1">
-      <a class="btn btn-ghost normal-case text-xl">Cassie电子病历</a>
+      <a class="btn btn-ghost normal-case text-xl">bs编辑器</a>
     </div>
     <div class="flex-none">
       <ul class="menu menu-horizontal px-1" @click="handleSelect">

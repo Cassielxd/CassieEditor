@@ -52,6 +52,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "0b4e04a4-51ea-47e7-ba20-a5042663c729",
+                extend: "false",
                 group: "p1"
               },
               content: [
@@ -76,6 +77,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "fea620f0-dd3c-4ab5-8c85-752b51996a98",
+                extend: "false",
                 group: "p2"
               },
               content: [
@@ -104,6 +106,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "bb1a5ec3-88ca-4a64-b69c-4a0361f5e434",
+                extend: "false",
                 group: "p3"
               },
               content: [
@@ -128,6 +131,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "c5ae0525-bcaf-4117-8208-804f46612574",
+                extend: "false",
                 group: "p4"
               },
               content: [
@@ -142,12 +146,26 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "c576357a-1eeb-49f3-8d12-ec214049ed83",
+                extend: "false",
                 group: "p5"
               },
               content: [
                 {
                   type: "text",
-                  text: "全身皮肤黏膜无黄染、无水肿，未见出血点、未见蜘蛛痣，全身浅表淋巴结未扪及肿大， 未见瘘管。"
+                  text: "全身皮肤黏膜无黄染、无水肿，未见出血点、未见蜘蛛痣，全身浅"
+                },
+                {
+                  type: "mention",
+                  attrs: {
+                    classify: "radio",
+                    id: null,
+                    delete: "true",
+                    label: "单选2"
+                  }
+                },
+                {
+                  type: "text",
+                  text: " 表淋巴结未扪及肿大， 未见瘘管。"
                 }
               ]
             },
@@ -156,6 +174,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "04f2c624-b004-46ac-a5c0-4d3b02abc2e3",
+                extend: "false",
                 group: "p6"
               },
               content: [
@@ -170,6 +189,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "bed29b51-a49d-4ed4-866d-d35a42b472d8",
+                extend: "false",
                 group: "p7"
               },
               content: [
@@ -184,6 +204,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "20acbf06-1e2d-47c0-943b-262d5b33b3b0",
+                extend: "false",
                 group: "p8"
               },
               content: [
@@ -198,6 +219,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "04d77859-c088-4c4f-af8b-17500c235e97",
+                extend: "false",
                 group: "p9"
               },
               content: [

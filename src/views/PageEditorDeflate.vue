@@ -46,6 +46,9 @@ export default {
     onMounted(() => {
       //如果是协作模式 设置 content需要滞后 否则会重复添加
       editor.value = new Editor({
+        onUpdate({ editor }) {
+          console.log(editor.getJSON());
+        },
         editable: true,
         content: pageContent,
         editorProps: {
@@ -81,7 +84,6 @@ export default {
       setTimeout(() => {
         editor.value?.view.dispatch(editor.value?.state.tr.setMeta("splitPage", true));
       }, 1000);
-
       //applyDevTools(editor.value.view);
     });
 

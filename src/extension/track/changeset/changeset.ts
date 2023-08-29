@@ -60,13 +60,11 @@ export class ChangeSet {
       const step = steps[i]
       let d = Array.isArray(data) ? data[i] : data
       let off = 0
-
       if (step instanceof ReplaceStep) {
         step.getMap().forEach((fromA: number, toA: number, fromB: number, toB: number) => {
           stepChanges.push(new Change(fromA + off, toA + off, fromB, toB,
                                       fromA == toA ? Span.none : [new Span(toA - fromA, d)],
                                       fromB == toB ? Span.none : [new Span(toB - fromB, d)]))
-
           off = (toB - fromB) - (toA - fromA)
         })
       } else if (step instanceof ReplaceAroundStep) {
@@ -89,7 +87,6 @@ export class ChangeSet {
           const inserted = fromA == toA ? Span.none : [new Span(toA - fromA, d)]
           const deleted = fromB == toB ? Span.none : [new Span(toB - fromB, d)]
           stepChanges.push(new BlockChange(fromA + off, toA + off, fromB, toB, inserted, deleted, insideReplaceAroundStep))
-
           off = (toB - fromB) - (toA - fromA)
         })
       } else if (step instanceof AddMarkStep) {
@@ -102,12 +99,10 @@ export class ChangeSet {
     }
     ////---------------------------------------------end-----------------------------------------
     if (stepChanges.length == 0) return this
-
     let newChanges = mergeAll(stepChanges, this.config.combine)
     let changes = merge(this.changes, newChanges, this.config.combine)
-
     // Minimize changes when possible
-    for (let i = 0; i < changes.length; i++) {
+    /*for (let i = 0; i < changes.length; i++) {
       let change = changes[i]
       if (change.fromA == change.toA || change.fromB == change.toB ||
           // Only look at changes that touch newly added changed ranges
@@ -124,7 +119,7 @@ export class ChangeSet {
         changes.splice(i, 1, ...diff)
         i += diff.length - 1
       }
-    }
+    }*/
 
     return new ChangeSet(this.config, changes)
   }

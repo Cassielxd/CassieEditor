@@ -2,6 +2,7 @@ import { mergeAttributes, Node } from "@tiptap/core";
 import { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import { PluginKey, TextSelection } from "@tiptap/pm/state";
 import { SuggestionClick, SuggestionClickOptions } from "@/extension/suggestion/mouseSuggestion";
+import { Slice } from "prosemirror-model";
 
 export type MentionOptions = {
   HTMLAttributes: Record<string, any>;
@@ -24,22 +25,13 @@ export const Mention = Node.create<MentionOptions>({
         pluginKey: MentionClickPluginKey,
         command: ({ editor, range, props }) => {
           if (!editor.options.editable) return;
-          const nodeAfter = editor.view.state.selection.$to.nodeAfter;
-          const overrideSpace = nodeAfter?.text?.startsWith(" ");
-          if (overrideSpace) {
-            range.to += 1;
-          }
           editor
             .chain()
             .focus()
-            .insertContentAt(range, [
+            .insertContent([
               {
                 type: this.name,
                 attrs: props
-              },
-              {
-                type: "text",
-                text: " "
               }
             ])
             .run();
@@ -54,7 +46,6 @@ export const Mention = Node.create<MentionOptions>({
   inline: true,
   //是否能选中
   selectable: true,
-
   atom: true,
   addAttributes() {
     return {

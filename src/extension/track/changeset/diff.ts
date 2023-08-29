@@ -45,7 +45,6 @@ function minUnchanged(sizeA: number, sizeB: number) {
 export function computeDiff(fragA: Fragment, fragB: Fragment, range: IChange) {
   const tokA = tokens(fragA, range.fromA, range.toA, []);
   const tokB = tokens(fragB, range.fromB, range.toB, []);
-
   // Scan from both sides to cheaply eliminate work
   let start = 0,
     endA = tokA.length,
