@@ -6,5 +6,10 @@ export const DiffExtension = Extension.create({
 
   addProseMirrorPlugins() {
     return [trackChangesPlugin()];
+  },
+  addExtensions() {
+    const extensions: any[] = [];
+
+    return extensions;
   }
 });

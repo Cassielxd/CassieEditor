@@ -14,7 +14,7 @@
       </BubbleMenu>
     </div>
     <div class="divider divider-horizontal">评论</div>
-    <div class="grid flex-grow card bg-base-300 rounded-box ">
+    <div class="grid flex-grow card bg-base-300 rounded-box">
       <OuterCommentVue :active-comments-instance="activeCommentsInstance" :all-comments="allComments" :format-date="formatDate" :focus-content="focusContent" :is-comment-mode-on="isCommentModeOn" @set-comment="setComment" />
     </div>
   </div>
@@ -34,6 +34,7 @@ import { v4 as uuidv4 } from "uuid";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import format from "date-fns/format";
+import { DiffExtension } from "@/extension/track";
 const unitConversion = new UnitConversion();
 export default {
   components: {
@@ -195,7 +196,11 @@ export default {
         extensions: [
           CassieKit.configure({
             textAlign: { types: ["heading", "paragraph"] },
-            mention: false,
+            mention: {
+              HTMLAttributes: {
+                class: "bg-gray-300"
+              }
+            },
             page: {
               bodyPadding: 10,
               bodyWidth: w,
@@ -207,6 +212,7 @@ export default {
             },
             focus: false
           }),
+          DiffExtension,
           Comment.configure({ isCommentModeOn: getIsCommentModeOn })
         ]
       });

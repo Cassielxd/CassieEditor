@@ -28,6 +28,7 @@ export const baseContent = {
   ]
 };
 export const signContent = "这是一个签名示例 请右键插入操作";
+
 export const pageContent = {
   type: "doc",
   content: [
