@@ -4,7 +4,7 @@
       <div class="bg-white shadow p-2 bars">
         <vue-file-toolbar-menu v-for="(content, index) in menus" :key="'bar-' + index" :content="content" />
       </div>
-      <editor-content class="my-2" :editor="editor" />
+      <editor-content class="bg-white" :editor="editor" style="width:800px; height: 1200px;" />
     </div>
   </div>
 </template>
@@ -77,7 +77,7 @@ export default {
       editor.value = new Editor({
         editorProps: {
           attributes: {
-            class: "divide-y divide-black-600"
+            class: ""
           }
         },
         content: '<p>Example Text</p>', //初始化编辑器内容

@@ -388,7 +388,6 @@ export class DocxSerializer {
 
   serialize(content: Node, options: Options) {
     const state = new DocxSerializerState(this.nodes, this.marks, options);
-    debugger;
     state.renderContent(content);
     const doc = createDocFromState(state);
     return doc;

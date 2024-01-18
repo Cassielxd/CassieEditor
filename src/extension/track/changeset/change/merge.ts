@@ -43,7 +43,6 @@ export function merge(x: IChange[], y: IChange[], combine: (a: any, b: any) => a
       curX = iX++ == x.length ? null : x[iX]
       // @ts-ignore
       curY = iY++ == y.length ? null : y[iY]
-      // debugger
     } else if (curX.isChange() && curY.isBlockChange()) {
       throw Error('TODO')
     } else { // Touch, need to merge
