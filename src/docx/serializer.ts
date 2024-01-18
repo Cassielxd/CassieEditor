@@ -96,7 +96,7 @@ export class DocxSerializerState {
 
   render(node: Node, parent: Node, index: number) {
     if (typeof parent === "number") throw new Error("!");
-    if (!this.nodes[node.type.name]) throw new Error(`Token type \`${node.type.name}\` not supported by Word renderer`);
+    if (!this.nodes[node.type.name]) throw new Error(`节点 \`${node.type.name}\` 没有可用的序列化方式`);
     this.nodes[node.type.name](this, node, parent, index);
   }
 
@@ -110,7 +110,6 @@ export class DocxSerializerState {
 
   renderInline(parent: Node) {
     // Pop the stack over to this object when we encounter a link, and closeLink restores it
-    debugger;
     let currentLink: { link: string; stack: ParagraphChild[] } | undefined;
     const closeLink = () => {
       if (!currentLink) return;
@@ -125,8 +124,6 @@ export class DocxSerializerState {
     const openLink = (href: string) => {
       const sameLink = href === currentLink?.link;
       this.addRunOptions({ style: "Hyperlink" });
-      // TODO: https://github.com/dolanmiu/docx/issues/1119
-      // Remove the if statement here and oneLink!
       const oneLink = true;
       if (!oneLink) {
         closeLink();
@@ -233,6 +230,12 @@ export class DocxSerializerState {
   // not sure what this actually is, seems to be close for 8.5x11
   maxImageWidth = MAX_IMAGE_WIDTH;
 
+  /**
+   * 处理图片块
+   * @param src
+   * @param widthPercent
+   * @param align
+   */
   image(src: string, widthPercent = 70, align: AlignOptions = "center") {
     const buffer = this.options.getImageBuffer(src);
     const dimensions = sizeOf(buffer);
@@ -264,6 +267,11 @@ export class DocxSerializerState {
       alignment
     });
   }
+
+  /**
+   * 处理分页块
+   * @param node
+   */
   page(node: Node) {
     node.content.forEach(({ content }) => {
       content.forEach((node) => {
@@ -271,6 +279,11 @@ export class DocxSerializerState {
       });
     });
   }
+
+  /**
+   * 处理表格块
+   * @param node
+   */
   table(node: Node) {
     const actualChildren = this.children;
     const rows: TableRow[] = [];
@@ -305,12 +318,22 @@ export class DocxSerializerState {
     this.children = actualChildren;
   }
 
+  /**
+   * 处理标题块
+   * @param id
+   * @param kind
+   * @param suffix
+   */
   captionLabel(id: string, kind: "Figure" | "Table", { suffix } = { suffix: ": " }) {
     this.current.push(...[createReferenceBookmark(id, kind, `${kind} `), new TextRun(suffix)]);
   }
 
   $footnoteCounter = 0;
 
+  /**
+   * 处理脚注块
+   * @param node
+   */
   footnote(node: Node) {
     const { current, nextRunOpts } = this;
     // Delete everything and work with the footnote inline on the current
@@ -327,6 +350,11 @@ export class DocxSerializerState {
     this.current.push(new FootnoteReferenceRun(this.$footnoteCounter));
   }
 
+  /**
+   * 如果调用了这个方法，那么会把当前节点添加到一个新的段落中
+   * @param node
+   * @param props
+   */
   closeBlock(node: Node, props?: IParagraphOptions) {
     const paragraph = new Paragraph({
       children: this.current,
