@@ -59,13 +59,16 @@
     "@tiptap/starter-kit": "^2.0.1",
     "@tiptap/suggestion": "^2.0.1",
     "@tiptap/vue-3": "^2.0.1",
+    "buffer-image-size": "^0.6.4",
     "core-js": "^3.8.3",
     "daisyui": "^3.2.1",
     "date-fns": "^2.29.3",
     "diff": "^5.1.0",
+    "docx": "^8.5.0",
+    "emr_wasm": "./cool_emr_wasm/pkg",
+    "file-saver": "^2.0.5",
     "mitt": "^3.0.0",
     "print-js": "^1.6.0",
-    "prosemirror-docx": "^0.1.1",
     "prosemirror-virtual-cursor": "^0.3.5",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
@@ -91,8 +94,7 @@
     "vue-template-compiler": "^2.7.14",
     "vue3-draggable-resizable": "^1.6.5",
     "vuex": "^4.0.0",
-    "yjs": "^13.5.43",
-    "emr_wasm": "./cool_emr_wasm/pkg"
+    "yjs": "^13.5.43"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",

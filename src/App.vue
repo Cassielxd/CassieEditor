@@ -35,6 +35,8 @@
         <li>
           <router-link to="/about">关于电子病历</router-link>
         </li>
+
+        <li><router-link to="/docx">导出</router-link></li>
       </ul>
     </div>
   </div>
@@ -53,6 +55,216 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { saveAs } from "file-saver";
+import { Document, Packer, Paragraph, Footer, DeletedTextRun, AlignmentType, ShadingType, PageNumber, InsertedTextRun, TextRun, CommentRangeStart, CommentRangeEnd, CommentReference } from "docx";
+const paragraph = new Paragraph({
+  children: [
+    new TextRun("This is a simple demo "),
+    new TextRun({
+      text: "on how to "
+    }),
+    new InsertedTextRun({
+      text: "mark a text as an insertion ",
+      id: 0,
+      author: "Firstname Lastname",
+      date: "2020-10-06T09:00:00Z"
+    }),
+    new DeletedTextRun({
+      text: "or a deletion.",
+      id: 1,
+      author: "Firstname Lastname",
+      date: "2020-10-06T09:00:00Z"
+    })
+  ]
+});
+const doc = new Document({
+  footnotes: {
+    1: {
+      children: [
+        new Paragraph({
+          children: [
+            new TextRun("This is a footnote"),
+            new DeletedTextRun({
+              text: " with some extra text which was deleted",
+              id: 0,
+              author: "Firstname Lastname",
+              date: "2020-10-06T09:05:00Z"
+            }),
+            new InsertedTextRun({
+              text: " and new content",
+              id: 1,
+              author: "Firstname Lastname",
+              date: "2020-10-06T09:05:00Z"
+            })
+          ]
+        })
+      ]
+    }
+  },
+  features: {
+    trackRevisions: true
+  },
+  comments: {
+    children: [
+      {
+        id: 0,
+        author: "Ray Chen",
+        date: new Date(),
+        children: [
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "some initial text content"
+              })
+            ]
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "comment text content"
+              }),
+              new TextRun({ text: "", break: 1 }),
+              new TextRun({
+                text: "More text here",
+                bold: true
+              })
+            ]
+          })
+        ]
+      },
+      {
+        id: 1,
+        author: "Bob Ross",
+        date: new Date(),
+        children: [
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Some initial text content"
+              })
+            ]
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "comment text content"
+              })
+            ]
+          })
+        ]
+      },
+      {
+        id: 2,
+        author: "John Doe",
+        date: new Date(),
+        children: [
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Hello World"
+              })
+            ]
+          })
+        ]
+      },
+      {
+        id: 3,
+        author: "Beatriz",
+        date: new Date(),
+        children: [
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Another reply"
+              })
+            ]
+          })
+        ]
+      }
+    ]
+  },
+  sections: [
+    {
+      properties: {},
+      children: [
+        paragraph,
+        new Paragraph({
+          children: [
+            new TextRun("Hello World"),
+            new DeletedTextRun({
+              break: 1,
+              text: "in order",
+              color: "ff0000",
+              bold: true,
+              size: 24,
+              font: {
+                name: "Garamond"
+              },
+              shading: {
+                type: ShadingType.REVERSE_DIAGONAL_STRIPE,
+                color: "00FFFF",
+                fill: "FF0000"
+              },
+              id: 2,
+              author: "Firstname Lastname",
+              date: "2020-10-06T09:00:00Z"
+            }),
+            new InsertedTextRun({
+              text: "to show how to ",
+              bold: false,
+              id: 3,
+              author: "Firstname Lastname",
+              date: "2020-10-06T09:05:00Z"
+            }),
+            new CommentRangeStart(0),
+            new TextRun({
+              text: "Foo Bar",
+              bold: true,
+              revision: {
+                id: 4,
+                author: "Firstname Lastname",
+                date: "2020-10-06T09:05:00Z",
+                bold: false
+              }
+            }),
+            new CommentRangeEnd(0),
+            new TextRun({
+              children: [new CommentReference(0)],
+              bold: true
+            })
+          ]
+        }),
+        new Paragraph({
+          children: [
+            new CommentRangeStart(1),
+            new CommentRangeStart(2),
+            new CommentRangeStart(3),
+            new TextRun({
+              text: "Some text which need commenting",
+              bold: true
+            }),
+            new CommentRangeEnd(1),
+            new TextRun({
+              children: [new CommentReference(1)],
+              bold: true
+            }),
+            new CommentRangeEnd(2),
+            new TextRun({
+              children: [new CommentReference(2)],
+              bold: true
+            }),
+            new CommentRangeEnd(3),
+            new TextRun({
+              children: [new CommentReference(3)],
+              bold: true
+            })
+          ]
+        })
+      ]
+    }
+  ]
+});
+
 @Options({
   data() {
     return {
@@ -60,6 +272,13 @@ import { Options, Vue } from "vue-class-component";
     };
   },
   methods: {
+    exportWorld() {
+      Packer.toBlob(doc).then((blob) => {
+        console.log(blob);
+        saveAs(blob, "example.docx");
+        console.log("Document created successfully");
+      });
+    },
     handleSelect: (key: string) => {
       console.log(key);
     }
@@ -97,6 +316,4 @@ export default class App extends Vue {}
   border-radius: 3px 3px 3px 0;
   white-space: nowrap;
 }
-
-
 </style>

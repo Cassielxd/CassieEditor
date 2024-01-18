@@ -2,7 +2,7 @@ import { mergeAttributes, Node } from "@tiptap/core";
 import { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import { PluginKey, TextSelection } from "@tiptap/pm/state";
 import { SuggestionClick, SuggestionClickOptions } from "@/extension/suggestion/mouseSuggestion";
-import { Slice } from "prosemirror-model";
+
 
 export type MentionOptions = {
   HTMLAttributes: Record<string, any>;

@@ -1,6 +1,9 @@
 <template>
   <div class="flex w-full">
     <div class="grid flex-grow card bg-base-300 rounded-box place-items-center">
+      <div class="bg-white shadow p-2 bars">
+        <vue-file-toolbar-menu v-for="(content, index) in menus" :key="'bar-' + index" :content="content" />
+      </div>
       <editor-content class="my-2" :editor="editor" />
       <BubbleMenu v-if="editor" :tippy-options="{ duration: 100, placement: 'bottom' }" :editor="editor" :should-show="({ editor }) => isCommentModeOn && !editor.state.selection.empty && !activeCommentsInstance.uuid" class="card bg-base-100 shadow-xl">
         <div class="card-body items-center text-center">
@@ -24,7 +27,7 @@
 import OuterCommentVue from "./OuterComment.vue";
 import { CassieKit, Comment } from "@/extension";
 import { Editor, EditorContent, BubbleMenu } from "@tiptap/vue-3";
-import { onBeforeUnmount, onMounted, ref, shallowRef } from "vue";
+import { onBeforeUnmount, onMounted, reactive, ref, shallowRef } from "vue";
 import { Editor as E } from "@tiptap/core";
 import { UnitConversion } from "@/extension/page/core";
 import { pageContent, headerlist, footerlist } from "./content";
@@ -33,16 +36,26 @@ import { pageContent, headerlist, footerlist } from "./content";
 import { v4 as uuidv4 } from "uuid";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+import VueFileToolbarMenu from "vue-file-toolbar-menu";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import format from "date-fns/format";
 import { DiffExtension } from "@/extension/track";
+import { defaultDocxSerializer, writeDocxForBlob } from "@/docx";
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { saveAs } from "file-saver";
 const unitConversion = new UnitConversion();
 export default {
   components: {
+    VueFileToolbarMenu,
     EditorContent,
     BubbleMenu,
     OuterCommentVue
   },
   setup() {
+
     const h = unitConversion.mmConversionPx(148);
     const w = unitConversion.mmConversionPx(210);
 
@@ -120,7 +133,29 @@ export default {
 
     const getIsCommentModeOn = () => isCommentModeOn.value;
     const editor = shallowRef<Editor>();
-
+    const opts = {
+      getImageBuffer(src: string) {
+        return "";
+      }
+    };
+    const menus = reactive([
+      [
+        {
+          icon: "save",
+          text: "导出",
+          title: "导出world",
+          click() {
+            let doc = editor.value?.state.doc;
+            const wordDocument = defaultDocxSerializer.serialize(doc, opts);
+            writeDocxForBlob(wordDocument, (blob) => {
+              console.log(blob);
+              saveAs(blob, "example.docx");
+              console.log("Document created successfully");
+            });
+          }
+        }
+      ]
+    ]);
     const setComment = (val?: string) => {
       const localVal = val || commentText.value;
 
@@ -229,7 +264,8 @@ export default {
       isCommentModeOn,
       activeCommentsInstance,
       allComments,
-      formatDate
+      formatDate,
+      menus
     };
   }
 };
