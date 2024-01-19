@@ -44,13 +44,15 @@ export default {
     const onUpdate = (output: any, editor: any) => {
     };
     const onStatus = (data: any, editor: any) => {
-      userLenth.value = editor.value.storage.collaborationCursor.users;
+      if(data.status=="connected"){
+        userLenth.value = editor.value.storage.collaborationCursor.users;
+      }
     };
     const onCreate = (option: any) => {
       console.log(option);
     };
     const user = { name: getRandomName(), color: getRandomColor() };
-    const url = "ws://47.104.64.212:1234";
+    const url = "ws://127.0.0.1:1234";
     return { user, pageContent, menulist, headerlist, footerlist, onUpdate, onStatus, onCreate, url, userLenth };
   }
 };

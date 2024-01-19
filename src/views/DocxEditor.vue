@@ -4,44 +4,35 @@
       <div class="bg-white shadow p-2 bars">
         <vue-file-toolbar-menu v-for="(content, index) in menus" :key="'bar-' + index" :content="content" />
       </div>
-      <editor-content class="bg-white" :editor="editor" style="width:800px; height: 1200px;" />
+      <editor-content class="bg-white" :editor="editor" :style="{width: w+'px',height: h+'px'}"   />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-
 import { StarterKit } from "@tiptap/starter-kit";
 import { Editor, EditorContent, BubbleMenu } from "@tiptap/vue-3";
 import { onBeforeUnmount, onMounted, reactive, ref, shallowRef } from "vue";
-import { Editor as E } from "@tiptap/core";
 import { UnitConversion } from "@/extension/page/core";
-import { pageContent, headerlist, footerlist } from "./content";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { v4 as uuidv4 } from "uuid";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import VueFileToolbarMenu from "vue-file-toolbar-menu";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import format from "date-fns/format";
-import { DiffExtension } from "@/extension/track";
 import { defaultDocxSerializer, writeDocxForBlob } from "@/docx";
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { saveAs } from "file-saver";
+
 const unitConversion = new UnitConversion();
+//210mm x 297mm。
+let w =unitConversion.mmConversionPx(210);
+let h =unitConversion.mmConversionPx(297);
 export default {
   components: {
     VueFileToolbarMenu,
     EditorContent
   },
   setup() {
-
     const { log } = console;
-
 
     const editor = shallowRef<Editor>();
     const opts = {
@@ -68,7 +59,6 @@ export default {
       ]
     ]);
 
-
     onBeforeUnmount(() => {
       editor.value?.destroy();
     });
@@ -80,17 +70,28 @@ export default {
             class: ""
           }
         },
-        content: '<p>Example Text</p>', //初始化编辑器内容
-        injectCSS: false,
-        extensions: [StarterKit]
+        content: `
+               <h1>title1</h1>
+                <h2>title2</h2>
+                 <h3>title3</h3>
+                  <h4>title3</h4>
+                   <h5>title3</h5>
+                    <h6>title3</h6>
+               <p>Example Text</p>`, //初始化编辑器内容
+
+        extensions: [
+          StarterKit.configure({
+            heading: { levels: [1, 2, 3, 4, 5, 6] }
+          })]
       });
     });
     return {
       editor,
-      menus
+      menus,
+      w,
+      h
     };
   }
 };
 </script>
-<style>
-</style>
+<style scoped></style>

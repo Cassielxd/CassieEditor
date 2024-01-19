@@ -99,7 +99,11 @@ export default defineComponent({
         onStatus: (data) => {
           emit("onStatus", data, editor);
         },
+        onClose: (data)=>{
+         console.log(data);
+        },
         onSynced: (data) => {
+          console.log(data);
           //如果当前协作文档 只有一个人 证明是第一个打开文档的 需要添加文档
           if (editor.value && editor.value.storage.collaborationCursor.users.length == 1) {
             if (props.content) {
