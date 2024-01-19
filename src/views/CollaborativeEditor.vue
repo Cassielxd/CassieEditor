@@ -8,7 +8,7 @@
     </div>
     <div class="avatar-group">
       <div class="avatar placeholder" v-for="(item, index) in userLenth" :key="index">
-        <div :style="{background: item.user.color}" class="text-neutral-content rounded-full w-24">
+        <div :style="{background: item.user.color?item.user.color:''}" class="text-neutral-content rounded-full w-24">
           <span>{{ item.user.name }}</span>
         </div>
       </div>
@@ -42,7 +42,7 @@ export default {
     let userLenth = ref([]);
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const onUpdate = (output: any, editor: any) => {
-      userLenth.value = editor.storage.collaborationCursor.users;
+
     };
     const onStatus = (data: any, editor: any) => {
 
