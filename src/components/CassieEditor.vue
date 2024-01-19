@@ -120,6 +120,9 @@ export default defineComponent({
          onClose: (data)=>{
            console.log(data);
          },
+         onAwarenessChange:(data)=>{
+           emit("onAwarenessChange", data);
+         },
          onSynced: (data) => {
            console.log(data);
            //如果当前协作文档 只有一个人 证明是第一个打开文档的 需要添加文档
