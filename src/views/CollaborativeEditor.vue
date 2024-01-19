@@ -42,10 +42,11 @@ export default {
     let userLenth = ref([]);
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const onUpdate = (output: any, editor: any) => {
+      userLenth.value = editor.storage.collaborationCursor.users;
     };
     const onStatus = (data: any, editor: any) => {
       if(data.status=="connected"){
-        userLenth.value = editor.value.storage.collaborationCursor.users;
+        userLenth.value = editor.storage.collaborationCursor.users;
       }
     };
     const onCreate = (option: any) => {
