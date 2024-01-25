@@ -7,7 +7,7 @@ import { CassieKit } from "@/extension";
 import { ResolvedPos } from "prosemirror-model";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { getDefault, getContentSpacing, computedWidth } from "emr_wasm";
+import { computedWidth } from "emr_wasm";
 export type PageOptions = {
   footerHeight: number;
   headerHeight: number;
@@ -26,82 +26,8 @@ export type SplitInfo = {
   depth: number;
 };
 
-/**
- * @description 获取需要分页的点 然后返回
- * @author Cassie
- * @method getNodeHeight 获取节点高度
- * @param doc 需要计算的doc
- * @param state
- */
-export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
-  const { schema } = state;
-  const { lastChild } = doc;
-  let accumolatedHeight = 0;
-  let pageBoundary = null;
-  let skip = true;
-  const { bodyOptions } = paginationPluginKey.getState(state);
-  const height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2;
-  const fulldoc = state.doc;
-  const paragraphDefaultHeight: number = getDefault();
-  let curBolck: Node;
-  let curPos: ResolvedPos;
-  const contentH = 0;
-  doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
-    if (node.type === schema.nodes[PAGE] && node !== lastChild) {
-      return false;
-    }
-    if (node.type === schema.nodes[PARAGRAPH]) {
-      //如果p标签没有子标签直接返回默认高度 否则计算高度
-      const pHeight = node.childCount > 0 ? getBlockHeight(node) : paragraphDefaultHeight;
-      accumolatedHeight += pHeight;
-      /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
-      if (accumolatedHeight > height && skip) {
-        skip = false; //禁止进入下一个循
-        //判断段落是否需要拆分
-        if (pHeight > paragraphDefaultHeight) {
-          const point = getBreakPos(node);
-          if (point) {
-            pageBoundary = {
-              pos: pos + point,
-              depth: 3
-            };
-            return false;
-          }
-        }
-        //如果段落是当前块的第一个节点直接返回上一层级的切割点
-        if (curBolck.firstChild == node) {
-          pageBoundary = {
-            pos: curPos.pos,
-            depth: 1
-          };
-          return false;
-        }
-        //直接返回当前段落
-        pageBoundary = {
-          pos,
-          depth: 2
-        };
-      }
-      return false;
-    }
-    //如果是以 CASSIE_BLOCK块为节点的话则 拆分到最细 以pp标签为单位进行拆分
-    if (node.type === schema.nodes[CASSIE_BLOCK]) {
-      const contentHeight = getContentSpacing(node.attrs.id);
-      accumolatedHeight += contentHeight;
-      curBolck = node;
-      curPos = fulldoc.resolve(pos);
-      return true;
-    }
-    if (node.type === schema.nodes[CASSIE_BLOCK_EXTEND]) {
-      curBolck = node;
-      curPos = fulldoc.resolve(pos);
-      accumolatedHeight += 8;
-      return true;
-    }
-  });
 
-  return pageBoundary ? pageBoundary : null;
-}
+
 
 /**
  *获取段落里最后一个需要分页的地方
@@ -111,7 +37,7 @@ export function getNodeHeight(doc: Node, state: EditorState): SplitInfo | null {
  * @param node
  * @param width
  */
-function getBreakPos(cnode: Node) {
+export function getBreakPos(cnode: Node) {
   const paragraphDOM = document.getElementById(cnode.attrs.id);
   if (!paragraphDOM) return null;
   const width = paragraphDOM.offsetWidth;
@@ -184,7 +110,7 @@ export function getExtentions() {
  * @author Cassie
  * @method getBlockHeight
  */
-function getBlockHeight(node: Node): number {
+export function getBlockHeight(node: Node): number {
   const paragraphDOM = document.getElementById(node.attrs.id);
   if (paragraphDOM) {
     return paragraphDOM.offsetHeight;

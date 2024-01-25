@@ -1,8 +1,8 @@
 import { Attrs, Node, NodeType, Schema } from "@tiptap/pm/model";
 import { PageOptions } from "@/extension/page/core";
-import { Transaction } from "@tiptap/pm/state";
+import { SplitContex } from "@/extension/page/computed";
 
-export type NodesComputed = Record<string, (node: Node, parent: Node, index: number) => boolean>;
+export type NodesComputed = Record<string, (splitContex: SplitContex, node: Node,pos: number, parent: Node|null, index: number) => boolean>;
 export type PluginState = {
   bodyOptions: PageOptions | null;
   deleting: boolean;

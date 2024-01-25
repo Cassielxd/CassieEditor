@@ -1,21 +1,82 @@
-import { CASSIE_BLOCK_EXTEND, EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
+import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
 import { NodesComputed, PluginState, SplitParams } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
-import { getNodeHeight, SplitInfo } from "@/extension/page/core";
+import { getBlockHeight, getBreakPos, SplitInfo } from "@/extension/page/core";
 import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
-import { Selection } from "@tiptap/pm/state";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { v4 as uuid } from "uuid";
+import { getContentSpacing, getDefault } from "../../../cool_emr_wasm/pkg";
 
-//默认计算方法
+
+//默认高度计算方法
 export const defaultNodesComputed: NodesComputed = {
-  [PARAGRAPH]: (node, parent, index) => {
+  [PARAGRAPH]: (splitContex, node, pos, parent, index) => {
+    //如果p标签没有子标签直接返回默认高度 否则计算高度
+    const pHeight = node.childCount > 0 ? getBlockHeight(node) : splitContex.paragraphDefaultHeight;
+    splitContex.accumolatedHeight += pHeight;
+    /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
+    if (splitContex.accumolatedHeight > splitContex.height) {
+      // @ts-ignore
+      let chunks = splitResolve(splitContex.doc.resolve(pos).path);
+      //判断段落是否需要拆分
+      if (pHeight > splitContex.paragraphDefaultHeight) {
+        const point = getBreakPos(node);
+        if (point) {
+          splitContex.pageBoundary = {
+            pos: pos + point,
+            depth: chunks.length
+          };
+          return false;
+        }
+      }
+      //如果段落是当前块的第一个节点直接返回上一层级的切割点
+      if (parent?.firstChild == node) {
+        splitContex.pageBoundary = {
+          pos: chunks[chunks.length - 2][2],
+          depth: chunks.length - 2
+        };
+        return false;
+      }
+      //直接返回当前段落
+      splitContex.pageBoundary = {
+        pos,
+        depth: chunks.length - 1
+      };
+    }
+    return false;
+
+  },
+  [CASSIE_BLOCK]: (splitContex, node, pos, parent, index) => {
+    const contentHeight = getContentSpacing(node.attrs.id);
+    splitContex.accumolatedHeight += contentHeight;
+    return true;
+  },
+  [CASSIE_BLOCK_EXTEND]: (splitContex, node, pos, parent, index) => {
+    splitContex.accumolatedHeight += 8;
+    return true;
+  },
+  [PAGE]: (splitContex, node, pos, parent, index) => {
+    if (node !== splitContex.doc.lastChild) {
+      return false;
+    }
     return true;
   }
 };
+
+export class SplitContex {
+  doc: Node;//文档
+  accumolatedHeight: number = 0;//累加高度
+  pageBoundary: SplitInfo | null = null;//返回的切割点
+  height: number = 0;//分页的高度
+  paragraphDefaultHeight: number = 0;//p标签的默认高度
+  constructor(doc: Node) {
+    this.doc = doc;
+  }
+}
+
 /*
  * PageComputedContext 分页核心计算class
  * */
@@ -31,6 +92,7 @@ export class PageComputedContext {
     this.state = state;
     this.pluginState = pluginState;
   }
+
   //核心执行逻辑
   run() {
     const { selection, doc } = this.state;
@@ -64,13 +126,14 @@ export class PageComputedContext {
     this.splitDocument();
     return this.tr;
   }
+
   /**
    * @description 递归分割page
    */
   splitDocument() {
     const { schema } = this.state;
     /*获取最后一个page计算高度 如果返回值存在的话证明需要分割*/
-    const splitInfo: SplitInfo | null = getNodeHeight(this.tr.doc, this.state);
+    const splitInfo: SplitInfo | null = this.getNodeHeight();
     if (!splitInfo) return;
     const type = getNodeType(PAGE, schema);
     this.splitPage({
@@ -100,6 +163,7 @@ export class PageComputedContext {
     }
     this.tr = tr;
   }
+
   /**
    * @method mergeDocument
    * @description  合并剩余文档 将剩余文档进行分页
@@ -113,6 +177,7 @@ export class PageComputedContext {
     //把所有的page 合并成一个 page
     this.mergeDefaultDocument(count);
   }
+
   /**
    * @description 分页主要逻辑 修改系统tr split方法 添加默认 extend判断 默认id重新生成
    * @author Cassie
@@ -151,18 +216,19 @@ export class PageComputedContext {
       after = Fragment.from(
         typeAfter
           ? typeAfter.type.create(
-              {
-                id: uuid(),
-                pageNumber: na?.attrs.pageNumber + 1
-              },
-              after
-            )
+            {
+              id: uuid(),
+              pageNumber: na?.attrs.pageNumber + 1
+            },
+            after
+          )
           : na
       );
     }
     tr.step(new ReplaceStep(pos, pos, new Slice(before.append(after), depth, depth)));
     this.tr = tr;
   }
+
   /**
    * desc 检查并修正分页造成的段落分行问题
    */
@@ -194,4 +260,39 @@ export class PageComputedContext {
     this.tr = tr;
     return this.tr;
   }
+
+  /**
+   * @description 获取需要分页的点 然后返回
+   * @author Cassie
+   * @method getNodeHeight 获取节点高度
+   */
+  getNodeHeight(): SplitInfo | null {
+    let doc = this.tr.doc;
+    const { schema } = this.state;
+    const { lastChild } = doc;
+    const { bodyOptions } = this.pluginState;
+    let splitContex = new SplitContex(doc);
+    // @ts-ignore
+    splitContex.height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2;
+
+    let nodesComputed = this.nodesComputed;
+    splitContex.doc = doc;
+    splitContex.paragraphDefaultHeight = getDefault();
+    let self = this;
+    doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
+      if (!splitContex.pageBoundary) {
+        return self.nodesComputed[node.type.name](splitContex, node, pos, parentNode, i);
+      }
+    });
+    return splitContex.pageBoundary ? splitContex.pageBoundary : null;
+  }
+}
+
+function splitResolve(array: []) {
+  let chunks = [];
+  let size = 3;
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  return chunks;
 }
