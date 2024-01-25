@@ -3,7 +3,7 @@ import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { computedWidth } from "../../../cool_emr_wasm/pkg";
+import { computedWidth } from "../../../cool_emr_wasm/pkg/cool_emr_wasm";
 export type PageOptions = {
   footerHeight: number;
   headerHeight: number;
@@ -21,9 +21,6 @@ export type SplitInfo = {
   pos: number;
   depth: number;
 };
-
-
-
 
 /**
  *获取段落里最后一个需要分页的地方

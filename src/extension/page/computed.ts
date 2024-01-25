@@ -1,3 +1,4 @@
+// @ts-noCheck
 import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
 import { NodesComputed, PluginState, SplitParams } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
@@ -5,11 +6,8 @@ import { EditorState, Transaction } from "@tiptap/pm/state";
 import { getBlockHeight, getBreakPos, SplitInfo } from "@/extension/page/core";
 import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { v4 as uuid } from "uuid";
-import { getContentSpacing, getDefault } from "../../../cool_emr_wasm/pkg";
-
+import { getContentSpacing, getDefault } from "../../../cool_emr_wasm/pkg/cool_emr_wasm";
 
 //默认高度计算方法
 export const defaultNodesComputed: NodesComputed = {
@@ -19,8 +17,7 @@ export const defaultNodesComputed: NodesComputed = {
     splitContex.accumolatedHeight += pHeight;
     /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
     if (splitContex.accumolatedHeight > splitContex.height) {
-      // @ts-ignore
-      let chunks = splitResolve(splitContex.doc.resolve(pos).path);
+      const chunks = splitResolve(splitContex.doc.resolve(pos).path);
       //判断段落是否需要拆分
       if (pHeight > splitContex.paragraphDefaultHeight) {
         const point = getBreakPos(node);
@@ -47,7 +44,6 @@ export const defaultNodesComputed: NodesComputed = {
       };
     }
     return false;
-
   },
   [CASSIE_BLOCK]: (splitContex, node, pos, parent, index) => {
     const contentHeight = getContentSpacing(node.attrs.id);
@@ -59,21 +55,20 @@ export const defaultNodesComputed: NodesComputed = {
     return true;
   },
   [PAGE]: (splitContex, node, pos, parent, index) => {
-    if (node !== splitContex.doc.lastChild) {
-      return false;
-    }
-    return true;
+    return node == splitContex.doc.lastChild;
   }
 };
 
 export class SplitContex {
-  doc: Node;//文档
-  accumolatedHeight: number = 0;//累加高度
-  pageBoundary: SplitInfo | null = null;//返回的切割点
-  height: number = 0;//分页的高度
-  paragraphDefaultHeight: number = 0;//p标签的默认高度
-  constructor(doc: Node) {
+  doc: Node; //文档
+  accumolatedHeight = 0; //累加高度
+  pageBoundary: SplitInfo | null = null; //返回的切割点
+  height = 0; //分页的高度
+  paragraphDefaultHeight = 0; //p标签的默认高度
+  constructor(doc: Node, height: number, paragraphDefaultHeight: number) {
     this.doc = doc;
+    this.height = height;
+    this.paragraphDefaultHeight = paragraphDefaultHeight;
   }
 }
 
@@ -100,10 +95,10 @@ export class PageComputedContext {
     if (splitPage) return this.initComputed();
     if (checkNode) return this.checkNodeAndFix();
     if (!inserting && deleting && selection.$head.node(1) === doc.lastChild) return this.tr;
-    this.computed();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    window.checkNode = true;
+    if (inserting || deleting) {
+      this.computed();
+      window.checkNode = true;
+    }
     return this.tr;
   }
 
@@ -216,12 +211,12 @@ export class PageComputedContext {
       after = Fragment.from(
         typeAfter
           ? typeAfter.type.create(
-            {
-              id: uuid(),
-              pageNumber: na?.attrs.pageNumber + 1
-            },
-            after
-          )
+              {
+                id: uuid(),
+                pageNumber: na?.attrs.pageNumber + 1
+              },
+              after
+            )
           : na
       );
     }
@@ -238,7 +233,6 @@ export class PageComputedContext {
     const { schema } = this.state;
     let beforeBolck: Node | null = null;
     let beforePos = 0;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
       if (node.type === schema.nodes[PARAGRAPH] && node.attrs.extend == "true") {
         if (beforeBolck == null) {
@@ -267,30 +261,24 @@ export class PageComputedContext {
    * @method getNodeHeight 获取节点高度
    */
   getNodeHeight(): SplitInfo | null {
-    let doc = this.tr.doc;
-    const { schema } = this.state;
-    const { lastChild } = doc;
+    const doc = this.tr.doc;
     const { bodyOptions } = this.pluginState;
-    let splitContex = new SplitContex(doc);
-    // @ts-ignore
-    splitContex.height = bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2;
-
-    let nodesComputed = this.nodesComputed;
-    splitContex.doc = doc;
-    splitContex.paragraphDefaultHeight = getDefault();
-    let self = this;
+    const splitContex = new SplitContex(doc, bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2, getDefault());
+    const nodesComputed = this.nodesComputed;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
       if (!splitContex.pageBoundary) {
-        return self.nodesComputed[node.type.name](splitContex, node, pos, parentNode, i);
+        return nodesComputed[node.type.name](splitContex, node, pos, parentNode, i);
       }
+      return false;
     });
     return splitContex.pageBoundary ? splitContex.pageBoundary : null;
   }
 }
 
 function splitResolve(array: []) {
-  let chunks = [];
-  let size = 3;
+  const chunks = [];
+  if (array.length <= 3) return array;
+  const size = 3;
   for (let i = 0; i < array.length; i += size) {
     chunks.push(array.slice(i, i + size));
   }

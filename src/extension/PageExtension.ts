@@ -1,7 +1,7 @@
 import { Extension } from "@tiptap/core";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { init_plugn } from "../../cool_emr_wasm/pkg";
+import { init_plugn } from "../../cool_emr_wasm/pkg/cool_emr_wasm";
 import { Page } from "@/extension/page/page";
 import CassieBlock from "@/extension/node/CassieBlock";
 import { PageOptions } from "@/extension/page/core";

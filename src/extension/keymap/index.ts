@@ -2,7 +2,7 @@ import { Extension, findChildrenInRange, findParentNode } from "@tiptap/core";
 import { getJsonFromDoc, getExtentions } from "@/extension/page/core";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { computedWidth } from "../../../cool_emr_wasm/pkg";
+import { computedWidth } from "../../../cool_emr_wasm/pkg/cool_emr_wasm";
 import { Selection, TextSelection } from "@tiptap/pm/state";
 import { EXTEND, PAGE, CASSIE_BLOCK } from "@/extension/nodeNames";
 import { ReplaceStep } from "@tiptap/pm/transform";
