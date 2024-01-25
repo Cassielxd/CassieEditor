@@ -1,13 +1,9 @@
 import { Node } from "@tiptap/pm/model";
-import { EditorState } from "@tiptap/pm/state";
 import { generateHTML } from "@tiptap/html";
-import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
-import { paginationPluginKey } from "@/extension/page/pagePlugn";
 import { CassieKit } from "@/extension";
-import { ResolvedPos } from "prosemirror-model";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { computedWidth } from "emr_wasm";
+import { computedWidth } from "../../../cool_emr_wasm/pkg";
 export type PageOptions = {
   footerHeight: number;
   headerHeight: number;

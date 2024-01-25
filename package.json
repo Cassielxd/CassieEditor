@@ -65,7 +65,6 @@
     "date-fns": "^2.29.3",
     "diff": "^5.1.0",
     "docx": "^8.5.0",
-    "emr_wasm": "./cool_emr_wasm/pkg",
     "file-saver": "^2.0.5",
     "mitt": "^3.0.0",
     "print-js": "^1.6.0",
