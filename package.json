@@ -58,7 +58,7 @@
     "@tiptap/pm": "^2.1.16",
     "@tiptap/starter-kit": "^2.1.16",
     "@tiptap/suggestion": "^2.1.16",
-    "@tiptap/vue-3": "^2.0.1",
+    "@tiptap/vue-3": "^2.1.16",
     "buffer-image-size": "^0.6.4",
     "core-js": "^3.8.3",
     "daisyui": "^3.2.1",

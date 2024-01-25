@@ -14,7 +14,7 @@ import * as Y from "yjs";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { HocuspocusProvider } from "@hocuspocus/provider";
-import { Extensions } from "@tiptap/core/src/types";
+import { Extensions } from "@tiptap/core";
 export default defineComponent({
   name: "cassie-editor",
   components: {
@@ -93,7 +93,7 @@ export default defineComponent({
     const provider = shallowRef<HocuspocusProvider>();
     onMounted(() => {
       //协作编辑 ws url
-     let extensions:Extensions = [
+      let extensions: Extensions = [
         CassieKit.configure({
           textAlign: { types: ["heading", "paragraph"] },
           mention: {
@@ -106,43 +106,45 @@ export default defineComponent({
           focus: false, //选中样式
           history: false //历史记录回退 协作模式禁止开启
         })
-
       ];
-     if(props.collaborationUrl){
-       provider.value = new HocuspocusProvider({
-         url: props.collaborationUrl || "",
-         name: "1", //这里需要修改 这里是文旦id
-         document: ydoc,
-         onStatus: (data) => {
-           emit("onStatus", data, editor.value);
-         },
-         onConnect:()=>{},
-         onClose: (data)=>{
-           console.log(data);
-         },
-         onAwarenessChange:(data)=>{
-           emit("onAwarenessChange", data);
-         },
-         onSynced: (data) => {
-           console.log(data);
-           //如果当前协作文档 只有一个人 证明是第一个打开文档的 需要添加文档
-           if (editor.value && editor.value.storage.collaborationCursor.users.length == 1) {
-             if (props.content) {
-               editor.value.commands.setContent(props.content);
-             }
-           }
-         }
-       });
-       extensions.push(Collaboration.configure({
-         document: ydoc
-       }));
-       extensions.push(CollaborationCursor.configure({
-         provider: provider.value,
-         //这里应该使用当前你的登录用户
-         user: props.user
-       }));
-
-     }
+      if (props.collaborationUrl) {
+        provider.value = new HocuspocusProvider({
+          url: props.collaborationUrl || "",
+          name: "1", //这里需要修改 这里是文旦id
+          document: ydoc,
+          onStatus: (data) => {
+            emit("onStatus", data, editor.value);
+          },
+          onConnect: () => {},
+          onClose: (data) => {
+            console.log(data);
+          },
+          onAwarenessChange: (data) => {
+            emit("onAwarenessChange", data);
+          },
+          onSynced: (data) => {
+            console.log(data);
+            //如果当前协作文档 只有一个人 证明是第一个打开文档的 需要添加文档
+            if (editor.value && editor.value.storage.collaborationCursor.users.length == 1) {
+              if (props.content) {
+                editor.value.commands.setContent(props.content);
+              }
+            }
+          }
+        });
+        extensions.push(
+          Collaboration.configure({
+            document: ydoc
+          })
+        );
+        extensions.push(
+          CollaborationCursor.configure({
+            provider: provider.value,
+            //这里应该使用当前你的登录用户
+            user: props.user
+          })
+        );
+      }
       //如果是协作模式 设置 content需要滞后 否则会重复添加
       editor.value = new Editor({
         editable: props.editable,

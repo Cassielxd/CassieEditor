@@ -2,7 +2,7 @@ import { HeadingLevel, ShadingType } from "docx";
 import { DocxSerializer, MarkSerializer, NodeSerializer } from "./serializer";
 import { getLatexFromNode } from "./utils";
 /*
-* 所有节点对应的 docx序列化方法
+ * 所有节点对应的 docx序列化方法
 * 方法名称是node节点名称
 * */
 export const defaultNodes: NodeSerializer = {
