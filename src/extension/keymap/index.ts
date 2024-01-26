@@ -1,13 +1,10 @@
 import { Extension, findChildrenInRange, findParentNode } from "@tiptap/core";
-import { getJsonFromDoc, getExtentions } from "@/extension/page/core";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { computedWidth } from "../../../cool_emr_wasm/pkg/cool_emr_wasm";
+import { getFlag } from "@/extension/page/core";
 import { Selection, TextSelection } from "@tiptap/pm/state";
 import { EXTEND, PAGE, CASSIE_BLOCK } from "@/extension/nodeNames";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
-import { generateHTML } from "@tiptap/html";
+
 import * as commands from "@/extension/commands";
 export const CoolKeyMap = Extension.create({
   name: "CoolKeyMap",
@@ -76,11 +73,7 @@ export const CoolKeyMap = Extension.create({
                   const selection1 = TextSelection.create(doc, pos1, pos1);
                   if (curBlock) {
                     const parent = selection1.$anchor.parent;
-                    const paragraphDOM = document.getElementById(parent.attrs.id);
-                    const html = generateHTML(getJsonFromDoc(parent), getExtentions());
-                    const wordl = computedWidth(html);
-                    const space = computedWidth(" ");
-                    if (paragraphDOM && Math.abs(wordl - paragraphDOM.getBoundingClientRect().width) < space) {
+                    if (getFlag(parent)) {
                       tr.setSelection(selection1);
                     } else {
                       tr.step(new ReplaceStep(pos1, pos, Slice.empty));

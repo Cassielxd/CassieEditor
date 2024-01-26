@@ -3,11 +3,10 @@ import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, PAGE, PARAGRAPH } from "@/ex
 import { NodesComputed, PluginState, SplitParams } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
-import { getBlockHeight, getBreakPos, SplitInfo } from "@/extension/page/core";
+import { getBlockHeight, getBreakPos, getContentSpacing, getDefault, SplitInfo } from "@/extension/page/core";
 import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { v4 as uuid } from "uuid";
-import { getContentSpacing, getDefault } from "../../../cool_emr_wasm/pkg/cool_emr_wasm";
 
 //默认高度计算方法
 export const defaultNodesComputed: NodesComputed = {

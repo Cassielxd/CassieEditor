@@ -1,9 +1,7 @@
 import { Node } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { computedWidth } from "../../../cool_emr_wasm/pkg/cool_emr_wasm";
+
 export type PageOptions = {
   footerHeight: number;
   headerHeight: number;
@@ -21,6 +19,45 @@ export type SplitInfo = {
   pos: number;
   depth: number;
 };
+
+export function getFlag(cnode: Node) {
+  const paragraphDOM = document.getElementById(cnode.attrs.id);
+  if (!paragraphDOM) return null;
+  const width = paragraphDOM.getBoundingClientRect().width;
+  const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
+  const wordl = computedWidth(html);
+  //证明一行都没填满 应当执行 合并
+  if (width >= wordl) {
+    return false;
+  }
+  let strLength = 0;
+  //多行计算最后一行是不是满行
+  cnode.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
+    if (node.isText) {
+      const nodeText = node.text;
+      if (nodeText) {
+        for (let i = 0; i < nodeText.length; i++) {
+          const wl = computedWidth(nodeText.charAt(i));
+          if (strLength + wl > width) {
+            strLength = wl;
+          } else {
+            strLength += wl;
+          }
+        }
+      }
+    } else {
+      const html = generateHTML(getJsonFromDoc(node), getExtentions());
+      const wordl = computedWidth(html);
+      if (strLength + wordl > width) {
+        strLength = wordl;
+      } else {
+        strLength += wordl;
+      }
+    }
+  });
+  const space = parseFloat(window.getComputedStyle(paragraphDOM).getPropertyValue("font-size"));
+  return Math.abs(strLength - width) < space;
+}
 
 /**
  *获取段落里最后一个需要分页的地方
@@ -157,4 +194,50 @@ export class UnitConversion {
     const c_value = inch * this.arrDPI[0];
     return Number(c_value.toFixed());
   }
+}
+const map = new Map();
+export function computedWidth(html: string) {
+  if (map.has(html)) {
+    return map.get(html);
+  }
+  const computedspan = document.getElementById("computedspan");
+  if (html == " ") {
+    html = "&nbsp;";
+  }
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (computedspan) {
+    computedspan.innerHTML = html;
+    const width = computedspan.getBoundingClientRect().width;
+    map.set(html, width);
+    return width;
+  }
+  return 0;
+}
+
+export function getContentSpacing(id: string) {
+  const dom = document.getElementById(id);
+  const content = dom?.querySelector(".content") as HTMLElement;
+  if (dom && content) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const contentStyle = window.getComputedStyle(content);
+    const paddingTop = contentStyle.getPropertyValue("padding-top");
+    const paddingBottom = contentStyle.getPropertyValue("padding-bottom");
+    const marginTop = contentStyle.getPropertyValue("margin-top");
+    const marginBottom = contentStyle.getPropertyValue("margin-bottom");
+    const padding = parseFloat(paddingTop) + parseFloat(paddingBottom);
+    const margin = parseFloat(marginTop) + parseFloat(marginBottom);
+    return padding + margin + (dom.offsetHeight - content.offsetHeight);
+  }
+  return 0;
+}
+
+export function getDefault() {
+  if (map.has("defaultheight")) {
+    return map.get("defaultheight");
+  }
+  const offsetHeight = document.getElementById("computedspan")?.offsetHeight;
+  map.set("defaultheight", offsetHeight);
+  return offsetHeight;
 }
