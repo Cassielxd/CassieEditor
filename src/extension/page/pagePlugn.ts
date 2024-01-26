@@ -5,7 +5,6 @@ import { EditorView } from "@tiptap/pm/view";
 import { PAGE } from "@/extension/nodeNames";
 import { PageOptions } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
-import { Editor } from "@tiptap/core";
 import { defaultNodesComputed, PageComputedContext } from "@/extension/page/computed";
 
 type PluginState = {
@@ -16,7 +15,7 @@ type PluginState = {
   splitPage: boolean;
 };
 export const paginationPluginKey = new PluginKey("pagination");
-export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
+export const pagePlugin = (bodyOption: PageOptions) => {
   const plugin: Plugin = new Plugin<PluginState>({
     key: paginationPluginKey,
     view: () => {
@@ -97,7 +96,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     },
     props: {
       handleTextInput(view, form, to, text) {
-        //view.focus();
+        view.focus();
         return false;
       },
       handleKeyDown(view, event) {

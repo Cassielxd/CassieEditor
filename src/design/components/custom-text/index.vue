@@ -1,5 +1,5 @@
 <template>
-  <div ref="inputtext" :style="styles" contenteditable="true" @input="inputText" @blur="inputBlur" @focus="inputFocus">
+  <div ref="inputtext" :style="styles" @input="inputText" @blur="inputBlur" @focus="inputFocus">
     {{ value }}
   </div>
 </template>

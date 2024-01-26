@@ -18,7 +18,16 @@ export const CoolKeyMap = Extension.create({
     /*修改系统默认的 回车拆分逻辑*/
     const handleEnter = () =>
       this.editor.commands.first(({ commands }) => {
-        return [() => commands.newlineInCode(), () => commands.createParagraphNear(), () => commands.liftEmptyBlock(), () => commands.splitCBlock()];
+        return [
+          () => commands.newlineInCode(),
+          () => commands.createParagraphNear(),
+          () => commands.liftEmptyBlock(),
+          () => {
+            const ok = commands.splitCBlock();
+            console.log(ok);
+            return ok;
+          }
+        ];
       });
     const handleBackspace = () =>
       this.editor.commands.first(({ commands }) => [

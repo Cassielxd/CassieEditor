@@ -25,7 +25,7 @@ export function getFlag(cnode: Node) {
   if (!paragraphDOM) return null;
   const width = paragraphDOM.getBoundingClientRect().width;
   const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
-  const wordl = computedWidth(html);
+  const wordl = computedWidth(html, false);
   //证明一行都没填满 应当执行 合并
   if (width >= wordl) {
     return false;
@@ -74,7 +74,7 @@ export function getBreakPos(cnode: Node) {
   let strLength = 0;
   let index = 0;
   const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
-  const wordl = computedWidth(html);
+  const wordl = computedWidth(html, false);
   //如果高度超过默认了 但是宽度没有超过 证明 只有一行 只是里面有 行内元素 比如 图片
   if (width >= wordl) {
     return null;
@@ -196,7 +196,7 @@ export class UnitConversion {
   }
 }
 const map = new Map();
-export function computedWidth(html: string) {
+export function computedWidth(html: string, cache = true) {
   if (map.has(html)) {
     return map.get(html);
   }
@@ -209,7 +209,9 @@ export function computedWidth(html: string) {
   if (computedspan) {
     computedspan.innerHTML = html;
     const width = computedspan.getBoundingClientRect().width;
-    map.set(html, width);
+    if (cache) {
+      map.set(html, width);
+    }
     return width;
   }
   return 0;

@@ -55,7 +55,6 @@ export default {
     OuterCommentVue
   },
   setup() {
-
     const h = unitConversion.mmConversionPx(148);
     const w = unitConversion.mmConversionPx(210);
 
