@@ -7,19 +7,20 @@ import { getBlockHeight, getBreakPos, getContentSpacing, getDefault, SplitInfo }
 import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { v4 as uuid } from "uuid";
+import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
 
 //默认高度计算方法
 export const defaultNodesComputed: NodesComputed = {
-  [PARAGRAPH]: (splitContex, node, pos, parent, index) => {
+  [PARAGRAPH]: (splitContex, node, pos, parent, dom) => {
     //如果p标签没有子标签直接返回默认高度 否则计算高度
-    const pHeight = node.childCount > 0 ? getBlockHeight(node) : splitContex.paragraphDefaultHeight;
+    const pHeight = node.childCount > 0 ? dom.node.offsetHeight : splitContex.paragraphDefaultHeight;
     splitContex.accumolatedHeight += pHeight;
     /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
     if (splitContex.accumolatedHeight > splitContex.height) {
       const chunks = splitResolve(splitContex.doc.resolve(pos).path);
       //判断段落是否需要拆分
       if (pHeight > splitContex.paragraphDefaultHeight) {
-        const point = getBreakPos(node);
+        const point = getBreakPos(node, dom);
         if (point) {
           splitContex.pageBoundary = {
             pos: pos + point,
@@ -44,16 +45,16 @@ export const defaultNodesComputed: NodesComputed = {
     }
     return false;
   },
-  [CASSIE_BLOCK]: (splitContex, node, pos, parent, index) => {
-    const contentHeight = getContentSpacing(node.attrs.id);
+  [CASSIE_BLOCK]: (splitContex, node, pos, parent, dom) => {
+    const contentHeight = getContentSpacing(dom.node);
     splitContex.accumolatedHeight += contentHeight;
     return true;
   },
-  [CASSIE_BLOCK_EXTEND]: (splitContex, node, pos, parent, index) => {
+  [CASSIE_BLOCK_EXTEND]: (splitContex, node, pos, parent, dom) => {
     splitContex.accumolatedHeight += 8;
     return true;
   },
-  [PAGE]: (splitContex, node, pos, parent, index) => {
+  [PAGE]: (splitContex, node, pos, parent, dom) => {
     return node == splitContex.doc.lastChild;
   }
 };
@@ -79,8 +80,9 @@ export class PageComputedContext {
   state: EditorState;
   tr: Transaction;
   pluginState: PluginState;
-
-  constructor(nodesComputed: NodesComputed, pluginState: PluginState, state: EditorState) {
+  editor: Editor;
+  constructor(editor: Editor, nodesComputed: NodesComputed, pluginState: PluginState, state: EditorState) {
+    this.editor = editor;
     this.nodesComputed = nodesComputed;
     this.tr = state.tr;
     this.state = state;
@@ -264,9 +266,12 @@ export class PageComputedContext {
     const { bodyOptions } = this.pluginState;
     const splitContex = new SplitContex(doc, bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2, getDefault());
     const nodesComputed = this.nodesComputed;
+    const editor = this.editor;
+    const domAtPos = editor.view.domAtPos.bind(editor.view);
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
       if (!splitContex.pageBoundary) {
-        return nodesComputed[node.type.name](splitContex, node, pos, parentNode, i);
+        const dom = domAtPos(pos + 1);
+        return nodesComputed[node.type.name](splitContex, node, pos, parentNode, dom);
       }
       return false;
     });

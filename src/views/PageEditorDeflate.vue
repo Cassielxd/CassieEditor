@@ -1,12 +1,11 @@
 <template>
   <div class="flex place-content-center bg-gray-200">
-    <editor-content :editor="editor" class="my-2" :style="{ width: bodyWidth + 'px' }" />
+    <editor-content :editor="editor"  />
   </div>
 </template>
 
 <script lang="ts">
 import applyDevTools from "prosemirror-dev-tools";
-import { getCurrentInstance } from "vue";
 import { pageContent, headerlist, footerlist } from "./content";
 import { UnitConversion } from "@/extension/page/core";
 import { EditorContent, Editor } from "@tiptap/vue-3";
@@ -19,7 +18,6 @@ export default {
     EditorContent
   },
   setup() {
-    const { ctx } = getCurrentInstance();
     let bodyWidth = unitConversion.mmConversionPx(210);
     let h = unitConversion.mmConversionPx(297);
     const menulist = [
@@ -35,8 +33,7 @@ export default {
         value: "date"
       }
     ];
-    const onUpdate = (output: any, editor: any) => {
-    };
+    const onUpdate = (output: any, editor: any) => {};
     const onCreate = (option: any) => {
       console.log(option);
     };

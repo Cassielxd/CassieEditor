@@ -12,7 +12,7 @@ export const PageExtension = Extension.create<PageOptions>({
     const plugins: any[] = [];
     if (this.options.design) return plugins;
     if (this.options.isPaging) {
-      plugins.push(pagePlugin(this.options));
+      plugins.push(pagePlugin(this.editor,this.options));
     }
     return plugins;
   },

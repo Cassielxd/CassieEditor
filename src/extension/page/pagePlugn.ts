@@ -6,6 +6,7 @@ import { PAGE } from "@/extension/nodeNames";
 import { PageOptions } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
 import { defaultNodesComputed, PageComputedContext } from "@/extension/page/computed";
+import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
 
 type PluginState = {
   bodyOptions: PageOptions | null;
@@ -15,7 +16,7 @@ type PluginState = {
   splitPage: boolean;
 };
 export const paginationPluginKey = new PluginKey("pagination");
-export const pagePlugin = (bodyOption: PageOptions) => {
+export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
   const plugin: Plugin = new Plugin<PluginState>({
     key: paginationPluginKey,
     view: () => {
@@ -91,7 +92,7 @@ export const pagePlugin = (bodyOption: PageOptions) => {
      * @param state
      */
     appendTransaction([newTr], _prevState, state) {
-      const page = new PageComputedContext(defaultNodesComputed, this.getState(state), state);
+      const page = new PageComputedContext(editor,defaultNodesComputed, this.getState(state), state);
       return page.run().scrollIntoView();
     },
     props: {

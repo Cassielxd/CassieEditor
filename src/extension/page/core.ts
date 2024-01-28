@@ -64,11 +64,13 @@ export function getFlag(cnode: Node) {
  * 行内中文字符和英文字符宽度超过 段落宽度 计算
  * 没有超过直接返回null
  * 由于行内有可能含有图片 不需要计算图片
- * @param node
- * @param width
+ * @param cnode
+ * @param dom
  */
-export function getBreakPos(cnode: Node) {
-  const paragraphDOM = document.getElementById(cnode.attrs.id);
+export function getBreakPos(cnode: Node, dom: object) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const paragraphDOM = dom.node;
   if (!paragraphDOM) return null;
   const width = paragraphDOM.offsetWidth;
   let strLength = 0;
@@ -217,9 +219,9 @@ export function computedWidth(html: string, cache = true) {
   return 0;
 }
 
-export function getContentSpacing(id: string) {
-  const dom = document.getElementById(id);
-  const content = dom?.querySelector(".content") as HTMLElement;
+export function getContentSpacing(content: HTMLElement) {
+  console.log(content);
+  const dom = content.parentElement;
   if (dom && content) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
