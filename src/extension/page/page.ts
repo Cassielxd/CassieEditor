@@ -7,6 +7,7 @@ import { VueNodeViewRenderer } from "@tiptap/vue-3";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { v4 as uuid } from "uuid";
+import { VueRenderer } from "@tiptap/vue-3/src/VueRenderer";
 
 export const Page = Node.create<PageOptions>({
   priority: 2,
@@ -67,6 +68,21 @@ export const Page = Node.create<PageOptions>({
     return ["page", mergeAttributes(HTMLAttributes, { id: pid }), 0];
   },
   addNodeView() {
-    return this.options.design ? VueNodeViewRenderer(PageDesignComponet) : VueNodeViewRenderer(PageComponet);
+    const options = this.options;
+    return ({ editor, node, getPos }) => {
+      const dom = document.createElement("div");
+      dom.setAttribute("class", "Page text-editor relative");
+      dom.setAttribute("id", node.attrs.id);
+      dom.oncontextmenu = () => false;
+      const content = document.createElement("div");
+      content.classList.add("PageContent");
+      content.setAttribute("style", "min-height: " + options.bodyHeight + "px;width:" + options.bodyWidth + "px;padding:" + options.bodyPadding + "px");
+      dom.append(content);
+      return {
+        dom,
+        contentDOM: content
+      };
+    };
+    //return this.options.design ? VueNodeViewRenderer(PageDesignComponet,{}) : VueNodeViewRenderer(PageComponet);
   }
 });

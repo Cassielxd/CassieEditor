@@ -91,15 +91,6 @@ export default {
       editor.value?.destroy();
     });
 
-    watchEffect(() => {
-      unref(editor)?.setOptions({
-        editorProps: {
-          attributes: {
-            spellcheck: String(false)
-          }
-        }
-      });
-    });
 
     return { pageContent, menulist, headerlist, footerlist, onUpdate, onCreate, editor, bodyWidth };
   }

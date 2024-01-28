@@ -1,5 +1,5 @@
 <template>
-  <div class="flex place-content-center bg-gray-200 ">
+  <div class="flex place-content-center bg-gray-200">
     <v-contextmenu ref="contextmenu">
       <v-contextmenu-item v-for="(widget, index) in wlist" :key="index" @click="(e: any) => menuclick(e, widget)">
         {{ widget.label }}
