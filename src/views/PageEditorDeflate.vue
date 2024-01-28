@@ -20,8 +20,8 @@ export default {
   },
   setup() {
     const { ctx } = getCurrentInstance();
-    const h = unitConversion.mmConversionPx(148);
-    const bodyWidth = unitConversion.mmConversionPx(210);
+    let bodyWidth = unitConversion.mmConversionPx(210);
+    let h = unitConversion.mmConversionPx(297);
     const menulist = [
       { classify: "radio", label: "单选", value: "radio" },
       {
@@ -36,8 +36,6 @@ export default {
       }
     ];
     const onUpdate = (output: any, editor: any) => {
-      /*      console.log(output);
-            console.log(editor);*/
     };
     const onCreate = (option: any) => {
       console.log(option);
@@ -90,7 +88,6 @@ export default {
     onBeforeUnmount(() => {
       editor.value?.destroy();
     });
-
 
     return { pageContent, menulist, headerlist, footerlist, onUpdate, onCreate, editor, bodyWidth };
   }

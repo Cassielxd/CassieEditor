@@ -9,13 +9,10 @@
           <router-link to="/">基础编辑器</router-link>
         </li>
         <li>
-          <router-link to="/page">设计模式</router-link>
+          <router-link to="/page1">分页演示</router-link>
         </li>
         <li>
-          <router-link to="/page1">默认模式</router-link>
-        </li>
-        <li>
-          <router-link to="/collaborativeeditor">多人协作</router-link>
+          <router-link to="/collaborativeeditor">协作演示</router-link>
         </li>
         <li>
           <router-link to="/commenteditor">评论/批注</router-link>
@@ -25,9 +22,6 @@
         </li>
         <li>
           <router-link to="/diff">版本比较</router-link>
-        </li>
-        <li>
-          <router-link to="/print">续打</router-link>
         </li>
         <li>
           <router-link to="/sign">电子签名</router-link>

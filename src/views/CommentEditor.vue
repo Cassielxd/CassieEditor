@@ -55,9 +55,9 @@ export default {
     OuterCommentVue
   },
   setup() {
-    const h = unitConversion.mmConversionPx(148);
-    const w = unitConversion.mmConversionPx(210);
 
+    let w = unitConversion.mmConversionPx(210);
+    let h = unitConversion.mmConversionPx(297);
     const dateTimeFormat = "yyyy.MM.dd HH:mm";
 
     const formatDate = (d: any) => (d ? format(new Date(d), dateTimeFormat) : null);
@@ -240,7 +240,7 @@ export default {
               bodyWidth: w,
               headerHeight: 100,
               footerHeight: 60,
-              bodyHeight: h - 100,
+              bodyHeight: h,
               headerData: headerlist,
               footerData: footerlist
             },

@@ -41,6 +41,24 @@ export const pageContent = {
       },
       content: [
         {
+          type: "paragraph",
+          attrs: {
+            textAlign: "left",
+            extend: "false",
+            group: "bb"
+          },
+          content: [
+            {
+              type: "text",
+              text: "3气管哮喘病史否认支,按国家计划接种"
+            },
+            {
+              type: "text",
+              text: "卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗."
+            }
+          ]
+        },
+        {
           type: "Node",
           attrs: {
             id: "pid_352165982dd",
@@ -231,7 +249,44 @@ export const pageContent = {
               ]
             }
           ]
+        },
+        {
+          type: "paragraph",
+          attrs: {
+            textAlign: "left",
+            extend: "false",
+            group: "p21"
+          },
+          content: [
+            {
+              type: "text",
+              text: "1气管哮喘病史否认支,按国家计划接种"
+            },
+            {
+              type: "text",
+              text: "卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗."
+            }
+          ]
+        },
+        {
+          type: "paragraph",
+          attrs: {
+            textAlign: "left",
+            extend: "false",
+            group: "aa"
+          },
+          content: [
+            {
+              type: "text",
+              text: "2气管哮喘病史否认支,按国家计划接种"
+            },
+            {
+              type: "text",
+              text: "卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗."
+            }
+          ]
         }
+
       ]
     }
   ]

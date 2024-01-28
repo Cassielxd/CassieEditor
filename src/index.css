@@ -31,6 +31,8 @@
 @layer components {
   .Page {
     @apply bg-white   divide-gray-400 leading-normal rounded-md transform my-2;
+    padding: 18mm;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
   }
   @media print {
     .Page { page-break-after: auto;}

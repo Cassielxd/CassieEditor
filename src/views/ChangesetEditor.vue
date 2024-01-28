@@ -18,8 +18,8 @@ export default {
     EditorContent
   },
   setup() {
-    const h = unitConversion.mmConversionPx(148);
-    const w = unitConversion.mmConversionPx(210);
+    let w = unitConversion.mmConversionPx(210);
+    let h = unitConversion.mmConversionPx(297);
     const menulist = [
       { classify: "radio", label: "单选", value: "radio" },
       {
@@ -56,7 +56,7 @@ export default {
             bodyWidth: w,
             headerHeight: 100,
             footerHeight: 60,
-            bodyHeight: h - 100,
+            bodyHeight: h,
             headerData: headerlist,
             footerData: footerlist
           },
