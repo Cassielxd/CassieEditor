@@ -67,10 +67,10 @@ export function getFlag(cnode: Node) {
  * @param cnode
  * @param dom
  */
-export function getBreakPos(cnode: Node, dom: object) {
+export function getBreakPos(cnode: Node, dom: HTMLElement) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const paragraphDOM = dom.node;
+  const paragraphDOM = dom;
   if (!paragraphDOM) return null;
   const width = paragraphDOM.offsetWidth;
   let strLength = 0;
@@ -219,9 +219,8 @@ export function computedWidth(html: string, cache = true) {
   return 0;
 }
 
-export function getContentSpacing(content: HTMLElement) {
-  console.log(content);
-  const dom = content.parentElement;
+export function getContentSpacing(dom: HTMLElement) {
+  const content = dom.querySelector(".content");
   if (dom && content) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -232,6 +231,8 @@ export function getContentSpacing(content: HTMLElement) {
     const marginBottom = contentStyle.getPropertyValue("margin-bottom");
     const padding = parseFloat(paddingTop) + parseFloat(paddingBottom);
     const margin = parseFloat(marginTop) + parseFloat(marginBottom);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return padding + margin + (dom.offsetHeight - content.offsetHeight);
   }
   return 0;

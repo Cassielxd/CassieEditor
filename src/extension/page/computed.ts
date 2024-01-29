@@ -3,7 +3,7 @@ import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, PAGE, PARAGRAPH } from "@/ex
 import { NodesComputed, PluginState, SplitParams } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
-import { getBlockHeight, getBreakPos, getContentSpacing, getDefault, SplitInfo } from "@/extension/page/core";
+import { getBreakPos, getContentSpacing, getDefault, SplitInfo } from "@/extension/page/core";
 import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { v4 as uuid } from "uuid";
@@ -13,7 +13,7 @@ import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
 export const defaultNodesComputed: NodesComputed = {
   [PARAGRAPH]: (splitContex, node, pos, parent, dom) => {
     //如果p标签没有子标签直接返回默认高度 否则计算高度
-    const pHeight = node.childCount > 0 ? dom.node.offsetHeight : splitContex.paragraphDefaultHeight;
+    const pHeight = node.childCount > 0 ? dom.offsetHeight : splitContex.paragraphDefaultHeight;
     splitContex.accumolatedHeight += pHeight;
     /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
     if (splitContex.accumolatedHeight > splitContex.height) {
@@ -46,7 +46,7 @@ export const defaultNodesComputed: NodesComputed = {
     return false;
   },
   [CASSIE_BLOCK]: (splitContex, node, pos, parent, dom) => {
-    const contentHeight = getContentSpacing(dom.node);
+    const contentHeight = getContentSpacing(dom);
     splitContex.accumolatedHeight += contentHeight;
     return true;
   },
@@ -222,6 +222,7 @@ export class PageComputedContext {
       );
     }
     tr.step(new ReplaceStep(pos, pos, new Slice(before.append(after), depth, depth)));
+
     this.tr = tr;
   }
 
@@ -266,11 +267,9 @@ export class PageComputedContext {
     const { bodyOptions } = this.pluginState;
     const splitContex = new SplitContex(doc, bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2, getDefault());
     const nodesComputed = this.nodesComputed;
-    const editor = this.editor;
-    const domAtPos = editor.view.domAtPos.bind(editor.view);
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
       if (!splitContex.pageBoundary) {
-        const dom = domAtPos(pos + 1);
+        const dom = document.getElementById(node.attrs.id);
         return nodesComputed[node.type.name](splitContex, node, pos, parentNode, dom);
       }
       return false;
