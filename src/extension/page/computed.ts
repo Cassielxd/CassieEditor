@@ -1,16 +1,29 @@
 // @ts-noCheck
-import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, PAGE, PARAGRAPH } from "@/extension/nodeNames";
+import { CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, PAGE, PARAGRAPH } from "@/extension/nodeNames";
 import { NodesComputed, PluginState, SplitParams } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
 import { getBreakPos, getContentSpacing, getDefault, getDomHeight, SplitInfo } from "@/extension/page/core";
 import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
-import { v4 as uuid } from "uuid";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
+import { getId } from "@/utils/id";
 
 //默认高度计算方法
 export const defaultNodesComputed: NodesComputed = {
+  [HEADING]: (splitContex, node, pos, parent, dom) => {
+    const pHeight = getDomHeight(dom);
+    splitContex.accumolatedHeight += pHeight;
+    if (splitContex.accumolatedHeight > splitContex.height) {
+      const chunks = splitResolve(splitContex.doc.resolve(pos).path);
+      //直接返回当前段落
+      splitContex.pageBoundary = {
+        pos,
+        depth: chunks.length - 1
+      };
+    }
+    return false;
+  },
   [PARAGRAPH]: (splitContex, node, pos, parent, dom) => {
     //如果p标签没有子标签直接返回默认高度 否则计算高度
     const pHeight = node.childCount > 0 ? getDomHeight(dom) : splitContex.paragraphDefaultHeight;
@@ -195,7 +208,7 @@ export class PageComputedContext {
       const n = $pos.node(d);
       let na: Node | null = $pos.node(d).copy(after);
       if (schema.nodes[n.type.name + EXTEND]) {
-        const attr = Object.assign({}, n.attrs, { id: uuid() });
+        const attr = Object.assign({}, n.attrs, { id: getId() });
         na = schema.nodes[n.type.name + EXTEND].createAndFill(attr, after);
       } else {
         //处理id重复的问题
@@ -205,7 +218,7 @@ export class PageComputedContext {
             extend = { extend: "true" };
           }
           //重新生成id
-          const attr = Object.assign({}, n.attrs, { id: uuid(), ...extend });
+          const attr = Object.assign({}, n.attrs, { id: getId(), ...extend });
           na = schema.nodes[n.type.name].createAndFill(attr, after);
         }
       }
@@ -213,7 +226,7 @@ export class PageComputedContext {
         typeAfter
           ? typeAfter.type.create(
               {
-                id: uuid(),
+                id: getId(),
                 pageNumber: na?.attrs.pageNumber + 1
               },
               after

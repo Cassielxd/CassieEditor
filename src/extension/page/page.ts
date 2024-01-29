@@ -1,9 +1,8 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import { PAGE } from "../nodeNames";
 import { PageOptions } from "@/extension/page/core";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { v4 as uuid } from "uuid";
+
+import { getId } from "@/utils/id";
 
 export const Page = Node.create<PageOptions>({
   priority: 2,
@@ -55,7 +54,7 @@ export const Page = Node.create<PageOptions>({
   },
 
   renderHTML({ node, HTMLAttributes }) {
-    const pid = uuid();
+    const pid = getId();
     if (!node.attrs.id) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

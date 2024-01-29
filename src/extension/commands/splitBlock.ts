@@ -2,9 +2,7 @@ import { EditorState, NodeSelection, TextSelection } from "@tiptap/pm/state";
 import { canSplit } from "@tiptap/pm/transform";
 
 import { defaultBlockAt, ExtensionAttribute, RawCommands, Commands } from "@tiptap/vue-3";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { v4 as uuid } from "uuid";
+import { getId } from "@/utils/id";
 
 function ensureMarks(state: EditorState, splittableMarks?: string[]) {
   const marks = state.storedMarks || (state.selection.$to.parentOffset && state.selection.$from.marks());
@@ -41,9 +39,9 @@ export const splitCBlock: RawCommands["splitCBlock"] =
     const newAttributes = getSplittedAttributes(extensionAttributes, $from.node().type.name, $from.node().attrs);
     //值如果包含id 需要重新生成
     if (newAttributes.id) {
-      newAttributes.id = uuid();
+      newAttributes.id = getId();
     }
-    if(newAttributes.extend=="true"){
+    if (newAttributes.extend == "true") {
       newAttributes.extend = "false";
     }
     if (selection instanceof NodeSelection && selection.node.isBlock) {

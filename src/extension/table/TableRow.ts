@@ -1,8 +1,7 @@
 import { TableRow } from "@tiptap/extension-table-row";
 import { mergeAttributes } from "@tiptap/core";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { v4 as uuid } from "uuid";
+
+import { getId } from "@/utils/id";
 export const CassieTableRow = TableRow.extend({
   addAttributes() {
     return {
@@ -16,7 +15,7 @@ export const CassieTableRow = TableRow.extend({
   },
 
   renderHTML({ node, HTMLAttributes }) {
-    const pid = uuid();
+    const pid = getId();
 
     if (!node.attrs.id) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

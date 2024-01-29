@@ -29,6 +29,15 @@ export const baseContent = {
 };
 export const signContent = "这是一个签名示例 请右键插入操作";
 
+export const pageContentHtml = `<page pagenumber="1" >
+<h1>我是标题</h1>
+<p  extend="false" data-group="bb">3气管哮喘病史否认支,按国家计划接种卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗.</p>
+<node group="title"><p  extend="false" data-group="p1">记录时间： 日期</p></node>
+<node  title="既往史" group="body_before"><p  extend="false" data-group="p2">气管哮喘病史否认支,按国家计划接种卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗.</p></node>
+<node  title="诊断结果" group="body_result"><p  extend="false" data-group="p3">诊断结果正常 ,我是过渡语句 测试 日期 测试2</p></node>
+<node  title="体格检查" group="body_check"><p  extend="false" data-group="p4">发育正常，营养良好，神志清楚，主动体位，查体合作,步态正常，正常面容。</p><p  extend="false" data-group="p5">全身皮肤黏膜无黄染、无水肿，未见出血点、未见蜘蛛痣，全身浅<span type="mention" class="bg-gray-300" classify="radio" delete="true" label="单选2">单选2</span> 表淋巴结未扪及肿大， 未见瘘管。</p><p  extend="false" data-group="p6">头颅形态大小无畸形，畸形颅,无压痛,无肿块。</p><p  extend="false" data-group="p6"></p><p extend="false" data-group="p7">颜面及眼睑无浮肿，双侧瞳孔等大同圆直径约3mm，对光反应灵敏。</p><p  extend="false" data-group="p8">口腔无异味，口唇红润光泽，黏膜正常，伸舌居中,无震颤。 耳鼻喉科情况详见专科检查。</p><p  extend="false" data-group="p9">胸廓双侧对称正常，胸壁无压痛。呼吸运动自如，语音震颤双侧对称，胸壁无压痛。</p></node><p  extend="false" data-group="p21">1气管哮喘病史否认支,按国家计划接种卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗.</p><p  extend="false" data-group="aa">2气管哮喘病史否认支,按国家计划接种卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗.</p>
+<h3>我是标题</h3>
+</page>`;
 export const pageContent = {
   type: "doc",
   content: [
@@ -286,7 +295,6 @@ export const pageContent = {
             }
           ]
         }
-
       ]
     }
   ]

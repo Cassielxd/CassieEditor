@@ -1,10 +1,8 @@
 import { Node } from "@tiptap/core";
 import { CASSIE_BLOCK } from "../nodeNames";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { v4 as uuid } from "uuid";
 import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import CassieBlockComponet from "@/extension/node/CassieBlockComponet.vue";
+import { getId } from "@/utils/id";
 export default Node.create({
   name: `${CASSIE_BLOCK}`,
   group: "block",
@@ -17,7 +15,7 @@ export default Node.create({
         parseHTML: (element) => element.getAttribute("id"),
         renderHTML: (attributes) => {
           if (!attributes.id) {
-            return { id: uuid() };
+            return { id: getId() };
           }
           return {
             id: attributes.id

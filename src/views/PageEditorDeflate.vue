@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import applyDevTools from "prosemirror-dev-tools";
-import { pageContent, headerlist, footerlist } from "./content";
+import { pageContent, headerlist, footerlist, pageContentHtml } from "./content";
 import { UnitConversion } from "@/extension/page/core";
 import { EditorContent, Editor } from "@tiptap/vue-3";
 import { onBeforeUnmount, onMounted, PropType, ref, shallowRef, unref, watchEffect } from "vue";
@@ -42,10 +42,10 @@ export default {
       //如果是协作模式 设置 content需要滞后 否则会重复添加
       editor.value = new Editor({
         onUpdate({ editor }) {
-          console.log(editor.getJSON());
+          //console.log(editor.getHTML());
         },
         editable: true,
-        content: pageContent,
+        content: pageContentHtml,
         editorProps: {
           attributes: {
             class: ""

@@ -7,7 +7,7 @@ import { CodeBlock, CodeBlockOptions } from "@tiptap/extension-code-block";
 import { Dropcursor, DropcursorOptions } from "@tiptap/extension-dropcursor";
 import { Gapcursor } from "@tiptap/extension-gapcursor";
 import { HardBreak, HardBreakOptions } from "@tiptap/extension-hard-break";
-import { Heading, HeadingOptions } from "@tiptap/extension-heading";
+import { HeadingOptions } from "@tiptap/extension-heading";
 import { History, HistoryOptions } from "@tiptap/extension-history";
 import { HorizontalRule, HorizontalRuleOptions } from "@tiptap/extension-horizontal-rule";
 import { Italic, ItalicOptions } from "@tiptap/extension-italic";
@@ -18,6 +18,7 @@ import { Strike, StrikeOptions } from "@tiptap/extension-strike";
 import { CassieText } from "@/extension/text/CassieText";
 import { PageExtension } from "@/extension/PageExtension";
 import { FocusClasses, FocusOptions } from "@/extension/focus/focus";
+import { EmrHeading } from "@/extension/heading/heading";
 import Table from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
@@ -117,7 +118,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     }
 
     if (this.options.heading !== false) {
-      extensions.push(Heading.configure(this.options?.heading));
+      extensions.push(EmrHeading.configure(this.options?.heading));
     }
 
     if (this.options.history !== false) {
