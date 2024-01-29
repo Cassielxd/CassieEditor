@@ -197,7 +197,9 @@ export class UnitConversion {
     return Number(c_value.toFixed());
   }
 }
+
 const map = new Map();
+
 export function computedWidth(html: string, cache = true) {
   if (map.has(html)) {
     return map.get(html);
@@ -242,7 +244,21 @@ export function getDefault() {
   if (map.has("defaultheight")) {
     return map.get("defaultheight");
   }
-  const offsetHeight = document.getElementById("computedspan")?.offsetHeight;
-  map.set("defaultheight", offsetHeight);
-  return offsetHeight;
+  const computedspan = document.getElementById("computedspan");
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const defaultheight = getDomHeight(computedspan);
+  map.set("defaultheight", defaultheight);
+  return defaultheight;
+}
+
+export function getDomHeight(dom: HTMLElement) {
+  const contentStyle = window.getComputedStyle(dom);
+  const paddingTop = contentStyle.getPropertyValue("padding-top");
+  const paddingBottom = contentStyle.getPropertyValue("padding-bottom");
+  const marginTop = contentStyle.getPropertyValue("margin-top");
+  const marginBottom = contentStyle.getPropertyValue("margin-bottom");
+  const padding = parseFloat(paddingTop) + parseFloat(paddingBottom);
+  const margin = parseFloat(marginTop) + parseFloat(marginBottom);
+  return padding + margin + dom?.offsetHeight + parseFloat(contentStyle.borderWidth);
 }

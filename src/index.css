@@ -1,38 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@layer base{
-  h1 {
-    @apply text-4xl;
-    @apply font-medium;
-  }
-  h2 {
-    @apply text-3xl;
-    @apply font-medium;
-  }
-  h3 {
-    @apply text-2xl;
-    @apply font-medium;
-  }
-  h4 {
-    @apply text-xl;
-    @apply font-medium;
-  }
-  h5 {
-    @apply text-lg;
-    @apply font-medium;
-  }
-  h6 {
-    @apply text-base;
-    @apply font-medium;
-  }
-}
+@layer base {
 
+}
 @layer components {
   .Page {
-    @apply bg-white   divide-gray-400 leading-normal rounded-md transform my-2;
-    padding: 18mm;
+    @apply bg-white   transform my-2 prose prose-base;
+    padding: 10mm;
     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+    p{
+      margin: 0;
+    }
   }
   @media print {
     .Page { page-break-after: auto;}
@@ -49,8 +28,7 @@
     margin: 0 !important;
   }
   .text-editor {
-    font-size: 0.8rem;
-    line-height: 1.5rem;
+
   }
   .has-focus {
     border-radius: 1px;

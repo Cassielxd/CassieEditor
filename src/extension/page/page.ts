@@ -68,7 +68,7 @@ export const Page = Node.create<PageOptions>({
     return ({ editor, node, getPos }) => {
       const dom = document.createElement("div");
       dom.setAttribute("class", "Page text-editor relative");
-      dom.setAttribute("style", "width:" + options.bodyWidth + "px;");
+      dom.setAttribute("style", "max-width:" + options.bodyWidth + "px;");
       dom.setAttribute("id", node.attrs.id);
       dom.oncontextmenu = () => false;
       const content = document.createElement("div");
