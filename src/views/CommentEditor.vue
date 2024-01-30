@@ -1,8 +1,8 @@
 <template>
   <div class="flex w-full">
     <div class="grid flex-grow card bg-base-300 rounded-box place-items-center">
-      <div class="bg-white shadow p-2 bars">
-        <vue-file-toolbar-menu v-for="(content, index) in menus" :key="'bar-' + index" :content="content" />
+      <div class="bars">
+        <FileTools :editor="editor"></FileTools>
       </div>
       <editor-content class="my-2" :editor="editor" />
       <BubbleMenu v-if="editor" :tippy-options="{ duration: 100, placement: 'bottom' }" :editor="editor" :should-show="({ editor }) => isCommentModeOn && !editor.state.selection.empty && !activeCommentsInstance.uuid" class="card bg-base-100 shadow-xl">
@@ -30,26 +30,21 @@ import { Editor, EditorContent, BubbleMenu } from "@tiptap/vue-3";
 import { onBeforeUnmount, onMounted, reactive, ref, shallowRef } from "vue";
 import { Editor as E } from "@tiptap/core";
 import { UnitConversion } from "@/extension/page/core";
-import { pageContent, headerlist, footerlist } from "./content";
+import { pageContentHtml, headerlist, footerlist } from "./content";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { v4 as uuidv4 } from "uuid";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import VueFileToolbarMenu from "vue-file-toolbar-menu";
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import format from "date-fns/format";
 import { DiffExtension } from "@/extension/track";
-import { defaultDocxSerializer, writeDocxForBlob } from "@/docx";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { saveAs } from "file-saver";
+import FileTools from "@/views/filetools/FileTools.vue";
 const unitConversion = new UnitConversion();
 export default {
   components: {
-    VueFileToolbarMenu,
+    FileTools,
     EditorContent,
     BubbleMenu,
     OuterCommentVue
@@ -136,24 +131,6 @@ export default {
         return "";
       }
     };
-    const menus = reactive([
-      [
-        {
-          icon: "save",
-          text: "导出",
-          title: "导出world",
-          click() {
-            let doc = editor.value?.state.doc;
-            const wordDocument = defaultDocxSerializer.serialize(doc, opts);
-            writeDocxForBlob(wordDocument, (blob) => {
-              console.log(blob);
-              saveAs(blob, "example.docx");
-              console.log("Document created successfully");
-            });
-          }
-        }
-      ]
-    ]);
     const setComment = (val?: string) => {
       const localVal = val || commentText.value;
 
@@ -224,7 +201,7 @@ export default {
             class: "divide-y divide-black-600"
           }
         },
-        content: pageContent, //初始化编辑器内容
+        content: pageContentHtml, //初始化编辑器内容
         injectCSS: false,
         extensions: [
           CassieKit.configure({
@@ -262,8 +239,7 @@ export default {
       isCommentModeOn,
       activeCommentsInstance,
       allComments,
-      formatDate,
-      menus
+      formatDate
     };
   }
 };

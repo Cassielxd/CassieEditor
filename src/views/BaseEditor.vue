@@ -1,11 +1,11 @@
 <template>
-  <CassieEditor :content="baseContent" @onCreate="onCreate" @onUpdate="onUpdate" :bodyWidth="750" output="json" :menu-list="menulist" />
+  <CassieEditor :content="pageContentHtml" @onCreate="onCreate" @onUpdate="onUpdate" :bodyWidth="1000" output="json" :menu-list="menulist" />
 </template>
 
 <script lang="ts">
 import { getCurrentInstance } from "vue";
 import CassieEditor from "../components/CassieEditor.vue";
-import { baseContent, headerlist, footerlist } from "./content";
+import { pageContentHtml, headerlist, footerlist } from "./content";
 
 export default {
   components: { CassieEditor },
@@ -31,7 +31,7 @@ export default {
     const onCreate = (option: any) => {
       console.log(option);
     };
-    return { baseContent, menulist, headerlist, footerlist, onUpdate, onCreate };
+    return { pageContentHtml, menulist, headerlist, footerlist, onUpdate, onCreate };
   }
 };
 </script>

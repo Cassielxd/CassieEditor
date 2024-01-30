@@ -27,10 +27,8 @@
           <router-link to="/sign">电子签名</router-link>
         </li>
         <li>
-          <router-link to="/about">关于电子病历</router-link>
+          <router-link to="/about">关于编辑器</router-link>
         </li>
-
-        <li><router-link to="/docx">导出</router-link></li>
       </ul>
     </div>
   </div>

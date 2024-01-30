@@ -11,14 +11,28 @@
       </div>
     </div>
   </footer>
-  <CassieEditor :user="user" footer-height="50" :body-width="w" :body-height="h" :content="pageContent" @onCreate="onCreate" :collaboration-url="url" @onStatus="onStatus" @onAwarenessChange="onAwarenessChange" @onUpdate="onUpdate" :bodyWidth="750" :menu-list="menulist" :header-data="headerlist" :footer-data="footerlist" />
-
+  <CassieEditor
+    :user="user"
+    footer-height="50"
+    :body-width="w"
+    :body-height="h"
+    :content="pageContentHtml"
+    @onCreate="onCreate"
+    :collaboration-url="url"
+    @onStatus="onStatus"
+    @onAwarenessChange="onAwarenessChange"
+    @onUpdate="onUpdate"
+    :bodyWidth="750"
+    :menu-list="menulist"
+    :header-data="headerlist"
+    :footer-data="footerlist"
+  />
 </template>
 
 <script lang="ts">
 import { getCurrentInstance, ref } from "vue";
 import CassieEditor from "../components/CassieEditor.vue";
-import { pageContent, headerlist, footerlist } from "./content";
+import { pageContentHtml, headerlist, footerlist } from "./content";
 import { getRandomColor, getRandomName } from "@/denoutils";
 import { UnitConversion } from "@/extension/page/core";
 const unitConversion = new UnitConversion();
@@ -53,7 +67,7 @@ export default {
     const url = "ws://127.0.0.1:1234";
     let w = unitConversion.mmConversionPx(210);
     let h = unitConversion.mmConversionPx(297);
-    return { w, h, user, pageContent, menulist, headerlist, footerlist, onUpdate, onStatus, onCreate, url, userLenth, onAwarenessChange };
+    return { w, h, user, pageContentHtml, menulist, headerlist, footerlist, onUpdate, onStatus, onCreate, url, userLenth, onAwarenessChange };
   }
 };
 </script>

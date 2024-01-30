@@ -30,13 +30,33 @@ export const baseContent = {
 export const signContent = "这是一个签名示例 请右键插入操作";
 
 export const pageContentHtml = `<page pagenumber="1" >
-<h1>我是标题</h1>
-<p  extend="false" data-group="bb">3气管哮喘病史否认支,按国家计划接种卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗.</p>
-<node group="title"><p  extend="false" data-group="p1">记录时间： 日期</p></node>
-<node  title="既往史" group="body_before"><p  extend="false" data-group="p2">气管哮喘病史否认支,按国家计划接种卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗.</p></node>
-<node  title="诊断结果" group="body_result"><p  extend="false" data-group="p3">诊断结果正常 ,我是过渡语句 测试 日期 测试2</p></node>
-<node  title="体格检查" group="body_check"><p  extend="false" data-group="p4">发育正常，营养良好，神志清楚，主动体位，查体合作,步态正常，正常面容。</p><p  extend="false" data-group="p5">全身皮肤黏膜无黄染、无水肿，未见出血点、未见蜘蛛痣，全身浅<span type="mention" class="bg-gray-300" classify="radio" delete="true" label="单选2">单选2</span> 表淋巴结未扪及肿大， 未见瘘管。</p><p  extend="false" data-group="p6">头颅形态大小无畸形，畸形颅,无压痛,无肿块。</p><p  extend="false" data-group="p6"></p><p extend="false" data-group="p7">颜面及眼睑无浮肿，双侧瞳孔等大同圆直径约3mm，对光反应灵敏。</p><p  extend="false" data-group="p8">口腔无异味，口唇红润光泽，黏膜正常，伸舌居中,无震颤。 耳鼻喉科情况详见专科检查。</p><p  extend="false" data-group="p9">胸廓双侧对称正常，胸壁无压痛。呼吸运动自如，语音震颤双侧对称，胸壁无压痛。</p></node><p  extend="false" data-group="p21">1气管哮喘病史否认支,按国家计划接种卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗.</p><p  extend="false" data-group="aa">2气管哮喘病史否认支,按国家计划接种卡介苗、乙肝、脊髓灰质炎、百白破、麻疹及乙脑疫苗.</p>
-<h3>我是标题</h3>
+    <h1 style="text-align: center">文档标题</h1>
+    <p  extend="false" data-group="bb">这是一个使用prosemirror和tiptap构建的编辑器</p>
+    <node group="title">
+        <p  extend="false" data-group="p1">无标题自定义块</p>
+    </node>
+    <node  title="自定义块标题一" group="body_before">
+        <p  extend="false" data-group="p2">我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容，我是一个自定义块内容，我是一个自定义块内容</p>
+    </node>
+    <node  title="自定义块标题二" group="body_result">
+        <p  extend="false" data-group="p3">我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容</p>
+    </node>
+    <node  title="自定义块标题三" group="body_check">
+        <p  extend="false" data-group="p4">我是一个可删除的自定义单选按钮<span type="mention" class="bg-gray-300" classify="radio" delete="true" label="单选2">单选2</span> 测试按钮</p>
+        <p  extend="false" data-group="p5">我是一个不可删除的自定义单选按钮
+            <span type="mention" class="bg-gray-300" classify="radio" delete="false" label="单选2">单选2</span> 测试按钮
+        </p>
+        <p  extend="false" data-group="p6">我是一个可删除的自定义多选按钮<span type="mention" class="bg-gray-300" classify="checkbox" delete="true" label="请选择">请选择</span>测试按钮</p>
+        <p  extend="false" data-group="p61">我是一个不可删除的自定义多选按钮<span type="mention" class="bg-gray-300" classify="checkbox" delete="false" label="请选择">请选择</span>测试按钮</p>
+        <p extend="false" data-group="p7">我是一个自定义的日期组件<span type="mention" class="bg-gray-300" classify="date" delete="false" label="请选择">请选择</span>测试按钮</p>
+        <p  extend="false" data-group="p8">我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容</p>
+        <p  extend="false" data-group="p9">我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容</p>
+    </node>
+    <p  extend="false" data-group="p21">我是一个独立的段落</p>
+    <p  extend="false" data-group="aa">我是一个独立的段落</p>
+    <h3>分页说明</h3>
+    <p  extend="false" data-group="aa1">H标签支持,p标签支持，自定义块Node支持</p>
+    <p  extend="false" data-group="aa2">核心分页逻辑已经完成，其他标签请照案例自行添加</p>
 </page>`;
 export const pageContent = {
   type: "doc",

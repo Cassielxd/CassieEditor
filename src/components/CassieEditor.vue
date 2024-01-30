@@ -1,5 +1,8 @@
 <template>
-  <div class="flex place-content-center bg-gray-200">
+  <div class="grid flex-grow card bg-base-300 rounded-box place-items-center">
+    <div class="bars">
+      <FileTools :editor="editor"></FileTools>
+    </div>
     <editor-content :editor="editor" class="my-2" />
   </div>
 </template>
@@ -15,9 +18,11 @@ import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { HocuspocusProvider } from "@hocuspocus/provider";
 import { Extensions } from "@tiptap/core";
+import FileTools from "@/views/filetools/FileTools.vue";
 export default defineComponent({
   name: "cassie-editor",
   components: {
+    FileTools,
     EditorContent
   },
   props: {
@@ -41,7 +46,7 @@ export default defineComponent({
     },
     bodyWidth: {
       type: Number,
-      default: 700
+      default: 1200
     },
     bodyPadding: {
       type: Number,
@@ -49,7 +54,7 @@ export default defineComponent({
     },
     isPaging: {
       type: Boolean,
-      default: false
+      default: true
     },
     headerData: {
       type: Array,
@@ -97,9 +102,6 @@ export default defineComponent({
         CassieKit.configure({
           textAlign: { types: ["heading", "paragraph"] },
           mention: {
-            HTMLAttributes: {
-              class: "bg-gray-300"
-            },
             clickSuggestion: BuildRender(props.menuList) //编辑器右键菜单
           },
           page: { ...props },
@@ -185,6 +187,9 @@ export default defineComponent({
         injectCSS: false,
         extensions
       });
+      setTimeout(() => {
+        editor.value?.view.dispatch(editor.value?.state.tr.setMeta("splitPage", true));
+      }, 1000);
       //applyDevTools(editor.value.view);
     });
 

@@ -64,6 +64,7 @@ export const defaultNodesComputed: NodesComputed = {
     }
     return false;
   },
+  //自定义块
   [CASSIE_BLOCK]: (splitContex, node, pos, parent, dom) => {
     const contentHeight = getContentSpacing(dom);
     splitContex.accumolatedHeight += contentHeight;
