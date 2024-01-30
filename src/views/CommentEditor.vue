@@ -126,11 +126,6 @@ export default {
 
     const getIsCommentModeOn = () => isCommentModeOn.value;
     const editor = shallowRef<Editor>();
-    const opts = {
-      getImageBuffer(src: string) {
-        return "";
-      }
-    };
     const setComment = (val?: string) => {
       const localVal = val || commentText.value;
 
