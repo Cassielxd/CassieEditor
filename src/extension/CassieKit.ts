@@ -1,7 +1,8 @@
 import { Extension } from "@tiptap/core";
 import { Blockquote, BlockquoteOptions } from "@tiptap/extension-blockquote";
 import { Bold, BoldOptions } from "@tiptap/extension-bold";
-import { BulletList, BulletListOptions } from "@tiptap/extension-bullet-list";
+import { BulletListOptions } from "@tiptap/extension-bullet-list";
+import { EmrBulletList } from "@/extension/bulletlist/bulletlist";
 import { Code, CodeOptions } from "@tiptap/extension-code";
 import { CodeBlock, CodeBlockOptions } from "@tiptap/extension-code-block";
 import { Dropcursor, DropcursorOptions } from "@tiptap/extension-dropcursor";
@@ -11,11 +12,15 @@ import { HeadingOptions } from "@tiptap/extension-heading";
 import { History, HistoryOptions } from "@tiptap/extension-history";
 import { HorizontalRule, HorizontalRuleOptions } from "@tiptap/extension-horizontal-rule";
 import { Italic, ItalicOptions } from "@tiptap/extension-italic";
-import { ListItem, ListItemOptions } from "@tiptap/extension-list-item";
+import { Highlight,HighlightOptions } from "@tiptap/extension-highlight";
+import { ListItemOptions } from "@tiptap/extension-list-item";
+import { EmrListItem } from "@/extension/bulletlist/listitem";
 import { OrderedList, OrderedListOptions } from "@tiptap/extension-ordered-list";
 import { EmrParagraph } from "@/extension/paragraph/paragraph";
 import { Strike, StrikeOptions } from "@tiptap/extension-strike";
 import { CassieText } from "@/extension/text/CassieText";
+
+import { TextStyle } from "@tiptap/extension-text-style";
 import { PageExtension } from "@/extension/PageExtension";
 import { FocusClasses, FocusOptions } from "@/extension/focus/focus";
 import { EmrHeading } from "@/extension/heading/heading";
@@ -56,6 +61,7 @@ export interface CassieKitOptions {
   history: Partial<HistoryOptions> | false;
   horizontalRule: Partial<HorizontalRuleOptions> | false;
   italic: Partial<ItalicOptions> | false;
+  highlight: Partial<HighlightOptions> | false;
   listItem: Partial<ListItemOptions> | false;
   orderedList: Partial<OrderedListOptions> | false;
   paragraph: Partial<ParagraphOptions> | false;
@@ -86,7 +92,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     }
 
     if (this.options.bulletList !== false) {
-      extensions.push(BulletList.configure(this.options?.bulletList));
+      extensions.push(EmrBulletList.configure(this.options?.bulletList));
     }
 
     if (this.options.code !== false) {
@@ -133,8 +139,11 @@ export const CassieKit = Extension.create<CassieKitOptions>({
       extensions.push(Italic.configure(this.options?.italic));
     }
 
+    if (this.options.highlight !== false) {
+      extensions.push(Highlight.configure(this.options?.highlight));
+    }
     if (this.options.listItem !== false) {
-      extensions.push(ListItem.configure(this.options?.listItem));
+      extensions.push(EmrListItem.configure(this.options?.listItem));
     }
 
     if (this.options.orderedList !== false) {
@@ -150,6 +159,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
 
     if (this.options.text !== false) {
       extensions.push(CassieText.configure(this.options?.text));
+      extensions.push(TextStyle);
     }
     if (this.options.textAlign !== false) {
       extensions.push(TextAlign.configure(this.options?.textAlign));

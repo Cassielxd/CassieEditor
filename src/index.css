@@ -28,7 +28,10 @@
     margin: 0 !important;
   }
   .text-editor {
-
+    @apply prose prose-base;
+    p{
+      margin: 0;
+    }
   }
   .has-focus {
     border-radius: 1px;

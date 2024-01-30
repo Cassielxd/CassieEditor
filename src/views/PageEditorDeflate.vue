@@ -1,6 +1,9 @@
 <template>
-  <div class="flex place-content-center bg-gray-200">
-    <editor-content :editor="editor" />
+  <div class="grid flex-grow card bg-base-300 rounded-box place-items-center">
+    <div class="bars">
+      <FileTools :editor="editor"></FileTools>
+    </div>
+    <editor-content class="my-2" :editor="editor" />
   </div>
 </template>
 
@@ -9,13 +12,15 @@ import applyDevTools from "prosemirror-dev-tools";
 import { pageContent, headerlist, footerlist, pageContentHtml } from "./content";
 import { UnitConversion } from "@/extension/page/core";
 import { EditorContent, Editor } from "@tiptap/vue-3";
-import { onBeforeUnmount, onMounted, PropType, ref, shallowRef, unref, watchEffect } from "vue";
+import { onBeforeUnmount, onMounted, PropType, reactive, ref, shallowRef, unref, watchEffect } from "vue";
 import { BuildRender, ContextMenuOptions } from "@/default";
 import { CassieKit } from "@/extension";
+import FileTools from "./filetools/FileTools.vue";
 const unitConversion = new UnitConversion();
 export default {
   components: {
-    EditorContent
+    EditorContent,
+    FileTools
   },
   setup() {
     let bodyWidth = unitConversion.mmConversionPx(210);
@@ -61,6 +66,9 @@ export default {
               },
               clickSuggestion: BuildRender(menulist) //编辑器右键菜单
             },
+            highlight: {
+              multicolor: true
+            },
             page: {
               bodyPadding: 10,
               bodyWidth: bodyWidth,
@@ -79,13 +87,12 @@ export default {
       setTimeout(() => {
         editor.value?.view.dispatch(editor.value?.state.tr.setMeta("splitPage", true));
       }, 1000);
-      //applyDevTools(editor.value.view);
+      applyDevTools(editor.value.view);
     });
 
     onBeforeUnmount(() => {
       editor.value?.destroy();
     });
-
     return { pageContent, menulist, headerlist, footerlist, onUpdate, onCreate, editor, bodyWidth };
   }
 };

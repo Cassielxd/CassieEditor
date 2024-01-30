@@ -55,7 +55,6 @@ export default {
     OuterCommentVue
   },
   setup() {
-
     let w = unitConversion.mmConversionPx(210);
     let h = unitConversion.mmConversionPx(297);
     const dateTimeFormat = "yyyy.MM.dd HH:mm";

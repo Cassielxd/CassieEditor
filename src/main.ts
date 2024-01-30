@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { createApp, h } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -25,6 +25,10 @@ app.component(Customimage.name, Customimage);
 app.component(Customlogo.name, Customlogo);
 app.component(CustomSelect.name, CustomSelect);
 app.component(PageCount.name, PageCount);
+
+app.component("v-style", {
+  render() {
+    return h("style", {}, this.$slots.default());
+  }
+});
 app.use(store).use(router).mount("#app");
-
-

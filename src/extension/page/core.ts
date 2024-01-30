@@ -240,6 +240,19 @@ export function getContentSpacing(dom: HTMLElement) {
   return 0;
 }
 
+export function getSpacing(dom: HTMLElement) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const contentStyle = window.getComputedStyle(dom);
+  const paddingTop = contentStyle.getPropertyValue("padding-top");
+  const paddingBottom = contentStyle.getPropertyValue("padding-bottom");
+  const marginTop = contentStyle.getPropertyValue("margin-top");
+  const marginBottom = contentStyle.getPropertyValue("margin-bottom");
+  const padding = parseFloat(paddingTop) + parseFloat(paddingBottom);
+  const margin = parseFloat(marginTop) + parseFloat(marginBottom);
+  return padding + margin;
+}
+
 export function getDefault() {
   if (map.has("defaultheight")) {
     return map.get("defaultheight");
@@ -261,4 +274,24 @@ export function getDomHeight(dom: HTMLElement) {
   const padding = parseFloat(paddingTop) + parseFloat(paddingBottom);
   const margin = parseFloat(marginTop) + parseFloat(marginBottom);
   return padding + margin + dom?.offsetHeight + parseFloat(contentStyle.borderWidth);
+}
+
+export function getAbsentHtmlH(node: Node) {
+  const html = generateHTML(getJsonFromDoc(node), getExtentions());
+  const computeddiv = document.getElementById("computeddiv");
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  computeddiv.innerHTML = html;
+  const nodesom = document.getElementById(node.attrs.id);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const h = getDomHeight(nodesom);
+  return h;
+}
+
+export function removeAbsentHtmlH(dom: HTMLElement) {
+  const computeddiv = document.getElementById("computeddiv");
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  computeddiv.removeChild(dom);
 }
