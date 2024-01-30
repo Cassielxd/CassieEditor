@@ -37,4 +37,7 @@
     border-radius: 1px;
     box-shadow: 0 0 0 1px blue;
   }
+  .mention{
+    @apply bg-blue-100 text-blue-800;
+  }
 }

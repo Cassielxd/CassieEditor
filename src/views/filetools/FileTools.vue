@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <v-style>
-      body { background-color: rgb(248, 249, 250); box-shadow: none; } ::selection { background-color: rgb(186, 212, 253); } :root { --demo-font-color: #222; --demo-bars-bkg: rgb(255, 255, 255); --demo-bars-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15); --demo-bars-padding: 5px;
+      body { box-shadow: none; } ::selection { background-color: rgb(186, 212, 253); } :root { --demo-font-color: #222; --demo-bars-bkg: rgb(255, 255, 255); --demo-bars-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15); --demo-bars-padding: 5px;
       --demo-bars-border-radius: 1px; --demo-text-bkg-color: white; --demo-text-box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15); --bar-font-color: rgb(32, 33, 36); --bar-font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif; --bar-font-size: 15px; --bar-font-weight: 500;
       --bar-letter-spacing: 0.2px; --bar-padding: 3px; --bar-button-icon-size: 20px; --bar-button-padding: 4px 6px; --bar-button-radius: 4px; --bar-button-hover-bkg: rgb(241, 243, 244); --bar-button-active-color: rgb(26, 115, 232); --bar-button-active-bkg: rgb(232, 240, 254);
       --bar-button-open-color: rgb(32, 33, 36); --bar-button-open-bkg: rgb(232, 240, 254); --bar-menu-bkg: white; --bar-menu-border-radius: 0 0 3px 3px; --bar-menu-item-chevron-margin: 0; --bar-menu-item-hover-bkg: rgb(241, 243, 244); --bar-menu-item-padding: 5px 8px 5px 35px;
@@ -173,16 +173,7 @@ export default {
             menu_width: 220
           },
           { is: "spacer" },
-          {
-            icon: this.edit_mode ? "lock_open" : "lock",
-            title: "Toggle edit mode",
-            active: !this.edit_mode,
-            click: () => {
-              this.edit_mode = !this.edit_mode;
-            }
-          }
-        ],
-        [
+
           {
             icon: "format_align_left",
             title: "Align left",
@@ -303,6 +294,16 @@ export default {
                 }
               }
             ]
+          },
+
+          {
+            icon: this.edit_mode ? "lock_open" : "lock",
+            title: "切换模式",
+            active: !this.edit_mode,
+            click: () => {
+              this.edit_mode = !this.edit_mode;
+              this.editor.setEditable(this.edit_mode);
+            }
           }
         ]
       ];
@@ -333,23 +334,6 @@ export default {
 :root {
   --demo-font-color: rgb(74, 238, 164);
 }
-html {
-  height: 100%;
-  overflow-y: scroll;
-  background-color: rgb(74, 238, 164);
-  transition-delay: 0.5s;
-}
-body {
-  margin: 0;
-  min-height: 100%;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--demo-font-color);
-  background-color: rgb(36, 44, 41);
-  box-shadow: inset 0 0 30vw 15vw black;
-  transition: color 0.3s, background-color 0.3s, box-shadow 0.5s;
-}
 ::selection {
   background-color: rgba(74, 238, 164, 0.2);
 }
@@ -363,12 +347,6 @@ svg.github {
   fill: var(--demo-font-color);
   margin-right: 5px;
 }
-*[contenteditable="true"] {
-  outline: none;
-}
-select {
-  outline: none;
-}
 
 .main {
   width: 100%;
@@ -378,7 +356,7 @@ select {
   background-color: var(--demo-bars-bkg, white);
   border-radius: var(--demo-bars-border-radius, 5px);
   box-shadow: var(--demo-bars-shadow, 0 0 20px black);
-  padding: var(--demo-bars-padding, 8px);
+  //padding: var(--demo-bars-padding, 8px);
   transition: 0.5s;
 }
 ::v-deep(.bars) * {

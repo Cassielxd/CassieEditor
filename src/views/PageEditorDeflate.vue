@@ -61,9 +61,6 @@ export default {
           CassieKit.configure({
             textAlign: { types: ["heading", "paragraph"] },
             mention: {
-              HTMLAttributes: {
-                class: "bg-gray-300"
-              },
               clickSuggestion: BuildRender(menulist) //编辑器右键菜单
             },
             highlight: {

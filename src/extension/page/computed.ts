@@ -4,12 +4,10 @@ import { NodesComputed, PluginState, SplitParams } from "@/extension/page/types"
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
 import {
-  getAbsentHtmlH,
   getBreakPos,
   getContentSpacing,
   getDefault,
   getDomHeight,
-  getSpacing, removeAbsentHtmlH,
   SplitInfo
 } from "@/extension/page/core";
 import { getNodeType } from "@tiptap/core";
@@ -31,54 +29,6 @@ export const defaultNodesComputed: NodesComputed = {
       };
     }
     return false;
-  },
-  [LISTITEM]: (splitContex, node, pos, parent, dom) => {
-    if (dom) {
-      const pHeight = getDomHeight(dom);
-      if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
-        const $ops = splitContex.doc.resolve(pos);
-        const chunks = splitResolve($ops.path);
-        debugger;
-        splitContex.pageBoundary = {
-          pos: pos,
-          depth: chunks.length - 1
-        };
-        return false;
-      }
-    } else {
-      /*const pHeight = getAbsentHtmlH(node);
-      const nodesom = document.getElementById(node.attrs.id);
-      if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
-        const chunks = splitResolve(splitContex.doc.resolve(pos).path);
-        splitContex.pageBoundary = {
-          pos,
-          depth: chunks.length
-        };
-        removeAbsentHtmlH(nodesom);
-        return false;
-      }*/
-      return true;
-    }
-
-    return true;
-  },
-  [BULLETLIST]: (splitContex, node, pos, parent, dom) => {
-    if (dom) {
-      const pHeight = getDomHeight(dom);
-      if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
-        const spacing = getSpacing(dom);
-        splitContex.accumolatedHeight += spacing;
-      }
-    } else {
-      const pHeight = getAbsentHtmlH(node);
-      const nodesom = document.getElementById(node.attrs.id);
-      if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
-        const spacing = getSpacing(nodesom);
-        splitContex.accumolatedHeight += spacing;
-      }
-      removeAbsentHtmlH(nodesom);
-    }
-    return true;
   },
   [PARAGRAPH]: (splitContex, node, pos, parent, dom) => {
     //如果p标签没有子标签直接返回默认高度 否则计算高度
@@ -267,7 +217,6 @@ export class PageComputedContext {
         const attr = Object.assign({}, n.attrs, { id: getId() });
         na = schema.nodes[n.type.name + EXTEND].createAndFill(attr, after);
       } else {
-        debugger;
         //处理id重复的问题
         if (na && na.attrs.id) {
           let extend = {};
