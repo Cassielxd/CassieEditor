@@ -1,12 +1,12 @@
 <template>
   <div class="main">
     <v-style>
-      body { box-shadow: none; } ::selection { background-color: rgb(186, 212, 253); } :root { --demo-font-color: #222; --demo-bars-bkg: rgb(255, 255, 255); --demo-bars-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15); --demo-bars-padding: 5px;
-      --demo-bars-border-radius: 1px; --demo-text-bkg-color: white; --demo-text-box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15); --bar-font-color: rgb(32, 33, 36); --bar-font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif; --bar-font-size: 15px; --bar-font-weight: 500;
-      --bar-letter-spacing: 0.2px; --bar-padding: 3px; --bar-button-icon-size: 20px; --bar-button-padding: 4px 6px; --bar-button-radius: 4px; --bar-button-hover-bkg: rgb(241, 243, 244); --bar-button-active-color: rgb(26, 115, 232); --bar-button-active-bkg: rgb(232, 240, 254);
-      --bar-button-open-color: rgb(32, 33, 36); --bar-button-open-bkg: rgb(232, 240, 254); --bar-menu-bkg: white; --bar-menu-border-radius: 0 0 3px 3px; --bar-menu-item-chevron-margin: 0; --bar-menu-item-hover-bkg: rgb(241, 243, 244); --bar-menu-item-padding: 5px 8px 5px 35px;
-      --bar-menu-item-icon-size: 15px; --bar-menu-item-icon-margin: 0 9px 0 -25px; --bar-menu-padding: 6px 1px; --bar-menu-shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.15); --bar-menu-separator-height: 1px; --bar-menu-separator-margin: 5px 0 5px 34px; --bar-menu-separator-color: rgb(227, 229, 233);
-      --bar-separator-color: rgb(218, 220, 224); --bar-separator-width: 1px; --bar-sub-menu-border-radius: 3px; } .bars > .bar:first-child { border-bottom: 1px solid rgb(218, 220, 224); margin-bottom: 3px; }
+      body { box-shadow: none; } ::selection { background-color: rgb(186, 212, 253); } :root { --demo-font-color: #222; --demo-bars-bkg: rgb(255, 255, 255); --demo-bars-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15); --demo-bars-padding: 5px; --demo-bars-border-radius: 1px; --demo-text-bkg-color:
+      white; --demo-text-box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15); --bar-font-color: rgb(32, 33, 36); --bar-font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif; --bar-font-size: 15px; --bar-font-weight: 500; --bar-letter-spacing: 0.2px; --bar-padding: 3px; --bar-button-icon-size:
+      20px; --bar-button-padding: 4px 6px; --bar-button-radius: 4px; --bar-button-hover-bkg: rgb(241, 243, 244); --bar-button-active-color: rgb(26, 115, 232); --bar-button-active-bkg: rgb(232, 240, 254); --bar-button-open-color: rgb(32, 33, 36); --bar-button-open-bkg: rgb(232, 240, 254);
+      --bar-menu-bkg: white; --bar-menu-border-radius: 0 0 3px 3px; --bar-menu-item-chevron-margin: 0; --bar-menu-item-hover-bkg: rgb(241, 243, 244); --bar-menu-item-padding: 5px 8px 5px 35px; --bar-menu-item-icon-size: 15px; --bar-menu-item-icon-margin: 0 9px 0 -25px; --bar-menu-padding: 6px 1px;
+      --bar-menu-shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.15); --bar-menu-separator-height: 1px; --bar-menu-separator-margin: 5px 0 5px 34px; --bar-menu-separator-color: rgb(227, 229, 233); --bar-separator-color: rgb(218, 220, 224); --bar-separator-width: 1px; --bar-sub-menu-border-radius: 3px; }
+      .bars > .bar:first-child { border-bottom: 1px solid rgb(218, 220, 224); margin-bottom: 3px; }
     </v-style>
     <div class="bars">
       <vue-file-toolbar-menu v-for="(content, index) in bars_content" :key="'bar-' + index" :content="content" />
@@ -56,6 +56,7 @@ export default {
                   console.log("New file!");
                 }
               },
+              { is: "separator" },
               {
                 text: "Save...",
                 click: () => {
@@ -63,12 +64,17 @@ export default {
                 }
               },
               { is: "separator" },
-              { text: "Print...", click: () => window.print() },
+              {
+                text: "Print...",
+                click: () => {
+                  console.log("New Print!");
+                }
+              },
               { is: "separator" },
               {
                 text: "Close",
                 click() {
-                  if (confirm("Do you want to close the page?")) window.close();
+                  console.log("Close");
                 }
               }
             ]
@@ -76,13 +82,13 @@ export default {
           {
             text: "编辑",
             menu: [
-              { text: "Cut", click: () => document.execCommand("cut") },
-              { text: "Copy", click: () => document.execCommand("copy") },
+              { text: "Cut", click: () => console.log("Close") },
+              { text: "Copy", click: () => console.log("Close") },
               {
                 text: "Paste",
                 click() {
                   navigator.clipboard.readText().then((text) => {
-                    document.execCommand("insertText", false, text);
+                    console.log(text);
                   });
                 }
               }
@@ -119,8 +125,8 @@ export default {
                   alert("Hotkey menu triggered either via clicking or shortcut.");
                 }
               },
-              { text: "Material icon", icon: "shopping_cart", click: () => window.open("https://material.io/resources/icons", "_blank") },
-              { text: "Platform emoji", emoji: "call_me_hand", click: () => window.open("https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json", "_blank") },
+              { text: "Material icon", icon: "shopping_cart", click: () => console.log("") },
+              { text: "Platform emoji", emoji: "call_me_hand", click: () => console.log("") },
               { text: "Menu text is wrapped when it is too long" },
               { is: DemoCustomMenuItem, text: "Your component", click: () => alert("Your custom action!") },
               { is: "separator" },
@@ -165,10 +171,10 @@ export default {
             menu: [
               { text: "About", icon: "help", click: () => alert("vue-file-toolbar-menu\nhttps://github.com/motla/vue-file-toolbar-menu\nby @motla\nMIT License") },
               { is: "separator" },
-              { text: "Repository", icon: "exit_to_app", click: () => window.open("https://github.com/motla/vue-file-toolbar-menu") },
-              { text: "API", icon: "exit_to_app", click: () => window.open("https://github.com/motla/vue-file-toolbar-menu/blob/master/API.md") },
-              { text: "Report Issue", icon: "exit_to_app", click: () => window.open("https://github.com/motla/vue-file-toolbar-menu/issues") },
-              { text: "Release Notes", icon: "exit_to_app", click: () => window.open("https://github.com/motla/vue-file-toolbar-menu/blob/master/CHANGELOG.md") }
+              { text: "Repository", icon: "exit_to_app", click: () => console.log("") },
+              { text: "API", icon: "exit_to_app", click: () => console.log("") },
+              { text: "Report Issue", icon: "exit_to_app", click: () => console.log("") },
+              { text: "Release Notes", icon: "exit_to_app", click: () => console.log("") }
             ],
             menu_width: 220
           },
