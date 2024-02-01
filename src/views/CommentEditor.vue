@@ -1,23 +1,25 @@
 <template>
-  <div class="flex w-full">
-    <div class="grid flex-grow card bg-base-300 rounded-box place-items-center">
-      <div class="bars">
+  <div class="grid grid-cols-4 gap-4">
+    <div class="bg-base-300   col-span-3 grid justify-items-center">
+      <div class="bars" style="width: 80%">
         <FileTools :editor="editor"></FileTools>
       </div>
       <editor-content class="my-2" :editor="editor" />
       <BubbleMenu v-if="editor" :tippy-options="{ duration: 100, placement: 'bottom' }" :editor="editor" :should-show="({ editor }) => isCommentModeOn && !editor.state.selection.empty && !activeCommentsInstance.uuid" class="card bg-base-100 shadow-xl">
-        <div class="card-body items-center text-center">
+        <div class="card items-center text-center  border border-indigo-600">
           <h2 class="card-title">评论</h2>
-          <textarea class="textarea textarea-primary" v-model="commentText" cols="30" rows="4" placeholder="添加新的批注" @keypress.enter.stop.prevent="() => setComment()" />
+          <div class="card-body"  style="padding:15px">
+            <textarea class="textarea textarea-bordered" v-model="commentText" cols="30" rows="4" placeholder="添加新的批注" @keypress.enter.stop.prevent="() => setComment()" />
+          </div>
+
           <div class="card-actions">
-            <button class="btn btn-accent btn-xs" @click="() => setComment()">添加</button>
-            <button class="btn btn-ghost btn-xs" @click="() => (commentText = '')">清空</button>
+            <button class="btn btn-outline btn-xs" @click="() => setComment()">添加</button>
+            <button class="btn btn-outline btn-xs" @click="() => (commentText = '')">清空</button>
           </div>
         </div>
       </BubbleMenu>
     </div>
-    <div class="divider divider-horizontal">评论</div>
-    <div class="grid flex-grow card bg-base-300 rounded-box">
+    <div class="card bg-base-300 rounded-box">
       <OuterCommentVue :active-comments-instance="activeCommentsInstance" :all-comments="allComments" :format-date="formatDate" :focus-content="focusContent" :is-comment-mode-on="isCommentModeOn" @set-comment="setComment" />
     </div>
   </div>

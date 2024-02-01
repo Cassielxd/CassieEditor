@@ -64,7 +64,7 @@ export default {
       console.log(option);
     };
     const user = { name: getRandomName(), color: getRandomColor() };
-    const url = "ws://127.0.0.1:1234";
+    const url = "ws://39.101.177.50:1234";
     let w = unitConversion.mmConversionPx(210);
     let h = unitConversion.mmConversionPx(297);
     return { w, h, user, pageContentHtml, menulist, headerlist, footerlist, onUpdate, onStatus, onCreate, url, userLenth, onAwarenessChange };

@@ -1,17 +1,16 @@
 <template>
   <div class="divide-y">
     <div v-for="(comment, i) in allComments" :key="i + 'external_comment'" class="card bg-base-100 scale-95" :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'active' : 'cursor-pointer'}`]" @click.stop.prevent="focusContent({ from: comment.from, to: comment.to })">
-      <div class="card-body">
-        <div v-for="(jsonComment, j) in comment.jsonComments.comments" :key="`${j}_${Math.random()}`" class="grid">
-          <div class="">
-            <strong class="text-md">{{ jsonComment.userName }} 日期：{{ formatDate(jsonComment.time) }}</strong>
-          </div>
+      <div v-for="(jsonComment, j) in comment.jsonComments.comments" :key="`${j}_${Math.random()}`" class="grid p-2.5">
 
-          <span class="content">评论：{{ jsonComment.content }}</span>
-        </div>
-        <div v-if="comment.jsonComments.uuid === activeCommentsInstance.uuid" class="" :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'border-blue-900' : 'max-h-0 border-blue-300'}`]">
+          <strong class="text-md">{{ jsonComment.userName }} 日期：{{ formatDate(jsonComment.time) }}</strong>
+
+        <span class="content">评论：{{ jsonComment.content }}</span>
+      </div>
+      <div >
+        <div v-if="comment.jsonComments.uuid === activeCommentsInstance.uuid" class="card-body p-2.5" :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'border-blue-900' : 'max-h-0 border-blue-300'}`]">
           <textarea
-            class="textarea textarea-primary"
+            class="textarea textarea-bordered"
             :ref="
               (el) => {
                 textareaRefs[comment.jsonComments.uuid] = el;
@@ -23,10 +22,9 @@
             placeholder="添加批注"
             @keypress.enter.stop.prevent="setComment"
           />
-
           <div class="card-actions">
-            <button class="btn btn-accent btn-xs" @click="setComment">添加</button>
-            <button class="btn btn-ghost btn-xs" @click="() => (commentText = '')">清空</button>
+            <button class="btn btn-outline btn-xs" @click="setComment">添加</button>
+            <button class="btn btn-outline btn-xs" @click="() => (commentText = '')">清空</button>
           </div>
         </div>
       </div>
