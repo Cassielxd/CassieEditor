@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import VueFileToolbarMenu from "vue-file-toolbar-menu"; // set from 'vue-file-toolbar-menu' in your application
+import VueFileToolbarMenu from "vue-file-toolbar-menu";
 import DemoCustomButton from "./DemoCustomButton.vue";
 import DemoCustomMenuItem from "./DemoCustomMenuItem.vue";
 
@@ -301,7 +301,6 @@ export default {
               }
             ]
           },
-
           {
             icon: this.edit_mode ? "lock_open" : "lock",
             title: "切换模式",
@@ -313,24 +312,7 @@ export default {
           }
         ]
       ];
-    },
-    isMacLike: () => /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform),
-    font_menu() {
-      return this.font_list.map((font) => {
-        return {
-          html: '<span class="ellipsis" style="font-family:' + font + '">' + font + "</span>",
-          icon: this.theme != "default" && this.font == font ? "check" : false,
-          active: this.font == font,
-          height: 20,
-          click: () => {
-            document.execCommand("fontName", false, font);
-            this.font = font;
-          }
-        };
-      });
-    },
-    font_list: () => ["Arial", "Avenir", "Courier New", "Garamond", "Georgia", "Impact", "Helvetica", "Palatino", "Roboto", "Times New Roman", "Verdana"],
-    is_touch_device: () => "ontouchstart" in window || window.navigator.msMaxTouchPoints > 0
+    }
   }
 };
 </script>

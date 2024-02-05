@@ -1,14 +1,14 @@
 <template>
   <div class="grid grid-cols-4 gap-4">
-    <div class="bg-base-300   col-span-3 grid justify-items-center">
+    <div class="bg-base-300 col-span-3 grid justify-items-center">
       <div class="bars" style="width: 80%">
         <FileTools :editor="editor"></FileTools>
       </div>
       <editor-content class="my-2" :editor="editor" />
       <BubbleMenu v-if="editor" :tippy-options="{ duration: 100, placement: 'bottom' }" :editor="editor" :should-show="({ editor }) => isCommentModeOn && !editor.state.selection.empty && !activeCommentsInstance.uuid" class="card bg-base-100 shadow-xl">
-        <div class="card items-center text-center  border border-indigo-600">
+        <div class="card items-center text-center border border-indigo-600">
           <h2 class="card-title">评论</h2>
-          <div class="card-body"  style="padding:15px">
+          <div class="card-body" style="padding: 15px">
             <textarea class="textarea textarea-bordered" v-model="commentText" cols="30" rows="4" placeholder="添加新的批注" @keypress.enter.stop.prevent="() => setComment()" />
           </div>
 

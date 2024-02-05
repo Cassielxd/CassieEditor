@@ -2,7 +2,7 @@
   <div class="bar-menu-item"
     @mousedown="(e) => e.preventDefault()"
     @click="(e) => (item.click && !item.disabled) ? item.click(e) : e.stopPropagation()">
-      <div class="label">{{item.text}}</div>
+    <div class="label">{{ item.text }}</div>
   </div>
 </template>
 
