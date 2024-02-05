@@ -1,14 +1,8 @@
-import { Node } from "@tiptap/core";
-import { CASSIE_BLOCK } from "../nodeNames";
-import { VueNodeViewRenderer } from "@tiptap/vue-3";
-import CassieBlockComponet from "@/extension/node/CassieBlockComponet.vue";
+import { Table } from "@tiptap/extension-table";
+import { mergeAttributes } from "@tiptap/core";
+
 import { getId } from "@/utils/id";
-export default Node.create({
-  name: `${CASSIE_BLOCK}`,
-  group: "block",
-  isolating: true,
-  content: "block*",
-  selectable: false,
+export const CassieTable = Table.extend({
   addAttributes() {
     return {
       id: {
@@ -36,38 +30,21 @@ export default Node.create({
             "data-group": attributes.group
           };
         }
-      },
-      title: {
-        default: null,
-        parseHTML: (element) => element.getAttribute("title"),
-        renderHTML: (attributes) => {
-          if (!attributes.title) {
-            return {};
-          }
-          return {
-            title: attributes.title
-          };
-        }
       }
     };
   },
+
   parseHTML() {
-    return [
-      {
-        tag: "Node"
-      }
-    ];
+    return [{ tag: "table" }];
   },
 
   renderHTML({ node, HTMLAttributes }) {
-    if (HTMLAttributes.id) {
+    if (!node.attrs.id) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      node.attrs.id = HTMLAttributes.id;
+      node.attrs.id = getId();
+      HTMLAttributes.id = node.attrs.id;
     }
-    return ["Node", HTMLAttributes, 0];
-  },
-  addNodeView() {
-    return VueNodeViewRenderer(CassieBlockComponet);
+    return ["table", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), ["tbody", 0]];
   }
 });

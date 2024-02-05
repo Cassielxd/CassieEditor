@@ -12,8 +12,8 @@ export const CassieBlockExt = Node.create({
   addAttributes() {
     return {
       id: {
-        parseHTML: (element) => element.getAttribute("id"),
-        renderHTML: (attributes) => {
+        parseHTML: (element: any) => element.getAttribute("id"),
+        renderHTML: (attributes: any) => {
           if (!attributes.id) {
             return { id: getId() };
           }
@@ -22,15 +22,18 @@ export const CassieBlockExt = Node.create({
           };
         }
       },
+      extend: {
+        default: "false"
+      },
       group: {
         default: null,
-        parseHTML: (element) => element.getAttribute("group"),
-        renderHTML: (attributes) => {
+        parseHTML: (element: any) => element.getAttribute("data-group"),
+        renderHTML: (attributes: any) => {
           if (!attributes.group) {
             return {};
           }
           return {
-            group: attributes.group
+            "data-group": attributes.group
           };
         }
       }

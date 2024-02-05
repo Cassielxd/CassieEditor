@@ -20,14 +20,12 @@ export const pageContentHtml = `<page pagenumber="1" >
         <p  extend="false" data-group="p6">我是一个可删除的自定义多选按钮<span type="mention" class="bg-gray-300" classify="checkbox" delete="true" label="请选择">请选择</span>测试按钮</p>
         <p  extend="false" data-group="p61">我是一个不可删除的自定义多选按钮<span type="mention" class="bg-gray-300" classify="checkbox" delete="false" label="请选择">请选择</span>测试按钮</p>
         <p extend="false" data-group="p7">我是一个自定义的日期组件<span type="mention" class="bg-gray-300" classify="date" delete="false" label="请选择">请选择</span>测试按钮</p>
-        <p  extend="false" data-group="p8">我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容</p>
-        <p  extend="false" data-group="p9">我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容</p>
     </node>
     <p  extend="false" data-group="p21">我是一个独立的段落</p>
-    <p  extend="false" data-group="aa">我是一个独立的段落</p>
     <h3>分页说明</h3>
     <p  extend="false" data-group="aa1">H标签支持,p标签支持，自定义块Node支持</p>
     <p  extend="false" data-group="aa2">核心分页逻辑已经完成，其他标签请照案例自行添加</p>
+    
 </page>`;
 export const pageContent = {
   type: "doc",

@@ -6,7 +6,30 @@ export const CassieTableRow = TableRow.extend({
   addAttributes() {
     return {
       id: {
-        parseHTML: (element) => element.getAttribute("id")
+        parseHTML: (element: any) => element.getAttribute("id"),
+        renderHTML: (attributes: any) => {
+          if (!attributes.id) {
+            return { id: getId() };
+          }
+          return {
+            id: attributes.id
+          };
+        }
+      },
+      extend: {
+        default: "false"
+      },
+      group: {
+        default: null,
+        parseHTML: (element: any) => element.getAttribute("data-group"),
+        renderHTML: (attributes: any) => {
+          if (!attributes.group) {
+            return {};
+          }
+          return {
+            "data-group": attributes.group
+          };
+        }
       }
     };
   },
@@ -15,14 +38,12 @@ export const CassieTableRow = TableRow.extend({
   },
 
   renderHTML({ node, HTMLAttributes }) {
-    const pid = getId();
-
     if (!node.attrs.id) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      node.attrs.id = pid;
+      node.attrs.id = getId();
+      HTMLAttributes.id = node.attrs.id;
     }
-
-    return ["tr", mergeAttributes(this.options.HTMLAttributes, { id: pid }, HTMLAttributes), 0];
+    return ["tr", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
   }
 });

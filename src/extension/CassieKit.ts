@@ -24,10 +24,10 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import { PageExtension } from "@/extension/PageExtension";
 import { FocusClasses, FocusOptions } from "@/extension/focus/focus";
 import { EmrHeading } from "@/extension/heading/heading";
-import Table from "@tiptap/extension-table";
 import { TableCellOptions, TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader, TableHeaderOptions } from "@tiptap/extension-table-header";
 import { CassieTableRow } from "@/extension/table/TableRow";
+import { CassieTable } from "@/extension/table/Table";
 import { cursorPlugin } from "@/extension/cursor/cursor";
 import { TableOptions } from "@tiptap/extension-table";
 import { Mention, MentionOptions } from "@/extension/suggestion/mention";
@@ -43,6 +43,8 @@ import { Document } from "@tiptap/extension-document";
 import { PrintExtension } from "@/extension/print/PrintExtension";
 import { CoolKeyMap } from "@/extension/keymap";
 import Image from "@tiptap/extension-image";
+import CassieBlock from "@/extension/node/CassieBlock";
+import { CassieBlockExt } from "@/extension/node/CassieBlockExt";
 export interface CassieKitOptions {
   blockquote: Partial<BlockquoteOptions> | false;
   bold: Partial<BoldOptions> | false;
@@ -168,7 +170,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     }
 
     if (this.options.table !== false) {
-      extensions.push(Table.configure(this.options?.table));
+      extensions.push(CassieTable.configure(this.options?.table));
       extensions.push(CassieTableRow);
       extensions.push(this.options?.tableHeader ? TableHeader.configure(this.options?.tableHeader) : TableHeader);
       extensions.push(this.options?.tableCell ? TableCell.configure(this.options?.tableCell) : TableCell);
@@ -179,6 +181,10 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     if (this.options.mention !== false) {
       extensions.push(Mention.configure(this.options?.mention));
     }
+    /*自定节点*/
+    extensions.push(CassieBlock);
+    /*自定义扩展块*/
+    extensions.push(CassieBlockExt);
     extensions.push(Underline);
     extensions.push(StrikeThrough);
     extensions.push(Insertion);

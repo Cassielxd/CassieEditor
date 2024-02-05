@@ -1,15 +1,9 @@
 // @ts-noCheck
-import { BULLETLIST, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PAGE, PARAGRAPH } from "@/extension/nodeNames";
+import { TABLE, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PAGE, PARAGRAPH, TABLE_ROW } from "@/extension/nodeNames";
 import { NodesComputed, PluginState, SplitParams } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
-import {
-  getBreakPos,
-  getContentSpacing,
-  getDefault,
-  getDomHeight,
-  SplitInfo
-} from "@/extension/page/core";
+import { getAbsentHtmlH, getBreakPos, getContentSpacing, getDefault, getDomHeight, SplitInfo } from "@/extension/page/core";
 import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
@@ -17,11 +11,39 @@ import { getId } from "@/utils/id";
 
 //默认高度计算方法
 export const defaultNodesComputed: NodesComputed = {
+  [TABLE_ROW]: (splitContex, node, pos, parent, dom) => {
+    const pHeight = getDomHeight(dom);
+    if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
+      debugger;
+      const chunks = splitResolve(splitContex.doc.resolve(pos).path);
+      if (parent?.firstChild == node) {
+        splitContex.pageBoundary = {
+          pos: chunks[chunks.length - 2][2],
+          depth: chunks.length - 2
+        };
+        return false;
+      }
+      splitContex.pageBoundary = {
+        pos,
+        depth: chunks.length
+      };
+    }
+    return false;
+  },
+  [TABLE]: (splitContex, node, pos, parent, dom) => {
+    const pHeight = getDomHeight(dom);
+    if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
+      splitContex.accumolatedHeight += pHeight;
+      return true;
+    }
+    return false;
+  },
   [HEADING]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
     splitContex.accumolatedHeight += pHeight;
     if (splitContex.accumolatedHeight > splitContex.height) {
       const chunks = splitResolve(splitContex.doc.resolve(pos).path);
+
       //直接返回当前段落
       splitContex.pageBoundary = {
         pos,
@@ -289,7 +311,8 @@ export class PageComputedContext {
     const nodesComputed = this.nodesComputed;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
       if (!splitContex.pageBoundary) {
-        const dom = document.getElementById(node.attrs.id);
+        let dom = document.getElementById(node.attrs.id);
+        if (!dom && node.type.name != PAGE) dom = getAbsentHtmlH(node);
         return nodesComputed[node.type.name](splitContex, node, pos, parentNode, dom);
       }
       return false;

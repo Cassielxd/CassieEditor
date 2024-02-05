@@ -1,6 +1,7 @@
 import { Node } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
+import { BuildRender } from "@/default";
 
 export type PageOptions = {
   footerHeight: number;
@@ -125,9 +126,22 @@ export function getExtentions() {
   return [
     CassieKit.configure({
       textAlign: { types: ["heading", "paragraph"] },
-      mention: {
+      highlight: {
+        multicolor: true
+      },
+      table: {
         HTMLAttributes: {
-          class: "bg-gray-300"
+          class: "border-collapse border border-slate-400"
+        }
+      },
+      tableCell: {
+        HTMLAttributes: {
+          class: "border border-slate-300"
+        }
+      },
+      tableHeader: {
+        HTMLAttributes: {
+          class: "border border-slate-300"
         }
       },
       page: false,
@@ -283,10 +297,7 @@ export function getAbsentHtmlH(node: Node) {
   // @ts-ignore
   computeddiv.innerHTML = html;
   const nodesom = document.getElementById(node.attrs.id);
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const h = getDomHeight(nodesom);
-  return h;
+  return nodesom;
 }
 
 export function removeAbsentHtmlH(dom: HTMLElement) {

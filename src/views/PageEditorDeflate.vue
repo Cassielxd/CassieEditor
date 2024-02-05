@@ -66,6 +66,21 @@ export default {
             highlight: {
               multicolor: true
             },
+            table: {
+              HTMLAttributes: {
+                class: "border-collapse border border-slate-400"
+              }
+            },
+            tableCell: {
+              HTMLAttributes: {
+                class: "border border-slate-300"
+              }
+            },
+            tableHeader: {
+              HTMLAttributes: {
+                class: "border border-slate-300"
+              }
+            },
             page: {
               bodyPadding: 10,
               bodyWidth: bodyWidth,

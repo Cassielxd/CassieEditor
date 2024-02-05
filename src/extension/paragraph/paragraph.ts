@@ -13,9 +13,10 @@ export const EmrParagraph = Paragraph.extend({
   content: "inline*",
   addAttributes() {
     return {
+
       id: {
-        parseHTML: (element) => element.getAttribute("id"),
-        renderHTML: (attributes) => {
+        parseHTML: (element: any) => element.getAttribute("id"),
+        renderHTML: (attributes: any) => {
           if (!attributes.id) {
             return { id: getId() };
           }
@@ -29,8 +30,8 @@ export const EmrParagraph = Paragraph.extend({
       },
       group: {
         default: null,
-        parseHTML: (element) => element.getAttribute("data-group"),
-        renderHTML: (attributes) => {
+        parseHTML: (element: any) => element.getAttribute("data-group"),
+        renderHTML: (attributes: any) => {
           if (!attributes.group) {
             return {};
           }
@@ -39,6 +40,7 @@ export const EmrParagraph = Paragraph.extend({
           };
         }
       }
+
     };
   },
   renderHTML({ node, HTMLAttributes }) {
