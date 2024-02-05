@@ -105,6 +105,21 @@ export default defineComponent({
             clickSuggestion: BuildRender(props.menuList) //编辑器右键菜单
           },
           page: { ...props },
+          table: {
+            HTMLAttributes: {
+              class: "border-collapse border border-slate-400"
+            }
+          },
+          tableCell: {
+            HTMLAttributes: {
+              class: "border border-slate-300"
+            }
+          },
+          tableHeader: {
+            HTMLAttributes: {
+              class: "border border-slate-300"
+            }
+          },
           focus: false, //选中样式
           history: false //历史记录回退 协作模式禁止开启
         })

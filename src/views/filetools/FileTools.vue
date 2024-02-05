@@ -120,7 +120,6 @@ export default {
               },
               {
                 text: "Hotkey",
-                hotkey: this.isMacLike ? "command+e" : "ctrl+e",
                 click() {
                   alert("Hotkey menu triggered either via clicking or shortcut.");
                 }
@@ -179,6 +178,138 @@ export default {
             menu_width: 220
           },
           { is: "spacer" },
+          {
+            icon: "table_view",
+            menu: [
+              {
+                text: "表格",
+                menu: [
+                  {
+                    text: "固定表格",
+                    click: () => {
+                      this.editor.chain().focus().fixTables().run();
+                    }
+                  },
+                  {
+                    text: "插入表格",
+                    click: () => {
+                      this.editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+                    }
+                  },
+                  {
+                    text: "删除表",
+                    click: () => {
+                      this.editor.chain().focus().deleteTable().run();
+                    }
+                  }
+                ]
+              },
+              {
+                text: "表头",
+                menu: [
+                  {
+                    text: "自适应表头",
+                    click: () => {
+                      this.editor.chain().focus().toggleHeaderRow().run();
+                    }
+                  },
+                  {
+                    text: "设置成表头样式",
+                    click: () => {
+                      this.editor.chain().focus().toggleHeaderCell().run();
+                    }
+                  }
+                ]
+              },
+              {
+                text: "列操作",
+                menu: [
+                  {
+                    text: "添加列(之前)",
+                    click: () => {
+                      this.editor.chain().focus().addColumnBefore().run();
+                    }
+                  },
+                  {
+                    text: "添加列(之后)",
+                    click: () => {
+                      this.editor.chain().focus().addColumnAfter().run();
+                    }
+                  },
+                  {
+                    text: "删除列",
+                    click: () => {
+                      this.editor.chain().focus().deleteColumn().run();
+                    }
+                  },
+                  {
+                    text: "设置第一列",
+                    click: () => {
+                      this.editor.chain().focus().toggleHeaderColumn().run();
+                    }
+                  }
+                ]
+              },
+              {
+                text: "行操作",
+                menu: [
+                  {
+                    text: "添加行(之前)",
+                    click: () => {
+                      this.editor.chain().focus().addRowBefore().run();
+                    }
+                  },
+                  {
+                    text: " 添加行(之后)",
+                    click: () => {
+                      this.editor.chain().focus().addRowAfter().run();
+                    }
+                  },
+                  {
+                    text: "删除行",
+                    click: () => {
+                      this.editor.chain().focus().deleteRow.run();
+                    }
+                  }
+                ]
+              },
+              {
+                text: "单元格操作",
+                menu: [
+                  {
+                    text: "合并单元格",
+                    click: () => {
+                      this.editor.chain().focus().mergeCells().run();
+                    }
+                  },
+                  {
+                    text: " 分割单元格",
+                    click: () => {
+                      this.editor.chain().focus().splitCell().run();
+                    }
+                  },
+                  {
+                    text: "合并或分割",
+                    click: () => {
+                      this.editor.chain().focus().mergeOrSplit().run();
+                    }
+                  },
+                  {
+                    text: "下一个单元格",
+                    click: () => {
+                      this.editor.chain().focus().goToNextCell().run();
+                    }
+                  },
+                  {
+                    text: "上一个单元格",
+                    click: () => {
+                      this.editor.chain().focus().goToPreviousCell().run();
+                    }
+                  }
+                ]
+              }
+            ]
+          },
 
           {
             icon: "format_align_left",
@@ -219,7 +350,6 @@ export default {
           {
             icon: "format_italic",
             title: "斜体",
-            hotkey: this.isMacLike ? "command+i" : "ctrl+i",
             click: () => {
               this.editor.chain().focus().toggleItalic().run();
             }
@@ -227,7 +357,6 @@ export default {
           {
             icon: "format_underline",
             title: "下划线",
-            hotkey: this.isMacLike ? "command+u" : "ctrl+u",
             click: () => {
               this.editor.chain().focus().toggleUnderline().run();
             }

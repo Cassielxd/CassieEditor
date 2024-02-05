@@ -17,6 +17,7 @@
     :body-width="w"
     :body-height="h"
     :content="pageContentHtml"
+    :is-paging="false"
     @onCreate="onCreate"
     :collaboration-url="url"
     @onStatus="onStatus"

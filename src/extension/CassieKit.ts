@@ -12,7 +12,7 @@ import { HeadingOptions } from "@tiptap/extension-heading";
 import { History, HistoryOptions } from "@tiptap/extension-history";
 import { HorizontalRule, HorizontalRuleOptions } from "@tiptap/extension-horizontal-rule";
 import { Italic, ItalicOptions } from "@tiptap/extension-italic";
-import { Highlight,HighlightOptions } from "@tiptap/extension-highlight";
+import { Highlight, HighlightOptions } from "@tiptap/extension-highlight";
 import { ListItemOptions } from "@tiptap/extension-list-item";
 import { EmrListItem } from "@/extension/bulletlist/listitem";
 import { OrderedList, OrderedListOptions } from "@tiptap/extension-ordered-list";
@@ -25,8 +25,8 @@ import { PageExtension } from "@/extension/PageExtension";
 import { FocusClasses, FocusOptions } from "@/extension/focus/focus";
 import { EmrHeading } from "@/extension/heading/heading";
 import Table from "@tiptap/extension-table";
-import TableCell from "@tiptap/extension-table-cell";
-import TableHeader from "@tiptap/extension-table-header";
+import { TableCellOptions, TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader, TableHeaderOptions } from "@tiptap/extension-table-header";
 import { CassieTableRow } from "@/extension/table/TableRow";
 import { cursorPlugin } from "@/extension/cursor/cursor";
 import { TableOptions } from "@tiptap/extension-table";
@@ -51,6 +51,8 @@ export interface CassieKitOptions {
   codeBlock: Partial<CodeBlockOptions> | false;
   page: Partial<PageOptions> | false;
   table: Partial<TableOptions> | false;
+  tableHeader: Partial<TableHeaderOptions> | false;
+  tableCell: Partial<TableCellOptions> | false;
   focus: Partial<FocusOptions> | false;
   mention: Partial<MentionOptions> | false;
   cursor: boolean;
@@ -168,8 +170,8 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     if (this.options.table !== false) {
       extensions.push(Table.configure(this.options?.table));
       extensions.push(CassieTableRow);
-      extensions.push(TableHeader);
-      extensions.push(TableCell);
+      extensions.push(this.options?.tableHeader ? TableHeader.configure(this.options?.tableHeader) : TableHeader);
+      extensions.push(this.options?.tableCell ? TableCell.configure(this.options?.tableCell) : TableCell);
     }
     if (this.options.focus !== false) {
       extensions.push(FocusClasses.configure(this.options?.focus));
