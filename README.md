@@ -40,6 +40,9 @@ http://emr.cymcar.com/
 16. 电子签名(已完成)
 
 #### 使用说明
+默认使用tailwindcss
+测试浏览器 chrome 120.0.6099.71  Microsoft Edge 121.0.2277.98
+其他版本需要自行测试
 
 #### 框架说明
 
