@@ -1,32 +1,3 @@
-export const baseContent = {
-  type: "doc",
-  content: [
-    {
-      type: "page",
-      attrs: {
-        HTMLAttributes: null,
-        pageNumber: 1,
-        id: "e8964236-272d-46d3-9474-b66039a1847e"
-      },
-      content: [
-        {
-          type: "paragraph",
-          attrs: {
-            textAlign: "left",
-            id: "5fc6844a-2a59-46b9-a565-5a06b9877116",
-            group: null
-          },
-          content: [
-            {
-              type: "text",
-              text: "这是一个基础编辑器"
-            }
-          ]
-        }
-      ]
-    }
-  ]
-};
 export const signContent = "这是一个签名示例 请右键插入操作";
 
 export const pageContentHtml = `<page pagenumber="1" >

@@ -126,7 +126,7 @@ export default defineComponent({
       ];
       if (props.collaborationUrl) {
         provider.value = new HocuspocusProvider({
-          url: props.collaborationUrl || "",
+          url: props.collaborationUrl,
           name: "1", //这里需要修改 这里是文旦id
           document: ydoc,
           onStatus: (data) => {

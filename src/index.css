@@ -12,7 +12,7 @@
     }
   }
   .Page {
-    @apply bg-white   transform my-2 text-editor;
+    @apply  bg-white   transform my-2 text-editor;
     padding: 10mm;
     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
   }
