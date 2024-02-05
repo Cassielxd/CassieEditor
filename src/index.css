@@ -5,13 +5,16 @@
 
 }
 @layer components {
-  .Page {
-    @apply bg-white   transform my-2 prose prose-base;
-    padding: 10mm;
-    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+  .text-editor {
+    @apply prose prose-base;
     p{
       margin: 0;
     }
+  }
+  .Page {
+    @apply bg-white   transform my-2 text-editor;
+    padding: 10mm;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
   }
   @media print {
     .Page { page-break-after: auto;}
@@ -26,12 +29,6 @@
     display: inline !important;
     border: none !important;
     margin: 0 !important;
-  }
-  .text-editor {
-    @apply prose prose-base;
-    p{
-      margin: 0;
-    }
   }
   .has-focus {
     border-radius: 1px;
