@@ -15,6 +15,7 @@ export const defaultNodesComputed: NodesComputed = {
     const pHeight = getDomHeight(dom);
     if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
       const chunks = splitResolve(splitContex.doc.resolve(pos).path);
+      //如果当前行是table的第一行并且已经超过分页高度 直接返回上一层级的切割点 保证table不会被拆分
       if (parent?.firstChild == node) {
         splitContex.pageBoundary = {
           pos: chunks[chunks.length - 2][2],
@@ -22,6 +23,7 @@ export const defaultNodesComputed: NodesComputed = {
         };
         return false;
       }
+      //如果不是第一行 直接返回当前行的切割点
       splitContex.pageBoundary = {
         pos,
         depth: chunks.length - 1
@@ -31,20 +33,35 @@ export const defaultNodesComputed: NodesComputed = {
     }
     return false;
   },
+  /**
+   * table 分割算法  如果table的高度超过分页高度 直接返回继续循环 tr
+   * @param splitContex
+   * @param node
+   * @param pos
+   * @param parent
+   * @param dom
+   */
   [TABLE]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
-    if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
-      return true;
-    }
+    //如果table的高度超过分页高度 直接返回继续循环 tr
+    if (splitContex.accumolatedHeight + pHeight > splitContex.height) return true;
+    //没有超过分页高度 累加高度
     splitContex.accumolatedHeight += pHeight;
     return false;
   },
+  /**
+   * h1-h6 分割算法 如果heading的高度超过分页高度 直接返回当前heading
+   * @param splitContex
+   * @param node
+   * @param pos
+   * @param parent
+   * @param dom
+   */
   [HEADING]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
     splitContex.accumolatedHeight += pHeight;
     if (splitContex.accumolatedHeight > splitContex.height) {
       const chunks = splitResolve(splitContex.doc.resolve(pos).path);
-
       //直接返回当前段落
       splitContex.pageBoundary = {
         pos,
@@ -53,6 +70,14 @@ export const defaultNodesComputed: NodesComputed = {
     }
     return false;
   },
+  /**
+   * p 分割算法 如果段落标签没有超过 默认段落高度 则直接返回段落分割点，否则继续计算 段落内部分割点
+   * @param splitContex
+   * @param node
+   * @param pos
+   * @param parent
+   * @param dom
+   */
   [PARAGRAPH]: (splitContex, node, pos, parent, dom) => {
     //如果p标签没有子标签直接返回默认高度 否则计算高度
     const pHeight = node.childCount > 0 ? getDomHeight(dom) : splitContex.paragraphDefaultHeight;
@@ -97,6 +122,14 @@ export const defaultNodesComputed: NodesComputed = {
     splitContex.accumolatedHeight += 8;
     return true;
   },
+  /**
+   * page 分割算法 永远返回最后一个page进行分割
+   * @param splitContex
+   * @param node
+   * @param pos
+   * @param parent
+   * @param dom
+   */
   [PAGE]: (splitContex, node, pos, parent, dom) => {
     return node == splitContex.doc.lastChild;
   }

@@ -1,7 +1,7 @@
 import { Node } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
-import { BuildRender } from "@/default";
+import { NodesComputed } from "@/extension/page/types";
 
 export type PageOptions = {
   footerHeight: number;
@@ -13,6 +13,7 @@ export type PageOptions = {
   design?: boolean;
   headerData?: any[];
   footerData?: any[];
+  NodesComputed?: NodesComputed;
   SystemAttributes?: Record<string, any>;
 };
 
@@ -304,5 +305,5 @@ export function removeAbsentHtmlH(dom: HTMLElement) {
   const computeddiv = document.getElementById("computeddiv");
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  computeddiv.removeChild(dom);
+  computeddiv.innerHTML = "";
 }

@@ -92,7 +92,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
      * @param state
      */
     appendTransaction([newTr], _prevState, state) {
-      const page = new PageComputedContext(editor,defaultNodesComputed, this.getState(state), state);
+      const page = new PageComputedContext(editor, defaultNodesComputed, this.getState(state), state);
       return page.run().scrollIntoView();
     },
     props: {
