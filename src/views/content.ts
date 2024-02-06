@@ -1,31 +1,65 @@
 export const signContent = "这是一个签名示例 请右键插入操作";
 
-export const pageContentHtml = `<page pagenumber="1" >
-    <h1 style="text-align: center">文档标题</h1>
+export const pageContentHtml = `<page pagenumber="1">
+    <h1 style="text-align: center"  extend="false">文档标题</h1>
     <p  extend="false" data-group="bb">这是一个使用prosemirror和tiptap构建的编辑器</p>
-    <node group="title">
+    <node  extend="false">
         <p  extend="false" data-group="p1">无标题自定义块</p>
     </node>
-    <node  title="自定义块标题一" group="body_before">
+    <node  extend="false" title="自定义块标题一">
         <p  extend="false" data-group="p2">我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容，我是一个自定义块内容，我是一个自定义块内容</p>
     </node>
-    <node  title="自定义块标题二" group="body_result">
+    <node  extend="false" title="自定义块标题二">
         <p  extend="false" data-group="p3">我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容,我是一个自定义块内容</p>
     </node>
-    <node  title="自定义块标题三" group="body_check">
-        <p  extend="false" data-group="p4">我是一个可删除的自定义单选按钮<span type="mention" class="bg-gray-300" classify="radio" delete="true" label="单选2">单选2</span> 测试按钮</p>
-        <p  extend="false" data-group="p5">我是一个不可删除的自定义单选按钮
-            <span type="mention" class="bg-gray-300" classify="radio" delete="false" label="单选2">单选2</span> 测试按钮
-        </p>
-        <p  extend="false" data-group="p6">我是一个可删除的自定义多选按钮<span type="mention" class="bg-gray-300" classify="checkbox" delete="true" label="请选择">请选择</span>测试按钮</p>
-        <p  extend="false" data-group="p61">我是一个不可删除的自定义多选按钮<span type="mention" class="bg-gray-300" classify="checkbox" delete="false" label="请选择">请选择</span>测试按钮</p>
-        <p extend="false" data-group="p7">我是一个自定义的日期组件<span type="mention" class="bg-gray-300" classify="date" delete="false" label="请选择">请选择</span>测试按钮</p>
+    <node  extend="false" title="自定义块标题三">
+        <p  extend="false" data-group="p4">我是一个可删除的自定义单选按钮<span type="mention" class="mention" classify="radio" delete="true" label="单选2">单选2</span> 测试按钮</p>
+        <p  extend="false" data-group="p5">我是一个不可删除的自定义单选按钮 <span type="mention" class="mention" classify="radio" delete="false" label="单选2">单选2</span> 测试按钮</p>
+        <p  extend="false" data-group="p6">我是一个可删除的自定义多选按钮<span type="mention" class="mention" classify="checkbox" delete="true" label="请选择">请选择</span>测试按钮</p>
+        <p  extend="false" data-group="p61">我是一个不可删除的自定义多选按钮<span type="mention" class="mention" classify="checkbox" delete="false" label="请选择">请选择</span>测试按钮</p>
+        <p  extend="false" data-group="p7">我是一个自定义的日期组件<span type="mention" class="mention" classify="date" delete="false" label="请选择">请选择</span>测试按钮</p>
     </node>
     <p  extend="false" data-group="p21">我是一个独立的段落</p>
-    <h3>分页说明</h3>
+    <h3 extend="false">分页说明</h3>
     <p  extend="false" data-group="aa1">H标签支持,p标签支持，自定义块Node支持</p>
     <p  extend="false" data-group="aa2">核心分页逻辑已经完成，其他标签请照案例自行添加</p>
-    
+    <table class="border-collapse border border-slate-400" id="25" extend="false">
+        <tbody>
+            <tr  extend="false">
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  extend="false"></p>
+                </td>
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  extend="false"></p>
+                </td>
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  extend="false"></p>
+                </td>
+            </tr>
+            <tr  extend="false">
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  extend="false"></p>
+                </td>
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  extend="false"></p>
+                </td>
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  extend="false"></p>
+                </td>
+            </tr>
+            <tr  extend="false">
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  extend="false"></p>
+                </td>
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  extend="false"></p>
+                </td>
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  extend="false"></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </page>`;
 export const pageContent = {
   type: "doc",
