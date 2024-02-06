@@ -1,6 +1,6 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import { Paragraph } from "@tiptap/extension-paragraph";
-import { getId } from "@/utils/id";
+import { getId, idAttributes } from "@/utils/id";
 
 export const EmrParagraph = Paragraph.extend({
   addOptions() {
@@ -12,36 +12,7 @@ export const EmrParagraph = Paragraph.extend({
   group: "block",
   content: "inline*",
   addAttributes() {
-    return {
-
-      id: {
-        parseHTML: (element: any) => element.getAttribute("id"),
-        renderHTML: (attributes: any) => {
-          if (!attributes.id) {
-            return { id: getId() };
-          }
-          return {
-            id: attributes.id
-          };
-        }
-      },
-      extend: {
-        default: "false"
-      },
-      group: {
-        default: null,
-        parseHTML: (element: any) => element.getAttribute("data-group"),
-        renderHTML: (attributes: any) => {
-          if (!attributes.group) {
-            return {};
-          }
-          return {
-            "data-group": attributes.group
-          };
-        }
-      }
-
-    };
+    return idAttributes;
   },
   renderHTML({ node, HTMLAttributes }) {
     if (HTMLAttributes.id) {

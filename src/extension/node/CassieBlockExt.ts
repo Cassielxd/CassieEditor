@@ -2,7 +2,7 @@ import { CASSIE_BLOCK_EXTEND } from "../nodeNames";
 import { mergeAttributes, Node } from "@tiptap/core";
 import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import CassieBlockExtComponet from "@/extension/node/CassieBlockExtComponet.vue";
-import { getId } from "@/utils/id";
+import { getId, idAttributes } from "@/utils/id";
 
 export const CassieBlockExt = Node.create({
   name: `${CASSIE_BLOCK_EXTEND}`,
@@ -10,34 +10,7 @@ export const CassieBlockExt = Node.create({
   isolating: true,
   content: "block*",
   addAttributes() {
-    return {
-      id: {
-        parseHTML: (element: any) => element.getAttribute("id"),
-        renderHTML: (attributes: any) => {
-          if (!attributes.id) {
-            return { id: getId() };
-          }
-          return {
-            id: attributes.id
-          };
-        }
-      },
-      extend: {
-        default: "false"
-      },
-      group: {
-        default: null,
-        parseHTML: (element: any) => element.getAttribute("data-group"),
-        renderHTML: (attributes: any) => {
-          if (!attributes.group) {
-            return {};
-          }
-          return {
-            "data-group": attributes.group
-          };
-        }
-      }
-    };
+    return idAttributes;
   },
   parseHTML() {
     return [

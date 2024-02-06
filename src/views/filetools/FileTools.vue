@@ -193,7 +193,7 @@ export default {
                   {
                     text: "插入表格",
                     click: () => {
-                      this.editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+                      this.editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: false }).run();
                     }
                   },
                   {

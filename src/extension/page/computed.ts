@@ -14,7 +14,6 @@ export const defaultNodesComputed: NodesComputed = {
   [TABLE_ROW]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
     if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
-      debugger;
       const chunks = splitResolve(splitContex.doc.resolve(pos).path);
       if (parent?.firstChild == node) {
         splitContex.pageBoundary = {
@@ -25,17 +24,19 @@ export const defaultNodesComputed: NodesComputed = {
       }
       splitContex.pageBoundary = {
         pos,
-        depth: chunks.length
+        depth: chunks.length - 1
       };
+    } else {
+      splitContex.accumolatedHeight += pHeight;
     }
     return false;
   },
   [TABLE]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
     if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
-      splitContex.accumolatedHeight += pHeight;
       return true;
     }
+    splitContex.accumolatedHeight += pHeight;
     return false;
   },
   [HEADING]: (splitContex, node, pos, parent, dom) => {
@@ -194,8 +195,15 @@ export class PageComputedContext {
       const nodesize = tr.doc.content.lastChild ? tr.doc.content.lastChild.nodeSize : 0;
       let depth = 1;
       //如果 前一页的最后一个node 和后一页的node 是同类 则合并
-      if (tr.doc.content.lastChild && tr.doc.content.lastChild.firstChild && tr.doc.content.lastChild.firstChild.type.name.includes(EXTEND)) {
-        depth = 2;
+      if (tr.doc.content.lastChild != tr.doc.content.firstChild) {
+        //获取倒数第二页
+        const prePage = tr.doc.content.child(tr.doc.content.childCount - 2);
+        //获取最后一页
+        const lastPage = tr.doc.content.lastChild;
+        //如果最后一页的第一个子标签和前一页的最后一个子标签类型一致 或者是扩展类型(是主类型的拆分类型) 进行合并的时候 深度为2
+        if ((lastPage?.firstChild?.type == prePage?.lastChild?.type || lastPage?.firstChild?.type.name.includes(EXTEND)) && lastPage?.lastChild?.attrs?.extend) {
+          depth = 2;
+        }
       }
       tr.join(tr.doc.content.size - nodesize, depth);
     }

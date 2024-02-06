@@ -2,7 +2,7 @@ import { Node } from "@tiptap/core";
 import { CASSIE_BLOCK } from "../nodeNames";
 import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import CassieBlockComponet from "@/extension/node/CassieBlockComponet.vue";
-import { getId } from "@/utils/id";
+import { getId, idAttributes } from "@/utils/id";
 export default Node.create({
   name: `${CASSIE_BLOCK}`,
   group: "block",
@@ -11,32 +11,7 @@ export default Node.create({
   selectable: false,
   addAttributes() {
     return {
-      id: {
-        parseHTML: (element: any) => element.getAttribute("id"),
-        renderHTML: (attributes: any) => {
-          if (!attributes.id) {
-            return { id: getId() };
-          }
-          return {
-            id: attributes.id
-          };
-        }
-      },
-      extend: {
-        default: "false"
-      },
-      group: {
-        default: null,
-        parseHTML: (element: any) => element.getAttribute("data-group"),
-        renderHTML: (attributes: any) => {
-          if (!attributes.group) {
-            return {};
-          }
-          return {
-            "data-group": attributes.group
-          };
-        }
-      },
+      ...idAttributes,
       title: {
         default: null,
         parseHTML: (element) => element.getAttribute("title"),
