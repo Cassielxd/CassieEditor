@@ -338,7 +338,7 @@ export class PageComputedContext {
     let beforeBolck: Node | null = null;
     let beforePos = 0;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
-      if (node.type === schema.nodes[PARAGRAPH] && node.attrs.extend == "true") {
+      if (node.type === schema.nodes[PARAGRAPH] && node.attrs.extend == true) {
         if (beforeBolck == null) {
           beforeBolck = node;
           beforePos = pos;
