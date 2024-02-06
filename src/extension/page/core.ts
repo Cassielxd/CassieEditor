@@ -301,7 +301,7 @@ export function getAbsentHtmlH(node: Node) {
   return nodesom;
 }
 
-export function removeAbsentHtmlH(dom: HTMLElement) {
+export function removeAbsentHtmlH() {
   const computeddiv = document.getElementById("computeddiv");
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

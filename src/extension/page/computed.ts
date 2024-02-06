@@ -122,36 +122,71 @@ export const defaultNodesComputed: NodesComputed = {
     return node == splitContex.lastPage();
   }
 };
-
-export class SplitContex {
+/**
+ * 分页上下文类
+ */
+export class SplitContext {
   #doc: Node; //文档
   #accumolatedHeight = 0; //累加高度
   #pageBoundary: SplitInfo | null = null; //返回的切割点
   #height = 0; //分页的高度
   #paragraphDefaultHeight = 0; //p标签的默认高度
+  /**
+   * 构造函数
+   * @param doc 文档
+   * @param height 分页高度
+   * @param paragraphDefaultHeight p标签的默认高度
+   */
   constructor(doc: Node, height: number, paragraphDefaultHeight: number) {
     this.#doc = doc;
     this.#height = height;
     this.#paragraphDefaultHeight = paragraphDefaultHeight;
   }
+  /**
+   * 获取默认高度
+   * @returns 默认高度
+   */
   getDefaultHeight() {
     return this.#paragraphDefaultHeight;
   }
+  /**
+   * 判断是否溢出
+   * @param height 增加的高度
+   * @returns 是否溢出
+   */
   isOverflow(height: number) {
     return this.#accumolatedHeight + height > this.#height;
   }
+  /**
+   * 增加高度
+   * @param height 增加的高度
+   */
   addHeight(height: number) {
     this.#accumolatedHeight += height;
   }
+  /**
+   * 设置切割点
+   * @param pos 切割点位置
+   * @param depth 切割点深度
+   */
   setBoundary(pos: number, depth: number) {
     this.#pageBoundary = {
       pos,
       depth
     };
   }
+  /**
+   * 获取切割点
+   * @returns 切割点
+   */
   pageBoundary() {
     return this.#pageBoundary;
   }
+  /**
+   * 解析切割点
+   * @param pos 切割点位置
+   * @returns 解析结果
+   */
   splitResolve(pos: number) {
     const array = this.#doc.resolve(pos).path;
     const chunks = [];
@@ -162,6 +197,10 @@ export class SplitContex {
     }
     return chunks;
   }
+  /**
+   * 获取最后一页
+   * @returns 最后一页
+   */
   lastPage() {
     return this.#doc.lastChild;
   }
@@ -367,7 +406,7 @@ export class PageComputedContext {
   getNodeHeight(): SplitInfo | null {
     const doc = this.tr.doc;
     const { bodyOptions } = this.pluginState;
-    const splitContex = new SplitContex(doc, bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2, getDefault());
+    const splitContex = new SplitContext(doc, bodyOptions?.bodyHeight - bodyOptions?.bodyPadding * 2, getDefault());
     const nodesComputed = this.nodesComputed;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
       if (!splitContex.pageBoundary()) {

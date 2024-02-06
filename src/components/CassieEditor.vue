@@ -127,7 +127,7 @@ export default defineComponent({
       if (props.collaborationUrl) {
         provider.value = new HocuspocusProvider({
           url: props.collaborationUrl,
-          name: "1", //这里需要修改 这里是文旦id
+          name: "1", //TODO 这里需要修改 这里是文档唯一id 用于区分不同的文档
           document: ydoc,
           onStatus: (data) => {
             emit("onStatus", data, editor.value);
@@ -137,11 +137,12 @@ export default defineComponent({
             console.log(data);
           },
           onAwarenessChange: (data) => {
+            //协作用户状态的变化
             emit("onAwarenessChange", data);
           },
           onSynced: (data) => {
-            console.log(data);
-            //如果当前协作文档 只有一个人 证明是第一个打开文档的 需要添加文档
+            //TODO 如果当前协作文档 只有一个人 证明是第一个打开文档的 需要添加文档
+            //TODO  这里的实现是错误的 应该在服务端实现打开文档的时候就添加文档 为了演示暂时这样处理减少网络请求
             if (editor.value && editor.value.storage.collaborationCursor.users.length == 1) {
               if (props.content) {
                 editor.value.commands.setContent(props.content);
@@ -205,7 +206,7 @@ export default defineComponent({
       setTimeout(() => {
         editor.value?.view.dispatch(editor.value?.state.tr.setMeta("splitPage", true));
       }, 1000);
-      //applyDevTools(editor.value.view);
+      //TODO 开发模式打开 applyDevTools(editor.value.view);
     });
 
     onBeforeUnmount(() => {

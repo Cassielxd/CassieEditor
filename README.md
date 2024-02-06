@@ -47,7 +47,7 @@ http://emr.cymcar.com/
 FileTools icon图标库  https://marella.me/material-icons/demo/
 
 #### 框架说明
-
+源码核心逻辑都有注释,
 分页实现思路请看PAGE.md
 
 
