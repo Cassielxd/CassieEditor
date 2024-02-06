@@ -1,7 +1,7 @@
 <template>
   <div class="card shadow-xl border join join-vertical bg-base-100">
     <template v-if="items.length">
-      <button v-for="(item, index) in items" :key="index" class="btn join-item" @click="onClick(index)">
+      <button v-for="(item, index) in items" :key="index" class="btn btn-outline btn-info btn-sm" @click="onClick(index)">
         <a>{{ item.name }}</a>
       </button>
     </template>

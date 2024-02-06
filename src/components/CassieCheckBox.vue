@@ -1,9 +1,9 @@
 <template>
   <div class="card bg-base-100 shadow-xl join join-vertical border">
-    <div class="form-control">
+    <div class="card-body form-control p-2.5">
       <label class="cursor-pointer label join-item" v-for="(item, index) in items" :key="index">
         <span class="label-text">{{ item.name }}</span>
-        <input type="checkbox" class="checkbox checkbox-md" @change="(e) => change(e, item)" />
+        <input type="checkbox" class="checkbox checkbox-md checkbox-info" @change="(e) => change(e, item)" />
       </label>
     </div>
     <div class="card-actions justify-end px-4 py-2">
