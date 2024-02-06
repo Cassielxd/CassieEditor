@@ -251,8 +251,8 @@ export class PageComputedContext {
         //处理id重复的问题
         if (na && na.attrs.id) {
           let extend = {};
-          if (na.attrs.extend == "false") {
-            extend = { extend: "true" };
+          if (na.attrs.extend == false) {
+            extend = { extend: true };
           }
           //重新生成id
           const attr = Object.assign({}, n.attrs, { id: getId(), ...extend });
