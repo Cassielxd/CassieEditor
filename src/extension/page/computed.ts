@@ -13,23 +13,17 @@ import { getId } from "@/utils/id";
 export const defaultNodesComputed: NodesComputed = {
   [TABLE_ROW]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
-    if (splitContex.accumolatedHeight + pHeight > splitContex.height) {
-      const chunks = splitResolve(splitContex.doc.resolve(pos).path);
+    if (splitContex.isOverflow(pHeight)) {
+      const chunks = splitContex.splitResolve(pos);
       //如果当前行是table的第一行并且已经超过分页高度 直接返回上一层级的切割点 保证table不会被拆分
       if (parent?.firstChild == node) {
-        splitContex.pageBoundary = {
-          pos: chunks[chunks.length - 2][2],
-          depth: chunks.length - 2
-        };
+        splitContex.setBoundary(chunks[chunks.length - 2][2], chunks.length - 2);
         return false;
       }
       //如果不是第一行 直接返回当前行的切割点
-      splitContex.pageBoundary = {
-        pos,
-        depth: chunks.length - 1
-      };
+      splitContex.setBoundary(pos, chunks.length - 1);
     } else {
-      splitContex.accumolatedHeight += pHeight;
+      splitContex.addHeight(pHeight);
     }
     return false;
   },
@@ -44,9 +38,9 @@ export const defaultNodesComputed: NodesComputed = {
   [TABLE]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
     //如果table的高度超过分页高度 直接返回继续循环 tr
-    if (splitContex.accumolatedHeight + pHeight > splitContex.height) return true;
+    if (splitContex.isOverflow(pHeight)) return true;
     //没有超过分页高度 累加高度
-    splitContex.accumolatedHeight += pHeight;
+    splitContex.addHeight(pHeight);
     return false;
   },
   /**
@@ -59,15 +53,12 @@ export const defaultNodesComputed: NodesComputed = {
    */
   [HEADING]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
-    splitContex.accumolatedHeight += pHeight;
-    if (splitContex.accumolatedHeight > splitContex.height) {
-      const chunks = splitResolve(splitContex.doc.resolve(pos).path);
+    if (splitContex.isOverflow(pHeight)) {
+      const chunks = splitContex.splitResolve(pos);
       //直接返回当前段落
-      splitContex.pageBoundary = {
-        pos,
-        depth: chunks.length - 1
-      };
+      splitContex.setBoundary(pos, chunks.length - 1);
     }
+    splitContex.addHeight(pHeight);
     return false;
   },
   /**
@@ -80,46 +71,43 @@ export const defaultNodesComputed: NodesComputed = {
    */
   [PARAGRAPH]: (splitContex, node, pos, parent, dom) => {
     //如果p标签没有子标签直接返回默认高度 否则计算高度
-    const pHeight = node.childCount > 0 ? getDomHeight(dom) : splitContex.paragraphDefaultHeight;
-    splitContex.accumolatedHeight += pHeight;
+    const pHeight = node.childCount > 0 ? getDomHeight(dom) : splitContex.getDefaultHeight();
+    if (!splitContex.isOverflow(pHeight)) {
+      splitContex.addHeight(pHeight);
+      return false;
+    }
     /*如果当前段落已经 超出分页高度直接拆分 skip 设置为false 循环到下一个段落时 禁止重复进入*/
-    if (splitContex.accumolatedHeight > splitContex.height) {
-      const chunks = splitResolve(splitContex.doc.resolve(pos).path);
-      //判断段落是否需要拆分
-      if (pHeight > splitContex.paragraphDefaultHeight) {
-        const point = getBreakPos(node, dom);
-        if (point) {
-          splitContex.pageBoundary = {
-            pos: pos + point,
-            depth: chunks.length
-          };
-          return false;
-        }
-      }
-      //如果段落是当前块的第一个节点直接返回上一层级的切割点
-      if (parent?.firstChild == node) {
-        splitContex.pageBoundary = {
-          pos: chunks[chunks.length - 2][2],
-          depth: chunks.length - 2
-        };
+    const chunks = splitContex.splitResolve(pos);
+    //判断段落是否需要拆分
+    if (pHeight > splitContex.getDefaultHeight()) {
+      const point = getBreakPos(node, dom);
+      if (point) {
+        splitContex.setBoundary(pos + point, chunks.length);
         return false;
       }
-      //直接返回当前段落
-      splitContex.pageBoundary = {
-        pos,
-        depth: chunks.length - 1
-      };
     }
+    //如果段落是当前块的第一个节点直接返回上一层级的切割点
+    if (parent?.firstChild == node) {
+      splitContex.setBoundary(chunks[chunks.length - 2][2], chunks.length - 2);
+      return false;
+    }
+    //直接返回当前段落
+    splitContex.setBoundary(pos, chunks.length - 1);
     return false;
   },
   //自定义块
   [CASSIE_BLOCK]: (splitContex, node, pos, parent, dom) => {
-    const contentHeight = getContentSpacing(dom);
-    splitContex.accumolatedHeight += contentHeight;
-    return true;
+    const pHeight = getDomHeight(dom);
+    if (splitContex.isOverflow(pHeight)) {
+      const contentHeight = getContentSpacing(dom);
+      splitContex.addHeight(contentHeight);
+      return true;
+    }
+    splitContex.addHeight(pHeight);
+    return false;
   },
   [CASSIE_BLOCK_EXTEND]: (splitContex, node, pos, parent, dom) => {
-    splitContex.accumolatedHeight += 8;
+    splitContex.addHeight(8);
     return true;
   },
   /**
@@ -131,20 +119,51 @@ export const defaultNodesComputed: NodesComputed = {
    * @param dom
    */
   [PAGE]: (splitContex, node, pos, parent, dom) => {
-    return node == splitContex.doc.lastChild;
+    return node == splitContex.lastPage();
   }
 };
 
 export class SplitContex {
-  doc: Node; //文档
-  accumolatedHeight = 0; //累加高度
-  pageBoundary: SplitInfo | null = null; //返回的切割点
-  height = 0; //分页的高度
-  paragraphDefaultHeight = 0; //p标签的默认高度
+  #doc: Node; //文档
+  #accumolatedHeight = 0; //累加高度
+  #pageBoundary: SplitInfo | null = null; //返回的切割点
+  #height = 0; //分页的高度
+  #paragraphDefaultHeight = 0; //p标签的默认高度
   constructor(doc: Node, height: number, paragraphDefaultHeight: number) {
-    this.doc = doc;
-    this.height = height;
-    this.paragraphDefaultHeight = paragraphDefaultHeight;
+    this.#doc = doc;
+    this.#height = height;
+    this.#paragraphDefaultHeight = paragraphDefaultHeight;
+  }
+  getDefaultHeight() {
+    return this.#paragraphDefaultHeight;
+  }
+  isOverflow(height: number) {
+    return this.#accumolatedHeight + height > this.#height;
+  }
+  addHeight(height: number) {
+    this.#accumolatedHeight += height;
+  }
+  setBoundary(pos: number, depth: number) {
+    this.#pageBoundary = {
+      pos,
+      depth
+    };
+  }
+  pageBoundary() {
+    return this.#pageBoundary;
+  }
+  splitResolve(pos: number) {
+    const array = this.#doc.resolve(pos).path;
+    const chunks = [];
+    if (array.length <= 3) return array;
+    const size = 3;
+    for (let i = 0; i < array.length; i += size) {
+      chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+  }
+  lastPage() {
+    return this.#doc.lastChild;
   }
 }
 
@@ -351,23 +370,13 @@ export class PageComputedContext {
     const splitContex = new SplitContex(doc, bodyOptions.bodyHeight - bodyOptions.bodyPadding * 2, getDefault());
     const nodesComputed = this.nodesComputed;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
-      if (!splitContex.pageBoundary) {
+      if (!splitContex.pageBoundary()) {
         let dom = document.getElementById(node.attrs.id);
         if (!dom && node.type.name != PAGE) dom = getAbsentHtmlH(node);
         return nodesComputed[node.type.name](splitContex, node, pos, parentNode, dom);
       }
       return false;
     });
-    return splitContex.pageBoundary ? splitContex.pageBoundary : null;
+    return splitContex.pageBoundary() ? splitContex.pageBoundary() : null;
   }
-}
-
-function splitResolve(array: []) {
-  const chunks = [];
-  if (array.length <= 3) return array;
-  const size = 3;
-  for (let i = 0; i < array.length; i += size) {
-    chunks.push(array.slice(i, i + size));
-  }
-  return chunks;
 }

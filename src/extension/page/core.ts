@@ -307,3 +307,27 @@ export function removeAbsentHtmlH(dom: HTMLElement) {
   // @ts-ignore
   computeddiv.innerHTML = "";
 }
+
+export function buildComputedHtml(options: any) {
+  const computedspan = document.getElementById("computedspan");
+  if (!computedspan) {
+    const p = document.createElement("p");
+    p.classList.add("text-editor");
+    p.setAttribute("style", "opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
+    p.setAttribute("id", "computedspan");
+    p.innerHTML = "&nbsp;";
+    document.body.append(p);
+  }
+  const computeddiv = document.getElementById("computeddiv");
+  if (!computeddiv) {
+    const dom = document.createElement("div");
+    dom.setAttribute("class", "Page text-editor relative");
+    dom.setAttribute("style", "opacity: 0;position: absolute;z-index: -9999;margin-left:-2003px;max-width:" + options.bodyWidth + "px;width:" + options.bodyWidth + "px;");
+    const content = document.createElement("div");
+    content.classList.add("PageContent");
+    content.setAttribute("style", "min-height: " + options.bodyHeight + "px;padding:" + options.bodyPadding + "px");
+    content.setAttribute("id", "computeddiv");
+    dom.append(content);
+    document.body.append(dom);
+  }
+}
