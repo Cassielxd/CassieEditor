@@ -1,38 +1,12 @@
-import { mergeAttributes, Node } from "@tiptap/core";
-import { BulletList, BulletListOptions } from "@tiptap/extension-bullet-list";
-import { getId } from "@/utils/id";
+import { mergeAttributes } from "@tiptap/core";
+import { BulletList } from "@tiptap/extension-bullet-list";
+import { idAttributes } from "@/utils/id";
 
 export const EmrBulletList = BulletList.extend({
+  //修改listItem+ 为listItem* 满足分页的需求
+  content: `listItem*`,
   addAttributes() {
-    return {
-      ...this.parent?.(),
-      id: {
-        parseHTML: (element) => element.getAttribute("id"),
-        renderHTML: (attributes) => {
-          if (!attributes.id) {
-            return { id: getId() };
-          }
-          return {
-            id: attributes.id
-          };
-        }
-      },
-      extend: {
-        default: "false"
-      },
-      group: {
-        default: null,
-        parseHTML: (element) => element.getAttribute("data-group"),
-        renderHTML: (attributes) => {
-          if (!attributes.group) {
-            return {};
-          }
-          return {
-            "data-group": attributes.group
-          };
-        }
-      }
-    };
+    return idAttributes;
   },
   renderHTML({ node, HTMLAttributes }) {
     if (HTMLAttributes.id) {
