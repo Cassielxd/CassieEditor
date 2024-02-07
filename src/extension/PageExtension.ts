@@ -2,11 +2,14 @@ import { Extension } from "@tiptap/core";
 import { Page } from "@/extension/page/page";
 import { buildComputedHtml, PageOptions } from "@/extension/page/core";
 import { pagePlugin } from "@/extension/page/pagePlugn";
+import { CoolKeyMap } from "@/extension/keymap";
 
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
   onBeforeCreate() {
-    buildComputedHtml(this.options);
+    if (this.options.isPaging) {
+      buildComputedHtml(this.options);
+    }
   },
   /*添加分页插件*/
   addProseMirrorPlugins() {
@@ -37,6 +40,9 @@ export const PageExtension = Extension.create<PageOptions>({
   addExtensions() {
     const extensions: any[] = [];
     /*分页*/
+    if (this.options.isPaging) {
+      extensions.push(CoolKeyMap);
+    }
     extensions.push(Page.configure(this.options));
     return extensions;
   }

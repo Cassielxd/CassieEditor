@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-4 gap-4">
     <div class="bg-base-300 col-span-3 grid justify-items-center">
-      <div class="bars" style="width: 80%">
+      <div class="bars">
         <FileTools :editor="editor"></FileTools>
       </div>
       <editor-content class="my-2" :editor="editor" />

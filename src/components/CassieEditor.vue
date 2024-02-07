@@ -1,6 +1,6 @@
 <template>
   <div class="grid flex-grow card bg-base-300 rounded-box place-items-center">
-    <div class="bars">
+    <div>
       <FileTools :editor="editor" v-if="editor"></FileTools>
     </div>
     <editor-content :editor="editor" class="my-2" />

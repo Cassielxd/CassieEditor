@@ -1,37 +1,9 @@
 import { mergeAttributes, Node } from "@tiptap/core";
-import { getId } from "@/utils/id";
+import { getId, idAttributes } from "@/utils/id";
 import { ListItem, ListItemOptions } from "@tiptap/extension-list-item";
 export const EmrListItem = ListItem.extend({
   addAttributes() {
-    return {
-      ...this.parent?.(),
-      id: {
-        parseHTML: (element) => element.getAttribute("id"),
-        renderHTML: (attributes) => {
-          if (!attributes.id) {
-            return { id: getId() };
-          }
-          return {
-            id: attributes.id
-          };
-        }
-      },
-      extend: {
-        default: "false"
-      },
-      group: {
-        default: null,
-        parseHTML: (element) => element.getAttribute("data-group"),
-        renderHTML: (attributes) => {
-          if (!attributes.group) {
-            return {};
-          }
-          return {
-            "data-group": attributes.group
-          };
-        }
-      }
-    };
+    return idAttributes;
   },
   renderHTML({ node, HTMLAttributes }) {
     if (HTMLAttributes.id) {

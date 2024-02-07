@@ -6,6 +6,7 @@ import { ReplaceStep } from "@tiptap/pm/transform";
 import { Slice } from "@tiptap/pm/model";
 
 import * as commands from "@/extension/commands";
+
 export const CoolKeyMap = Extension.create({
   name: "CoolKeyMap",
   /*添加自定义命令*/
@@ -18,16 +19,7 @@ export const CoolKeyMap = Extension.create({
     /*修改系统默认的 回车拆分逻辑*/
     const handleEnter = () =>
       this.editor.commands.first(({ commands }) => {
-        return [
-          () => commands.newlineInCode(),
-          () => commands.createParagraphNear(),
-          () => commands.liftEmptyBlock(),
-          () => {
-            const ok = commands.splitCBlock();
-            console.log(ok);
-            return ok;
-          }
-        ];
+        return [() => commands.newlineInCode(), () => commands.createParagraphNear(), () => commands.liftEmptyBlock(), () => commands.splitCBlock()];
       });
     const handleBackspace = () =>
       this.editor.commands.first(({ commands }) => [
@@ -183,7 +175,14 @@ const deleteSelection = (commands) => {
   return commands.command(({ tr }) => {
     const { selection, doc } = tr;
     //查找选中范围内的所有块
-    const nodesInChangedRanges = findChildrenInRange(doc, { from: selection.from, to: selection.to }, (node) => node.type.name == CASSIE_BLOCK);
+    const nodesInChangedRanges = findChildrenInRange(
+      doc,
+      {
+        from: selection.from,
+        to: selection.to
+      },
+      (node) => node.type.name == CASSIE_BLOCK
+    );
     for (let i = 0; i < nodesInChangedRanges.length; i++) {
       const node = nodesInChangedRanges[i];
       const endPos = node.pos + node.node.nodeSize;

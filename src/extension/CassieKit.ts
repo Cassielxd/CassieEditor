@@ -41,10 +41,10 @@ import { Deletion } from "@/extension/marks/deletion";
 import { EmrDocument } from "@/extension/doc/document";
 import { Document } from "@tiptap/extension-document";
 import { PrintExtension } from "@/extension/print/PrintExtension";
-import { CoolKeyMap } from "@/extension/keymap";
 import Image from "@tiptap/extension-image";
 import CassieBlock from "@/extension/node/CassieBlock";
 import { CassieBlockExt } from "@/extension/node/CassieBlockExt";
+import { EmrOrderedList } from "@/extension/bulletlist/orderlist";
 export interface CassieKitOptions {
   blockquote: Partial<BlockquoteOptions> | false;
   bold: Partial<BoldOptions> | false;
@@ -151,7 +151,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     }
 
     if (this.options.orderedList !== false) {
-      extensions.push(OrderedList.configure(this.options?.orderedList));
+      extensions.push(EmrOrderedList.configure(this.options?.orderedList));
     }
 
     if (this.options.paragraph !== false) {
@@ -190,7 +190,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     extensions.push(Insertion);
     extensions.push(Deletion);
     extensions.push(PrintExtension);
-    extensions.push(CoolKeyMap);
+
     extensions.push(Image.configure({ inline: true, allowBase64: true }));
     return extensions;
   }

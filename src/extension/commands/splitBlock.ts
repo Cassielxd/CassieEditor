@@ -3,6 +3,7 @@ import { canSplit } from "@tiptap/pm/transform";
 
 import { defaultBlockAt, ExtensionAttribute, RawCommands, Commands } from "@tiptap/vue-3";
 import { getId } from "@/utils/id";
+import { getSplittedAttributes } from "@/extension";
 
 function ensureMarks(state: EditorState, splittableMarks?: string[]) {
   const marks = state.storedMarks || (state.selection.$to.parentOffset && state.selection.$from.marks());
@@ -27,15 +28,13 @@ declare module "@tiptap/core" {
 /*修改系统默认 block块分割事件操作  如果分割的时候  属性包含id的话
  * 需要重新生成 因为id 在 html里面是唯一的 只有 其他的属性 可以被继承到 下一个 block
  * */
-export const splitCBlock: RawCommands["splitCBlock"] =
+
+export const splitCBlock: RawCommands["splitBlock"] =
   ({ keepMarks = true } = {}) =>
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   ({ tr, state, dispatch, editor }) => {
     const { selection, doc } = tr;
     const { $from, $to } = selection;
     const extensionAttributes = editor.extensionManager.attributes;
-
     const newAttributes = getSplittedAttributes(extensionAttributes, $from.node().type.name, $from.node().attrs);
     //值如果包含id 需要重新生成
     if (newAttributes.id) {
@@ -73,14 +72,15 @@ export const splitCBlock: RawCommands["splitCBlock"] =
 
       const deflt = $from.depth === 0 ? undefined : defaultBlockAt($from.node(-1).contentMatchAt($from.indexAfter(-1)));
 
-      let types = deflt
-        ? [
-            {
-              type: deflt,
-              attrs: newAttributes
-            }
-          ]
-        : undefined;
+      let types =
+        atEnd && deflt
+          ? [
+              {
+                type: deflt,
+                attrs: newAttributes
+              }
+            ]
+          : undefined;
 
       let can = canSplit(tr.doc, tr.mapping.map($from.pos), 1, types);
 
@@ -118,20 +118,3 @@ export const splitCBlock: RawCommands["splitCBlock"] =
 
     return true;
   };
-
-/*获取需要分割的节点属性*/
-export function getSplittedAttributes(extensionAttributes: ExtensionAttribute[], typeName: string, attributes: Record<string, any>): Record<string, any> {
-  return Object.fromEntries(
-    Object.entries(attributes).filter(([name]) => {
-      const extensionAttribute = extensionAttributes.find((item) => {
-        return item.type === typeName && item.name === name;
-      });
-
-      if (!extensionAttribute) {
-        return false;
-      }
-
-      return extensionAttribute.attribute.keepOnSplit;
-    })
-  );
-}

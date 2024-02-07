@@ -7,6 +7,9 @@ export const CC = "CC";
 export const HEADING = "heading";
 export const BULLETLIST = "bulletList";
 export const LISTITEM = "listItem";
+
+export const ORDEREDLIST = "orderedList";
+
 export const TABLE = "table";
 
 export const TABLE_ROW = "tableRow";

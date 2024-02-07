@@ -341,6 +341,21 @@ export default {
           },
           { is: "separator" },
           {
+            icon: "format_list_numbered",
+            title: "编号列表",
+            click: () => {
+              this.editor.chain().focus().toggleOrderedList().run();
+            }
+          },
+          {
+            icon: "format_list_bulleted",
+            title: "符号列表",
+            click: () => {
+              this.editor.chain().focus().toggleBulletList().run();
+            }
+          },
+          { is: "separator" },
+          {
             icon: "format_bold",
             title: "加粗",
             click: () => {
