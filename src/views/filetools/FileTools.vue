@@ -177,9 +177,41 @@ export default {
             ],
             menu_width: 220
           },
-          { is: "spacer" },
+          { is: "separator" },
+
+
+          {
+            icon: "format_align_left",
+            title: "左对齐",
+            click: () => {
+              this.editor.chain().focus().setTextAlign("left").run();
+            }
+          },
+          {
+            icon: "format_align_center",
+            title: "居中",
+            click: () => {
+              this.editor.chain().focus().setTextAlign("center").run();
+            }
+          },
+          {
+            icon: "format_align_right",
+            title: "右对齐",
+            click: () => {
+              this.editor.chain().focus().setTextAlign("right").run();
+            }
+          },
+          {
+            icon: "format_align_justify",
+            title: "两端对齐",
+            click: () => {
+              this.editor.chain().focus().setTextAlign("justify").run();
+            }
+          },
+          { is: "separator" },
           {
             icon: "table_view",
+            title: "表格",
             menu: [
               {
                 text: "表格",
@@ -310,36 +342,6 @@ export default {
               }
             ]
           },
-
-          {
-            icon: "format_align_left",
-            title: "Align left",
-            click: () => {
-              this.editor.chain().focus().setTextAlign("left").run();
-            }
-          },
-          {
-            icon: "format_align_center",
-            title: "Align center",
-            click: () => {
-              this.editor.chain().focus().setTextAlign("center").run();
-            }
-          },
-          {
-            icon: "format_align_right",
-            title: "Align right",
-            click: () => {
-              this.editor.chain().focus().setTextAlign("right").run();
-            }
-          },
-          {
-            icon: "format_align_justify",
-            title: "Justify content",
-            click: () => {
-              this.editor.chain().focus().setTextAlign("justify").run();
-            }
-          },
-          { is: "separator" },
           {
             icon: "format_list_numbered",
             title: "编号列表",
