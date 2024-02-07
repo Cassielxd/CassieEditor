@@ -1,5 +1,5 @@
 // @ts-noCheck
-import { TABLE, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PAGE, PARAGRAPH, TABLE_ROW } from "@/extension/nodeNames";
+import { TABLE, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PAGE, PARAGRAPH, TABLE_ROW, ORDEREDLIST, BULLETLIST } from "@/extension/nodeNames";
 import { NodesComputed, PluginState, SplitParams } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
@@ -11,6 +11,39 @@ import { getId } from "@/utils/id";
 
 //默认高度计算方法
 export const defaultNodesComputed: NodesComputed = {
+  [ORDEREDLIST]: (splitContex, node, pos, parent, dom) => {
+    const pHeight = getDomHeight(dom);
+    //如果table的高度超过分页高度 直接返回继续循环 tr
+    if (splitContex.isOverflow(pHeight)) return true;
+    //没有超过分页高度 累加高度
+    splitContex.addHeight(pHeight);
+    return false;
+  },
+  [BULLETLIST]: (splitContex, node, pos, parent, dom) => {
+    const pHeight = getDomHeight(dom);
+    //如果table的高度超过分页高度 直接返回继续循环 tr
+    if (splitContex.isOverflow(pHeight)) return true;
+    //没有超过分页高度 累加高度
+    splitContex.addHeight(pHeight);
+    return false;
+  },
+  [LISTITEM]: (splitContex, node, pos, parent, dom) => {
+
+    const pHeight = getDomHeight(dom);
+    if (splitContex.isOverflow(pHeight)) {
+      const chunks = splitContex.splitResolve(pos);
+      //如果当前行是list的第一行并且已经超过分页高度 直接返回上一层级的切割点
+      if (parent?.firstChild == node) {
+        splitContex.setBoundary(chunks[chunks.length - 2][2], chunks.length - 2);
+        return false;
+      }
+      //如果不是第一行 直接返回当前行的切割点
+      splitContex.setBoundary(pos, chunks.length - 1);
+    } else {
+      splitContex.addHeight(pHeight);
+    }
+    return false;
+  },
   [TABLE_ROW]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
     if (splitContex.isOverflow(pHeight)) {
