@@ -11,11 +11,11 @@ import { getId } from "@/utils/id";
 
 /**
  * @description 默认 table ol ul 列表类型的公共计算逻辑
- * @param splitContex
- * @param node
- * @param pos
- * @param parent
- * @param dom
+ * @param splitContex 分割上下文
+ * @param node 当前需要计算的节点
+ * @param pos   当前节点的位置
+ * @param parent 当前节点的父节点
+ * @param dom 当前节点的dom
  */
 export const sameListCalculation = (splitContex, node, pos, parent, dom) => {
   const pHeight = getDomHeight(dom);
@@ -27,11 +27,11 @@ export const sameListCalculation = (splitContex, node, pos, parent, dom) => {
 };
 /**
  * @description 默认 LISTITEM TABLE_ROW 段落类型的公共计算逻辑
- * @param splitContex
- * @param node
- * @param pos
- * @param parent
- * @param dom
+ * @param splitContex 分割上下文
+ * @param node 当前需要计算的节点
+ * @param pos  当前节点的位置
+ * @param parent 当前节点的父节点
+ * @param dom 当前节点的dom
  */
 export const sameItemCalculation = (splitContex, node, pos, parent, dom) => {
   const pHeight = getDomHeight(dom);
@@ -56,22 +56,14 @@ export const defaultNodesComputed: NodesComputed = {
   [BULLETLIST]: sameListCalculation,
   [LISTITEM]: sameItemCalculation,
   [TABLE_ROW]: sameItemCalculation,
-  /**
-   * table 分割算法  如果table的高度超过分页高度 直接返回继续循环 tr
-   * @param splitContex
-   * @param node
-   * @param pos
-   * @param parent
-   * @param dom
-   */
   [TABLE]: sameListCalculation,
   /**
    * h1-h6 分割算法 如果heading的高度超过分页高度 直接返回当前heading
-   * @param splitContex
-   * @param node
-   * @param pos
-   * @param parent
-   * @param dom
+   * @param splitContex 分割上下文
+   * @param node 当前需要计算的节点
+   * @param pos 当前节点的位置
+   * @param parent 当前节点的父节点
+   * @param dom 当前节点的dom
    */
   [HEADING]: (splitContex, node, pos, parent, dom) => {
     const pHeight = getDomHeight(dom);
@@ -85,11 +77,11 @@ export const defaultNodesComputed: NodesComputed = {
   },
   /**
    * p 分割算法 如果段落标签没有超过 默认段落高度 则直接返回段落分割点，否则继续计算 段落内部分割点
-   * @param splitContex
-   * @param node
-   * @param pos
-   * @param parent
-   * @param dom
+   * @param splitContex 分割上下文
+   * @param node  当前需要计算的节点
+   * @param pos 当前节点的位置
+   * @param parent 当前节点的父节点
+   * @param dom 当前节点的dom
    */
   [PARAGRAPH]: (splitContex, node, pos, parent, dom) => {
     //如果p标签没有子标签直接返回默认高度 否则计算高度
@@ -134,11 +126,11 @@ export const defaultNodesComputed: NodesComputed = {
   },
   /**
    * page 分割算法 永远返回最后一个page进行分割
-   * @param splitContex
-   * @param node
-   * @param pos
-   * @param parent
-   * @param dom
+   * @param splitContex 分割上下文
+   * @param node 当前需要计算的节点
+   * @param pos 当前节点的位置
+   * @param parent 当前节点的父节点
+   * @param dom 当前节点的dom
    */
   [PAGE]: (splitContex, node, pos, parent, dom) => {
     return node == splitContex.lastPage();
