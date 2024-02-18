@@ -16,11 +16,6 @@ export const CoolKeyMap = Extension.create({
     };
   },
   addKeyboardShortcuts() {
-    /*修改系统默认的 回车拆分逻辑*/
-    const handleEnter = () =>
-      this.editor.commands.first(({ commands }) => {
-        return [() => commands.newlineInCode(), () => commands.createParagraphNear(), () => commands.liftEmptyBlock(), () => commands.splitCBlock()];
-      });
     const handleBackspace = () =>
       this.editor.commands.first(({ commands }) => [
         () => {
@@ -158,7 +153,6 @@ export const CoolKeyMap = Extension.create({
         }
       ]);
     return {
-      Enter: handleEnter,
       Backspace: handleBackspace,
       Delete: handleDelete,
       Tab: handleTab

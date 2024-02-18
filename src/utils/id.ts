@@ -1,7 +1,8 @@
-let id = 1;
+let gid = 1;
 
 export function getId() {
-  return id++;
+  gid += 1;
+  return gid;
 }
 
 export const idAttributes: any = {

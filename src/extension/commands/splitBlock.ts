@@ -29,7 +29,7 @@ declare module "@tiptap/core" {
  * 需要重新生成 因为id 在 html里面是唯一的 只有 其他的属性 可以被继承到 下一个 block
  * */
 
-export const splitCBlock: RawCommands["splitBlock"] =
+export const splitBlock: RawCommands["splitBlock"] =
   ({ keepMarks = true } = {}) =>
   ({ tr, state, dispatch, editor }) => {
     const { selection, doc } = tr;
@@ -40,9 +40,11 @@ export const splitCBlock: RawCommands["splitBlock"] =
     if (newAttributes.id) {
       newAttributes.id = getId();
     }
+
     if (newAttributes.extend == "true") {
       newAttributes.extend = "false";
     }
+    console.log(newAttributes);
     if (selection instanceof NodeSelection && selection.node.isBlock) {
       if (!$from.parentOffset || !canSplit(doc, $from.pos)) {
         return false;
@@ -71,16 +73,16 @@ export const splitCBlock: RawCommands["splitBlock"] =
       }
 
       const deflt = $from.depth === 0 ? undefined : defaultBlockAt($from.node(-1).contentMatchAt($from.indexAfter(-1)));
-
-      let types =
-        atEnd && deflt
-          ? [
-              {
-                type: deflt,
-                attrs: newAttributes
-              }
-            ]
-          : undefined;
+      //修改默认操作 不管是不是在末尾都分割 都需要有新的属性id 保证id的唯一性
+      let types = /*
+        atEnd &&*/ deflt
+        ? [
+            {
+              type: deflt,
+              attrs: newAttributes
+            }
+          ]
+        : undefined;
 
       let can = canSplit(tr.doc, tr.mapping.map($from.pos), 1, types);
 
@@ -108,11 +110,9 @@ export const splitCBlock: RawCommands["splitBlock"] =
           }
         }
       }
-
       if (keepMarks) {
         ensureMarks(state, editor.extensionManager.splittableMarks);
       }
-
       tr.scrollIntoView();
     }
 
