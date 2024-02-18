@@ -2,6 +2,18 @@
   "name": "cool-editor",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://39.101.177.50/",
+  "description": "tiptap and prosemirror rich text editor ext demo",
+  "repository": {
+    "url": "https://github.com/Cassielxd/CassieEditor"
+  },
+  "keywords": [
+    "tiptap",
+    "prosemirror",
+    "wysiwyg",
+    "text editor",
+    "emr"
+  ],
   "scripts": {
     "serve": "vite",
     "build": "vite build",
