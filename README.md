@@ -1,5 +1,7 @@
 # cool editor
 
+
+- [English md](https://github.com/Cassielxd/CassieEditor/blob/main/README-EN.md)
 #### 介绍
 
 基于prosemirror和tiptap开发的富文本编辑器项目
