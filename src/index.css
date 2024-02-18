@@ -5,6 +5,9 @@
 
 }
 @layer components {
+  /*
+  编辑器默认
+  */
   .text-editor {
     @apply prose prose-base;
     h1,h2,h3,h4,h5,h6{
@@ -24,10 +27,28 @@
     }
   }
   .Page {
-    @apply  bg-white   transform my-2 text-editor;
-    padding: 10mm;
+    @apply  bg-white   transform my-2 text-editor relative;
+    padding: 20mm;
     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
   }
+  .corner {
+    @apply absolute h-10 w-10 bg-white;
+  }
+  .corner-top-left {
+    @apply corner left-10 top-10 border-r border-b border-solid;
+  }
+  .corner-top-right {
+    @apply corner top-10 right-10 border-l border-b border-solid;
+  }
+
+  .corner-bottom-left {
+    @apply corner bottom-10 left-10 border-r border-t border-solid;
+  }
+
+  .corner-bottom-right {
+    @apply corner bottom-10 right-10 border-l border-t border-solid;
+  }
+
   @media print {
     .Page { page-break-after: auto;}
   }

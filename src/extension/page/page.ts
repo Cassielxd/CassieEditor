@@ -70,6 +70,14 @@ export const Page = Node.create<PageOptions>({
       dom.setAttribute("style", "max-width:" + options.bodyWidth + "px;width:" + options.bodyWidth + "px;");
       dom.setAttribute("id", node.attrs.id);
       dom.oncontextmenu = () => false;
+
+      const corners = ["corner-top-left", "corner-top-right", "corner-bottom-left", "corner-bottom-right"];
+      corners.forEach((corner) => {
+        const cornerDiv = document.createElement("div");
+        cornerDiv.setAttribute("class", corner);
+        dom.append(cornerDiv);
+      });
+
       const content = document.createElement("div");
       content.classList.add("PageContent");
       content.setAttribute("style", "min-height: " + options.bodyHeight + "px;padding:" + options.bodyPadding + "px");
