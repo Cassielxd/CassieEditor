@@ -94,7 +94,7 @@ export const defaultNodesComputed: NodesComputed = {
     const chunks = splitContex.splitResolve(pos);
     //判断段落是否需要拆分
     if (pHeight > splitContex.getDefaultHeight()) {
-      const point = getBreakPos(node, dom);
+      const point = getBreakPos(node, dom, splitContex);
       if (point) {
         splitContex.setBoundary(pos + point, chunks.length);
         return false;
@@ -306,7 +306,8 @@ export class PageComputedContext {
         //获取最后一页
         const lastPage = tr.doc.content.lastChild;
         //如果最后一页的第一个子标签和前一页的最后一个子标签类型一致 或者是扩展类型(是主类型的拆分类型) 进行合并的时候 深度为2
-        if ((lastPage?.firstChild?.type == prePage?.lastChild?.type || lastPage?.firstChild?.type.name.includes(EXTEND)) && lastPage?.lastChild?.attrs?.extend) {
+
+        if ((lastPage?.firstChild?.type == prePage?.lastChild?.type || lastPage?.firstChild?.type.name.includes(EXTEND)) && lastPage?.firstChild?.attrs?.extend) {
           depth = 2;
         }
       }
@@ -396,8 +397,13 @@ export class PageComputedContext {
           beforeBolck = node;
           beforePos = pos;
         } else {
+          console.log("beforeBolck: " + beforeBolck);
           const mappedPos = tr.mapping.map(pos);
-          tr = tr.step(new ReplaceStep(mappedPos - 1, mappedPos + 1, Slice.empty));
+          if (beforeBolck.type == schema.nodes[PARAGRAPH]) {
+          } else {
+            tr = tr.step(new ReplaceStep(mappedPos - 1, mappedPos + 1, Slice.empty));
+          }
+
           return false;
         }
       }

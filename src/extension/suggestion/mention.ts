@@ -3,7 +3,6 @@ import { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import { PluginKey, TextSelection } from "@tiptap/pm/state";
 import { SuggestionClick, SuggestionClickOptions } from "@/extension/suggestion/mouseSuggestion";
 
-
 export type MentionOptions = {
   HTMLAttributes: Record<string, any>;
   renderLabel: (props: { options: MentionOptions; node: ProseMirrorNode }) => string;

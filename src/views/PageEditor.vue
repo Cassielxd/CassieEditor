@@ -10,7 +10,6 @@ import { onBeforeUnmount, reactive, ref } from "vue";
 import { UnitConversion } from "../extension/page/core";
 import { WIDGET_BASE_LIST } from "@/design/config";
 
-
 const unitConversion = new UnitConversion();
 export default {
   components: {

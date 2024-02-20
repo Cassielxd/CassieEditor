@@ -1,18 +1,43 @@
 import { Node } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
+import { SplitContext } from "@/extension/page/computed";
 
 export function getFlag(cnode: Node) {
   const paragraphDOM = document.getElementById(cnode.attrs.id);
   if (!paragraphDOM) return null;
   const width = paragraphDOM.getBoundingClientRect().width;
   const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
-  const wordl = computedWidth(html, false);
+  const { width: wordl } = computedWidth(html, false);
   //证明一行都没填满 应当执行 合并
   if (width >= wordl) {
     return false;
   }
-  const { strLength } = calculateNodeOverflowWidthAndPoint(cnode, width);
+  let strLength = 0;
+  cnode.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
+    //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
+    if (node.isText) {
+      const nodeText = node.text;
+      if (nodeText) {
+        for (let i = 0; i < nodeText.length; i++) {
+          const { width: wl, height } = computedWidth(nodeText.charAt(i));
+          if (strLength + wl > width) {
+            strLength = wl;
+          } else {
+            strLength += wl;
+          }
+        }
+      }
+    } else {
+      const html = generateHTML(getJsonFromDoc(node), getExtentions());
+      const { width: wordl, height } = computedWidth(html);
+      if (strLength + wordl > width) {
+        strLength = wordl;
+      } else {
+        strLength += wordl;
+      }
+    }
+  });
   const space = parseFloat(window.getComputedStyle(paragraphDOM).getPropertyValue("font-size"));
   return Math.abs(strLength - width) < space;
 }
@@ -22,31 +47,51 @@ export function getFlag(cnode: Node) {
  * @param node
  * @param width
  */
-function calculateNodeOverflowWidthAndPoint(node: Node, width: number) {
+function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitContex: SplitContext) {
   let strLength = 0;
+  let allHeight = 0;
+  let maxHeight = 0;
   let index = 0;
+  let isFlag = true;
   node.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
+    if (!isFlag) {
+      return isFlag;
+    }
     //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
     if (node.isText) {
       const nodeText = node.text;
       if (nodeText) {
         for (let i = 0; i < nodeText.length; i++) {
-          const wl = computedWidth(nodeText.charAt(i));
+          const { width: wl, height } = computedWidth(nodeText.charAt(i));
           if (strLength + wl > width) {
-            strLength = wl;
+            allHeight += maxHeight;
+            if (splitContex.isOverflow(allHeight)) {
+              isFlag = false;
+              return isFlag;
+            }
             index = pos + i + 1;
+            strLength = wl;
+            maxHeight = 0;
           } else {
+            if (height > maxHeight) maxHeight = height;
             strLength += wl;
           }
         }
       }
     } else {
       const html = generateHTML(getJsonFromDoc(node), getExtentions());
-      const wordl = computedWidth(html);
+      const { width: wordl, height } = computedWidth(html);
       if (strLength + wordl > width) {
-        strLength = wordl;
+        allHeight += maxHeight;
+        if (splitContex.isOverflow(allHeight)) {
+          isFlag = false;
+          return isFlag;
+        }
         index = pos + 1;
+        strLength = wordl;
+        maxHeight = 0;
       } else {
+        if (height > maxHeight) maxHeight = height;
         strLength += wordl;
       }
     }
@@ -62,7 +107,7 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number) {
  * @param cnode
  * @param dom
  */
-export function getBreakPos(cnode: Node, dom: HTMLElement) {
+export function getBreakPos(cnode: Node, dom: HTMLElement, splitContex: SplitContext) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const paragraphDOM = dom;
@@ -70,12 +115,12 @@ export function getBreakPos(cnode: Node, dom: HTMLElement) {
   const width = paragraphDOM.offsetWidth;
 
   const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
-  const wordl = computedWidth(html, false);
+  const { width: wordl } = computedWidth(html, false);
   //如果高度超过默认了 但是宽度没有超过 证明 只有一行 只是里面有 行内元素 比如 图片
   if (width >= wordl) {
     return null;
   }
-  const { index } = calculateNodeOverflowWidthAndPoint(cnode, width);
+  const { index } = calculateNodeOverflowWidthAndPoint(cnode, width, splitContex);
   return index ? index : null;
 }
 
@@ -195,10 +240,12 @@ export function computedWidth(html: string, cache = true) {
   if (computedspan) {
     computedspan.innerHTML = html;
     const width = computedspan.getBoundingClientRect().width;
+    const height = computedspan.getBoundingClientRect().height;
     if (cache) {
-      map.set(html, width);
+      map.set(html, { height, width });
     }
-    return width;
+    computedspan.innerHTML = "&nbsp;";
+    return { height, width };
   }
   return 0;
 }

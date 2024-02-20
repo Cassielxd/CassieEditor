@@ -7,7 +7,7 @@ export function createShortId() {
 }
 
 export function createDocFromState(state: { numbering: INumberingOptions["config"]; children: ISectionOptions["children"]; footnotes?: IFootnotes }) {
-  const doc = new  Document({
+  const doc = new Document({
     footnotes: state.footnotes,
     numbering: {
       config: state.numbering

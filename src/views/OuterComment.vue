@@ -2,12 +2,11 @@
   <div class="divide-y">
     <div v-for="(comment, i) in allComments" :key="i + 'external_comment'" class="card bg-base-100 scale-95" :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'active' : 'cursor-pointer'}`]" @click.stop.prevent="focusContent({ from: comment.from, to: comment.to })">
       <div v-for="(jsonComment, j) in comment.jsonComments.comments" :key="`${j}_${Math.random()}`" class="grid p-2.5">
-
-          <strong class="text-md">{{ jsonComment.userName }} 日期：{{ formatDate(jsonComment.time) }}</strong>
+        <strong class="text-md">{{ jsonComment.userName }} 日期：{{ formatDate(jsonComment.time) }}</strong>
 
         <span class="content">评论：{{ jsonComment.content }}</span>
       </div>
-      <div >
+      <div>
         <div v-if="comment.jsonComments.uuid === activeCommentsInstance.uuid" class="card-body p-2.5" :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'border-blue-900' : 'max-h-0 border-blue-300'}`]">
           <textarea
             class="textarea textarea-bordered"

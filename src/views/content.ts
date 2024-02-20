@@ -22,7 +22,7 @@ export const pageContentHtml = `<page pagenumber="1">
     <p  extend="false" data-group="p21">我是一个独立的段落</p>
     <h3 extend="false">分页说明</h3>
     <p  extend="false" data-group="aa1">H标签支持,p标签支持，自定义块Node支持</p>
-    <p  extend="false" data-group="aa2">核心分页逻辑已经完成，其他标签请照案例自行添加</p>
+    <p  extend="false" data-group="aa2">核心分页逻辑已经完成，其他标签请照案例自行添加核心分页逻辑已经完成，其他标签请照案例自行添加核心分页逻辑已经完成，其他标签请照案例自行添加核心分页逻辑已经完成，其他标签请照案例自行添加核心分页逻辑已经完成，其他标签请照案例自行添加核心分页逻辑已经完成，其他标签请照案例自行添加</p>
     <table class="border-collapse border border-slate-400" id="25" extend="false">
         <tbody>
             <tr  extend="false">

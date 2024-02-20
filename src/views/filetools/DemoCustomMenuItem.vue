@@ -1,7 +1,5 @@
 <template>
-  <div class="bar-menu-item"
-    @mousedown="(e) => e.preventDefault()"
-    @click="(e) => (item.click && !item.disabled) ? item.click(e) : e.stopPropagation()">
+  <div class="bar-menu-item" @mousedown="(e) => e.preventDefault()" @click="(e) => (item.click && !item.disabled ? item.click(e) : e.stopPropagation())">
     <div class="label">{{ item.text }}</div>
   </div>
 </template>
@@ -11,7 +9,7 @@ export default {
   props: {
     item: Object // item contains the properties you defined in the Bar definition
   }
-}
+};
 </script>
 
 <style scoped>
@@ -31,7 +29,11 @@ export default {
   animation-play-state: running;
 }
 @keyframes slide {
-  0% { background-position: 0% 0 }
-  100% { background-position: 200% 0 }
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 </style>

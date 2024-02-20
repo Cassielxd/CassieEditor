@@ -13,5 +13,3 @@ export const ORDEREDLIST = "orderedList";
 export const TABLE = "table";
 
 export const TABLE_ROW = "tableRow";
-
-

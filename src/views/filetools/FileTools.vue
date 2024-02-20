@@ -179,7 +179,6 @@ export default {
           },
           { is: "separator" },
 
-
           {
             icon: "format_align_left",
             title: "左对齐",
