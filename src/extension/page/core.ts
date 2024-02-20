@@ -12,58 +12,20 @@ export function getFlag(cnode: Node) {
   if (width >= wordl) {
     return false;
   }
-  let strLength = 0;
-  //多行计算最后一行是不是满行
-  cnode.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
-    if (node.isText) {
-      const nodeText = node.text;
-      if (nodeText) {
-        for (let i = 0; i < nodeText.length; i++) {
-          const wl = computedWidth(nodeText.charAt(i));
-          if (strLength + wl > width) {
-            strLength = wl;
-          } else {
-            strLength += wl;
-          }
-        }
-      }
-    } else {
-      const html = generateHTML(getJsonFromDoc(node), getExtentions());
-      const wordl = computedWidth(html);
-      if (strLength + wordl > width) {
-        strLength = wordl;
-      } else {
-        strLength += wordl;
-      }
-    }
-  });
+  const { strLength } = calculateNodeOverflowWidthAndPoint(cnode, width);
   const space = parseFloat(window.getComputedStyle(paragraphDOM).getPropertyValue("font-size"));
   return Math.abs(strLength - width) < space;
 }
 
 /**
- *获取段落里最后一个需要分页的地方
- * 行内中文字符和英文字符宽度超过 段落宽度 计算
- * 没有超过直接返回null
- * 由于行内有可能含有图片 不需要计算图片
- * @param cnode
- * @param dom
+ * 计算节点的宽度和超出的位置
+ * @param node
+ * @param width
  */
-export function getBreakPos(cnode: Node, dom: HTMLElement) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const paragraphDOM = dom;
-  if (!paragraphDOM) return null;
-  const width = paragraphDOM.offsetWidth;
+function calculateNodeOverflowWidthAndPoint(node: Node, width: number) {
   let strLength = 0;
   let index = 0;
-  const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
-  const wordl = computedWidth(html, false);
-  //如果高度超过默认了 但是宽度没有超过 证明 只有一行 只是里面有 行内元素 比如 图片
-  if (width >= wordl) {
-    return null;
-  }
-  cnode.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
+  node.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
     //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
     if (node.isText) {
       const nodeText = node.text;
@@ -89,6 +51,31 @@ export function getBreakPos(cnode: Node, dom: HTMLElement) {
       }
     }
   });
+  return { strLength, index };
+}
+
+/**
+ *获取段落里最后一个需要分页的地方
+ * 行内中文字符和英文字符宽度超过 段落宽度 计算
+ * 没有超过直接返回null
+ * 由于行内有可能含有图片 不需要计算图片
+ * @param cnode
+ * @param dom
+ */
+export function getBreakPos(cnode: Node, dom: HTMLElement) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const paragraphDOM = dom;
+  if (!paragraphDOM) return null;
+  const width = paragraphDOM.offsetWidth;
+
+  const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
+  const wordl = computedWidth(html, false);
+  //如果高度超过默认了 但是宽度没有超过 证明 只有一行 只是里面有 行内元素 比如 图片
+  if (width >= wordl) {
+    return null;
+  }
+  const { index } = calculateNodeOverflowWidthAndPoint(cnode, width);
   return index ? index : null;
 }
 

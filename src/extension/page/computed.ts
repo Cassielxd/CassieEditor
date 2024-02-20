@@ -3,7 +3,7 @@ import { TABLE, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PA
 import { ComputedFn, NodesComputed, PageState, SplitParams, SplitInfo } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
-import { getAbsentHtmlH, getBreakPos, getContentSpacing, getDefault, getDomHeight} from "@/extension/page/core";
+import { getAbsentHtmlH, getBreakPos, getContentSpacing, getDefault, getDomHeight } from "@/extension/page/core";
 import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
