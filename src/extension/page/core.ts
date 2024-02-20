@@ -1,26 +1,6 @@
 import { Node } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
-import { NodesComputed } from "@/extension/page/types";
-
-export type PageOptions = {
-  footerHeight: number;
-  headerHeight: number;
-  bodyHeight: number;
-  bodyWidth: number;
-  bodyPadding: number;
-  isPaging?: boolean;
-  design?: boolean;
-  headerData?: any[];
-  footerData?: any[];
-  NodesComputed?: NodesComputed;
-  SystemAttributes?: Record<string, any>;
-};
-
-export type SplitInfo = {
-  pos: number;
-  depth: number;
-};
 
 export function getFlag(cnode: Node) {
   const paragraphDOM = document.getElementById(cnode.attrs.id);

@@ -1,23 +1,16 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { EditorState, Plugin, PluginKey, Transaction } from "@tiptap/pm/state";
+import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 import { PAGE } from "@/extension/nodeNames";
-import { PageOptions, removeAbsentHtmlH } from "@/extension/page/core";
+import { removeAbsentHtmlH } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
 import { defaultNodesComputed, PageComputedContext } from "@/extension/page/computed";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
-
-type PluginState = {
-  bodyOptions: PageOptions | null; //分页条件
-  deleting: boolean; //删除标志位
-  inserting: boolean; //插入标志位
-  checkNode: boolean; //检验node节点完整性
-  splitPage: boolean; //分页标志位 用户主动调用
-};
+import { PageState, PageOptions } from "@/extension/page/types";
 export const paginationPluginKey = new PluginKey("pagination");
 export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
-  const plugin: Plugin = new Plugin<PluginState>({
+  const plugin: Plugin = new Plugin<PageState>({
     key: paginationPluginKey,
     view: () => {
       return {

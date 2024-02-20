@@ -1,9 +1,9 @@
 // @ts-noCheck
 import { TABLE, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PAGE, PARAGRAPH, TABLE_ROW, ORDEREDLIST, BULLETLIST } from "@/extension/nodeNames";
-import { NodesComputed, PluginState, SplitParams } from "@/extension/page/types";
+import { ComputedFn, NodesComputed, PageState, SplitParams, SplitInfo } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
-import { getAbsentHtmlH, getBreakPos, getContentSpacing, getDefault, getDomHeight, SplitInfo } from "@/extension/page/core";
+import { getAbsentHtmlH, getBreakPos, getContentSpacing, getDefault, getDomHeight} from "@/extension/page/core";
 import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
@@ -17,7 +17,7 @@ import { getId } from "@/utils/id";
  * @param parent 当前节点的父节点
  * @param dom 当前节点的dom
  */
-export const sameListCalculation = (splitContex, node, pos, parent, dom) => {
+export const sameListCalculation: ComputedFn = (splitContex, node, pos, parent, dom) => {
   const pHeight = getDomHeight(dom);
   //如果列表的高度超过分页高度 直接返回继续循环 tr 或者li
   if (splitContex.isOverflow(pHeight)) return true;
@@ -33,7 +33,7 @@ export const sameListCalculation = (splitContex, node, pos, parent, dom) => {
  * @param parent 当前节点的父节点
  * @param dom 当前节点的dom
  */
-export const sameItemCalculation = (splitContex, node, pos, parent, dom) => {
+export const sameItemCalculation: ComputedFn = (splitContex, node, pos, parent, dom) => {
   const pHeight = getDomHeight(dom);
   if (splitContex.isOverflow(pHeight)) {
     const chunks = splitContex.splitResolve(pos);
@@ -227,20 +227,20 @@ export class PageComputedContext {
   nodesComputed: NodesComputed;
   state: EditorState;
   tr: Transaction;
-  pluginState: PluginState;
+  pageState: PageState;
   editor: Editor;
-  constructor(editor: Editor, nodesComputed: NodesComputed, pluginState: PluginState, state: EditorState) {
+  constructor(editor: Editor, nodesComputed: NodesComputed, pageState: PageState, state: EditorState) {
     this.editor = editor;
     this.nodesComputed = nodesComputed;
     this.tr = state.tr;
     this.state = state;
-    this.pluginState = pluginState;
+    this.pageState = pageState;
   }
 
   //核心执行逻辑
   run() {
     const { selection, doc } = this.state;
-    const { inserting, deleting, checkNode, splitPage }: PluginState = this.pluginState;
+    const { inserting, deleting, checkNode, splitPage }: PageState = this.pageState;
     if (splitPage) return this.initComputed();
     if (checkNode) return this.checkNodeAndFix();
     if (!inserting && deleting && selection.$head.node(1) === doc.lastChild) return this.tr;
@@ -419,7 +419,7 @@ export class PageComputedContext {
    */
   getNodeHeight(): SplitInfo | null {
     const doc = this.tr.doc;
-    const { bodyOptions } = this.pluginState;
+    const { bodyOptions } = this.pageState;
     const splitContex = new SplitContext(doc, bodyOptions?.bodyHeight - bodyOptions?.bodyPadding * 2, getDefault());
     const nodesComputed = this.nodesComputed;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {

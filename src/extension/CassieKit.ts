@@ -32,7 +32,7 @@ import { cursorPlugin } from "@/extension/cursor/cursor";
 import { TableOptions } from "@tiptap/extension-table";
 import { Mention, MentionOptions } from "@/extension/suggestion/mention";
 import TextAlign, { TextAlignOptions } from "@tiptap/extension-text-align";
-import { PageOptions } from "@/extension/page/core";
+import { PageOptions } from "@/extension/page/types";
 import { ParagraphOptions } from "@tiptap/extension-paragraph";
 import Underline from "@tiptap/extension-underline";
 import { StrikeThrough } from "@/extension/marks/strikethrough";

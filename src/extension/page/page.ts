@@ -1,6 +1,6 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import { PAGE } from "../nodeNames";
-import { PageOptions } from "@/extension/page/core";
+import { PageOptions } from "@/extension/page/types";
 
 import { getId } from "@/utils/id";
 

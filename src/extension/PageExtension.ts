@@ -1,6 +1,7 @@
 import { Extension } from "@tiptap/core";
 import { Page } from "@/extension/page/page";
-import { buildComputedHtml, PageOptions } from "@/extension/page/core";
+import { buildComputedHtml } from "@/extension/page/core";
+import { PageOptions } from "@/extension/page/types";
 import { pagePlugin } from "@/extension/page/pagePlugn";
 import { CoolKeyMap } from "@/extension/keymap";
 
