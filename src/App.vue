@@ -1,10 +1,15 @@
 <template>
   <div class="navbar">
-    <div class="flex-1">
-      <a class="btn btn-ghost normal-case text-xl">bs编辑器</a>
+    <div class="navbar-start">
+      <div class="avatar">
+        <div class="w-10 rounded-full">
+          <img src="./avatar.png" />
+        </div>
+      </div>
+      <a class="btn btn-ghost normal-case text-xl">CoolEditor</a>
     </div>
-    <div class="flex-none">
-      <ul class="menu menu-horizontal px-1" @click="handleSelect">
+    <div class="navbar-center">
+      <ul class="menu menu-horizontal px-1">
         <li>
           <router-link to="/">基础编辑器</router-link>
         </li>
@@ -29,8 +34,15 @@
         <li>
           <router-link to="/about">关于编辑器</router-link>
         </li>
+      </ul>
+    </div>
+    <div class="navbar-end">
+      <ul class="menu menu-horizontal px-1">
         <li>
           <a href="https://github.com/Cassielxd/CassieEditor">github</a>
+        </li>
+        <li>
+          <a href="https://gitee.com/stringlxd/cool_emr">gitee</a>
         </li>
       </ul>
     </div>
