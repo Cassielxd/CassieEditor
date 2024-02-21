@@ -3,6 +3,10 @@ import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
 import { SplitContext } from "@/extension/page/computed";
 
+/**
+ * 计算最后一行是否填满
+ * @param cnode
+ */
 export function getFlag(cnode: Node) {
   const paragraphDOM = document.getElementById(cnode.attrs.id);
   if (!paragraphDOM) return null;
@@ -20,7 +24,7 @@ export function getFlag(cnode: Node) {
       const nodeText = node.text;
       if (nodeText) {
         for (let i = 0; i < nodeText.length; i++) {
-          const { width: wl, height } = computedWidth(nodeText.charAt(i));
+          const { width: wl } = computedWidth(nodeText.charAt(i));
           if (strLength + wl > width) {
             strLength = wl;
           } else {
@@ -30,7 +34,7 @@ export function getFlag(cnode: Node) {
       }
     } else {
       const html = generateHTML(getJsonFromDoc(node), getExtentions());
-      const { width: wordl, height } = computedWidth(html);
+      const { width: wordl } = computedWidth(html);
       if (strLength + wordl > width) {
         strLength = wordl;
       } else {

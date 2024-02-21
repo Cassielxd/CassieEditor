@@ -30,7 +30,7 @@
           <router-link to="/about">关于编辑器</router-link>
         </li>
         <li>
-          <a href="https://gitee.com/stringlxd/cool_emr">源码地址</a>
+          <a href="https://github.com/Cassielxd/CassieEditor">github</a>
         </li>
       </ul>
     </div>
