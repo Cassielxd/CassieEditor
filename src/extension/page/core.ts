@@ -2,6 +2,7 @@ import { Node } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
 import { SplitContext } from "@/extension/page/computed";
+import { CassieText } from "@/extension/text/CassieText";
 
 /**
  * 计算最后一行是否填满
@@ -63,10 +64,18 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
     }
     //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
     if (node.isText) {
+      let isMarkd = false;
+      if (node.marks.length) isMarkd = true;
       const nodeText = node.text;
       if (nodeText) {
         for (let i = 0; i < nodeText.length; i++) {
-          const { width: wl, height } = computedWidth(nodeText.charAt(i));
+          let resource = nodeText.charAt(i);
+          if (isMarkd) {
+            const nodeJson = node.toJSON();
+            nodeJson.text = resource;
+            resource = generateHTML(getJsonFromDocForJson(nodeJson), getExtentions());
+          }
+          const { width: wl, height } = computedWidth(resource);
           if (strLength + wl > width) {
             allHeight += maxHeight;
             if (splitContex.isOverflow(allHeight)) {
@@ -136,6 +145,13 @@ export function getJsonFromDoc(node: Node) {
   return {
     type: "doc",
     content: [node.toJSON()]
+  };
+}
+
+export function getJsonFromDocForJson(json: any) {
+  return {
+    type: "doc",
+    content: [json]
   };
 }
 
