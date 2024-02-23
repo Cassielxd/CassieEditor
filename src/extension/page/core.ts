@@ -67,10 +67,12 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
       let isMarkd = false;
       if (node.marks.length) isMarkd = true;
       const nodeText = node.text;
+
       if (nodeText) {
         for (let i = 0; i < nodeText.length; i++) {
           let resource = nodeText.charAt(i);
-          if (isMarkd&&resource!= " ") {
+          //fix bug #1 修复空格计算宽度问题和文本有样式的情况计算问题 例如加粗
+          if (isMarkd && resource!= " ") {
             const nodeJson = node.toJSON();
             nodeJson.text = resource;
             resource = generateHTML(getJsonFromDocForJson(nodeJson), getExtentions());
