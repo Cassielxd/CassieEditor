@@ -47,7 +47,7 @@ export default {
       //如果是协作模式 设置 content需要滞后 否则会重复添加
       editor.value = new Editor({
         onUpdate({ editor }) {
-          console.log(editor.getHTML());
+          //console.log(editor.getHTML());
         },
         editable: true,
         content: pageContentHtml,

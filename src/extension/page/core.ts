@@ -70,7 +70,7 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
       if (nodeText) {
         for (let i = 0; i < nodeText.length; i++) {
           let resource = nodeText.charAt(i);
-          if (isMarkd) {
+          if (isMarkd&&resource!= " ") {
             const nodeJson = node.toJSON();
             nodeJson.text = resource;
             resource = generateHTML(getJsonFromDocForJson(nodeJson), getExtentions());
