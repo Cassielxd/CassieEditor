@@ -1,4 +1,4 @@
-import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
+import { EditorState, Plugin, PluginKey, Transaction } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 import { PAGE } from "@/extension/nodeNames";
 import { removeAbsentHtmlH } from "@/extension/page/core";
@@ -10,9 +10,20 @@ import { PageState, PageOptions } from "@/extension/page/types";
 class PageDetector {
   #editor: Editor;
   #bodyOption: PageOptions;
-  constructor(editor: Editor, bodyOption: PageOptions) {
+  #pageClass: string;
+  constructor(editor: Editor, bodyOption: PageOptions, pageClass = ".PageContent") {
     this.#bodyOption = bodyOption;
     this.#editor = editor;
+    this.#pageClass = pageClass;
+  }
+  /**
+   * @author Cassie
+   * @method isOverflown
+   * @param pageBody  当前需要分页的 dom
+   * @param bodyOption 需要分页的条件
+   */
+  isOverflown(pageBody: Element) {
+    return pageBody.scrollHeight > this.#bodyOption.bodyHeight;
   }
   update(view: EditorView, prevState: EditorState) {
     const { selection, schema, tr } = view.state;
@@ -23,9 +34,9 @@ class PageDetector {
     const deleting = window.stepStatus ? window.stepStatus : false;
     const pageDOM = findParentDomRefOfType(schema.nodes[PAGE], domAtPos)(selection);
     if (!pageDOM) return;
-    const pageBody = (pageDOM as HTMLElement).querySelector(".PageContent");
+    const pageBody = (pageDOM as HTMLElement).querySelector(this.#pageClass);
     if (pageBody) {
-      const inserting = isOverflown(pageBody, this.#bodyOption);
+      const inserting = this.isOverflown(pageBody);
       if (inserting || deleting) {
         if (inserting) tr.setMeta("inserting", inserting);
         if (deleting) {
@@ -52,6 +63,26 @@ class PageDetector {
     }
   }
 }
+class TransfromPageState {
+  #state: PageState;
+  #tr: Transaction;
+  constructor(state: PageState, tr: Transaction) {
+    this.#state = state;
+    this.#tr = tr;
+  }
+  transform() {
+    const next: PageState = { ...this.#state };
+    const splitPage: boolean = this.#tr.getMeta("splitPage");
+    const checkNode: boolean = this.#tr.getMeta("checkNode");
+    const deleting: boolean = this.#tr.getMeta("deleting");
+    const inserting: boolean = this.#tr.getMeta("inserting");
+    next.splitPage = splitPage ? splitPage : false;
+    next.inserting = inserting ? inserting : false;
+    next.deleting = deleting ? deleting : false;
+    next.checkNode = checkNode ? checkNode : false;
+    return next;
+  }
+}
 
 export const paginationPluginKey = new PluginKey("pagination");
 export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
@@ -72,18 +103,9 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
        * Meta数据是一个事务级别的 一个事务结束 meta消失
        * state则在整个生命周期里都存在的
        * */
-      apply: (tr, prev): PageState => {
-        const next: PageState = { ...prev };
-        const splitPage: boolean = tr.getMeta("splitPage");
-        const checkNode: boolean = tr.getMeta("checkNode");
-        const deleting: boolean = tr.getMeta("deleting");
-        const inserting: boolean = tr.getMeta("inserting");
-        next.splitPage = splitPage ? splitPage : false;
-        next.inserting = inserting ? inserting : false;
-        next.deleting = deleting ? deleting : false;
-        next.bodyOptions = bodyOption;
-        next.checkNode = checkNode ? checkNode : false;
-        return next;
+      apply: (tr, prevState): PageState => {
+        prevState.bodyOptions = bodyOption;
+        return new TransfromPageState(prevState, tr).transform();
       }
     },
     /**
@@ -119,14 +141,4 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     }
   });
   return plugin;
-};
-
-/**
- * @author Cassie
- * @method isOverflown
- * @param pageBody  当前需要分页的 dom
- * @param bodyOption 需要分页的条件
- */
-const isOverflown = (pageBody: Element, bodyOption: PageOptions) => {
-  return pageBody.scrollHeight > bodyOption.bodyHeight;
 };

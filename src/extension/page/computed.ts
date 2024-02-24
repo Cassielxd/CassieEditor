@@ -403,7 +403,6 @@ export class PageComputedContext {
           } else {
             tr = tr.step(new ReplaceStep(mappedPos - 1, mappedPos + 1, Slice.empty));
           }
-
           return false;
         }
       }
