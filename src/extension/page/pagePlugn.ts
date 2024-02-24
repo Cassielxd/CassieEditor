@@ -1,4 +1,4 @@
-import { EditorState, Plugin, PluginKey, Transaction } from "@tiptap/pm/state";
+import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 import { PAGE } from "@/extension/nodeNames";
 import { removeAbsentHtmlH } from "@/extension/page/core";
@@ -63,27 +63,6 @@ class PageDetector {
     }
   }
 }
-class TransfromPageState {
-  #state: PageState;
-  #tr: Transaction;
-  constructor(state: PageState, tr: Transaction) {
-    this.#state = state;
-    this.#tr = tr;
-  }
-  transform() {
-    const next: PageState = { ...this.#state };
-    const splitPage: boolean = this.#tr.getMeta("splitPage");
-    const checkNode: boolean = this.#tr.getMeta("checkNode");
-    const deleting: boolean = this.#tr.getMeta("deleting");
-    const inserting: boolean = this.#tr.getMeta("inserting");
-    next.splitPage = splitPage ? splitPage : false;
-    next.inserting = inserting ? inserting : false;
-    next.deleting = deleting ? deleting : false;
-    next.checkNode = checkNode ? checkNode : false;
-    return next;
-  }
-}
-
 export const paginationPluginKey = new PluginKey("pagination");
 export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
   const plugin: Plugin = new Plugin<PageState>({
@@ -92,20 +71,15 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       return new PageDetector(editor, bodyOption);
     },
     state: {
-      init: (): PageState => ({
-        bodyOptions: null,
-        deleting: false,
-        inserting: false,
-        checkNode: false,
-        splitPage: false
-      }),
+      init: (): PageState => {
+        return new PageState(bodyOption, false, false, false, false);
+      },
       /*判断标志位是否存在  如果存在 则修改 state 值
        * Meta数据是一个事务级别的 一个事务结束 meta消失
        * state则在整个生命周期里都存在的
        * */
       apply: (tr, prevState): PageState => {
-        prevState.bodyOptions = bodyOption;
-        return new TransfromPageState(prevState, tr).transform();
+        return prevState.transform(tr);
       }
     },
     /**

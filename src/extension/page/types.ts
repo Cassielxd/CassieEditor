@@ -1,6 +1,6 @@
 import { Attrs, Node, NodeType, Schema } from "@tiptap/pm/model";
 import { SplitContext } from "@/extension/page/computed";
-
+import {Transaction } from "@tiptap/pm/state";
 /**
  * The computed function for the page extension a node.
  * @param splitContex 分割上下文.
@@ -12,13 +12,32 @@ import { SplitContext } from "@/extension/page/computed";
  */
 export type ComputedFn = (splitContex: SplitContext, node: Node, pos: number, parent: Node | null, dom: HTMLElement) => boolean;
 export type NodesComputed = Record<string, ComputedFn>;
-export type PageState = {
-  bodyOptions: PageOptions | null;
+export class PageState {
+  bodyOptions: PageOptions;
   deleting: boolean;
   inserting: boolean;
   checkNode: boolean;
   splitPage: boolean;
-};
+  constructor(bodyOptions: PageOptions, deleting: boolean, inserting: boolean, checkNode: boolean, splitPage: boolean) {
+    this.bodyOptions = bodyOptions;
+    this.deleting = deleting;
+    this.inserting = inserting;
+    this.checkNode = checkNode;
+    this.splitPage = splitPage;
+  }
+  transform(tr: Transaction) {
+    const splitPage: boolean = tr.getMeta("splitPage");
+    const checkNode: boolean = tr.getMeta("checkNode");
+    const deleting: boolean = tr.getMeta("deleting");
+    const inserting: boolean = tr.getMeta("inserting");
+    const splitPage1 = splitPage ? splitPage : false;
+    const inserting2 = inserting ? inserting : false;
+    const deleting3 = deleting ? deleting : false;
+    const checkNode4 = checkNode ? checkNode : false;
+    return new PageState(this.bodyOptions, deleting3, inserting2, checkNode4, splitPage1);
+  }
+}
+
 export type SplitParams = {
   pos: number;
   depth?: number;

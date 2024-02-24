@@ -44,7 +44,6 @@ export const splitBlock: RawCommands["splitBlock"] =
     if (newAttributes.extend == "true") {
       newAttributes.extend = "false";
     }
-    console.log(newAttributes);
     if (selection instanceof NodeSelection && selection.node.isBlock) {
       if (!$from.parentOffset || !canSplit(doc, $from.pos)) {
         return false;
