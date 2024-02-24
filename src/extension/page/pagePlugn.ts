@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 import { PAGE } from "@/extension/nodeNames";
@@ -8,50 +6,62 @@ import { findParentDomRefOfType } from "@/utils/index";
 import { defaultNodesComputed, PageComputedContext } from "@/extension/page/computed";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
 import { PageState, PageOptions } from "@/extension/page/types";
+
+class PageDetector {
+  #editor: Editor;
+  #bodyOption: PageOptions;
+  constructor(editor: Editor, bodyOption: PageOptions) {
+    this.#bodyOption = bodyOption;
+    this.#editor = editor;
+  }
+  update(view: EditorView, prevState: EditorState) {
+    const { selection, schema, tr } = view.state;
+    if (view.state.doc.eq(prevState.doc)) return;
+    const domAtPos = view.domAtPos.bind(view);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const deleting = window.stepStatus ? window.stepStatus : false;
+    const pageDOM = findParentDomRefOfType(schema.nodes[PAGE], domAtPos)(selection);
+    if (!pageDOM) return;
+    const pageBody = (pageDOM as HTMLElement).querySelector(".PageContent");
+    if (pageBody) {
+      const inserting = isOverflown(pageBody, this.#bodyOption);
+      if (inserting || deleting) {
+        if (inserting) tr.setMeta("inserting", inserting);
+        if (deleting) {
+          tr.setMeta("deleting", true);
+          /*防止多次触发没完没了的 进行分割处理*/
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.stepStatus = false;
+        }
+        const state = view.state.apply(tr);
+        view.updateState(state);
+      }
+      /*检验 node节点完整性*/
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      if (window.checkNode) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        window.checkNode = false;
+        tr.setMeta("checkNode", true);
+        const state = view.state.apply(tr);
+        view.updateState(state);
+      }
+    }
+  }
+}
+
 export const paginationPluginKey = new PluginKey("pagination");
 export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
   const plugin: Plugin = new Plugin<PageState>({
     key: paginationPluginKey,
     view: () => {
-      return {
-        /*
-         * 1:获取当前鼠标所在的page
-         * 2：判断当前的page div高度是否超过了 固定高度
-         * 3：超过固定高度则设置标志位setMeta   Meta 只在一个tr有效
-         * */
-        update: (view: EditorView, prevState: EditorState) => {
-          const { selection, schema, tr } = view.state;
-          if (view.state.doc.eq(prevState.doc)) return;
-          const domAtPos = view.domAtPos.bind(view);
-          const deleting = window.stepStatus ? window.stepStatus : false;
-          const pageDOM = findParentDomRefOfType(schema.nodes[PAGE], domAtPos)(selection);
-          if (!pageDOM) return;
-          const pageBody = (pageDOM as HTMLElement).querySelector(".PageContent");
-          if (pageBody) {
-            const inserting = isOverflown(pageBody, bodyOption);
-            if (inserting || deleting) {
-              if (inserting) tr.setMeta("inserting", inserting);
-              if (deleting) {
-                tr.setMeta("deleting", true);
-                /*防止多次触发没完没了的 进行分割处理*/
-                window.stepStatus = false;
-              }
-              const state = view.state.apply(tr);
-              view.updateState(state);
-            }
-            /*检验 node节点完整性*/
-            if (window.checkNode) {
-              window.checkNode = false;
-              tr.setMeta("checkNode", true);
-              const state = view.state.apply(tr);
-              view.updateState(state);
-            }
-          }
-        }
-      };
+      return new PageDetector(editor, bodyOption);
     },
     state: {
-      init: (): PluginState => ({
+      init: (): PageState => ({
         bodyOptions: null,
         deleting: false,
         inserting: false,
@@ -62,8 +72,8 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
        * Meta数据是一个事务级别的 一个事务结束 meta消失
        * state则在整个生命周期里都存在的
        * */
-      apply: (tr, prev): PluginState => {
-        const next: PluginState = { ...prev };
+      apply: (tr, prev): PageState => {
+        const next: PageState = { ...prev };
         const splitPage: boolean = tr.getMeta("splitPage");
         const checkNode: boolean = tr.getMeta("checkNode");
         const deleting: boolean = tr.getMeta("deleting");
@@ -96,8 +106,12 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       },
       handleKeyDown(view, event) {
         if (event.code == "Backspace") {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           window.stepStatus = true;
         } else {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           window.stepStatus = false;
         }
         return false;
