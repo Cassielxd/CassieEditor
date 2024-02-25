@@ -72,7 +72,7 @@ export const Page = Node.create<PageOptions>({
 });
 export class PageView implements NodeView {
   dom: Element;
-  contentDOM: Element | null;
+  contentDOM: HTMLElement;
   constructor({ node }: NodeViewRendererProps, options: PageOptions) {
     const dom = document.createElement("div");
     dom.setAttribute("class", "Page text-editor relative");
