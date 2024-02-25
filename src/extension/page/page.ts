@@ -4,8 +4,6 @@ import { PageOptions } from "@/extension/page/types";
 
 import { getId } from "@/utils/id";
 import { NodeView } from "@tiptap/pm/view";
-import { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import { Decoration, DecorationSource } from "prosemirror-view";
 export const Page = Node.create<PageOptions>({
   priority: 2,
   /* 标签名称 */
