@@ -71,25 +71,40 @@ export const Page = Node.create<PageOptions>({
   }
 });
 export class PageView implements NodeView {
-  dom: Element;
+  dom: HTMLElement;
   contentDOM: HTMLElement;
-  constructor({ node }: NodeViewRendererProps, options: PageOptions) {
-    const dom = document.createElement("div");
-    dom.setAttribute("class", "Page text-editor relative");
-    dom.setAttribute("style", "max-width:" + options.bodyWidth + "px;width:" + options.bodyWidth + "px;");
-    dom.setAttribute("id", node.attrs.id);
-    dom.oncontextmenu = () => false;
-    this.dom = dom;
+  options: PageOptions;
+  props: NodeViewRendererProps;
+  constructor(props: NodeViewRendererProps, options: PageOptions) {
+    this.options = options;
+    this.props = props;
+    this.dom = document.createElement("div");
+    this.contentDOM = document.createElement("div");
+    this.buildDom();
+    this.buildCorners();
+    this.buildContentDOM();
+  }
+  buildDom() {
+    const { node } = this.props;
+    this.dom.setAttribute("class", "Page text-editor relative");
+    this.dom.setAttribute("style", "max-width:" + this.options.bodyWidth + "px;width:" + this.options.bodyWidth + "px;");
+    this.dom.setAttribute("id", node.attrs.id);
+    this.dom.oncontextmenu = () => false;
+  }
+  buildHeaderAndFooter() {
+    //TODO 页眉页脚的实现
+  }
+  buildCorners() {
     const corners = ["corner-top-left", "corner-top-right", "corner-bottom-left", "corner-bottom-right"];
     corners.forEach((corner) => {
       const cornerDiv = document.createElement("div");
       cornerDiv.setAttribute("class", corner);
       this.dom.append(cornerDiv);
     });
-    const content = document.createElement("div");
-    content.classList.add("PageContent");
-    content.setAttribute("style", "min-height: " + options.bodyHeight + "px;padding:" + options.bodyPadding + "px");
-    this.dom.append(content);
-    this.contentDOM = content;
+  }
+  buildContentDOM() {
+    this.contentDOM.classList.add("PageContent");
+    this.contentDOM.setAttribute("style", "min-height: " + this.options.bodyHeight + "px;padding:" + this.options.bodyPadding + "px");
+    this.dom.append(this.contentDOM);
   }
 }
