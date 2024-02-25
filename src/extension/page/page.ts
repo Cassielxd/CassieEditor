@@ -1,9 +1,11 @@
-import { mergeAttributes, Node } from "@tiptap/core";
+import { mergeAttributes, Node, NodeViewRendererProps } from "@tiptap/core";
 import { PAGE } from "../nodeNames";
 import { PageOptions } from "@/extension/page/types";
 
 import { getId } from "@/utils/id";
-
+import { NodeView } from "@tiptap/pm/view";
+import { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import { Decoration, DecorationSource } from "prosemirror-view";
 export const Page = Node.create<PageOptions>({
   priority: 2,
   /* 标签名称 */
@@ -64,29 +66,32 @@ export const Page = Node.create<PageOptions>({
   },
   addNodeView() {
     const options = this.options;
-    return ({ editor, node, getPos }) => {
-      const dom = document.createElement("div");
-      dom.setAttribute("class", "Page text-editor relative");
-      dom.setAttribute("style", "max-width:" + options.bodyWidth + "px;width:" + options.bodyWidth + "px;");
-      dom.setAttribute("id", node.attrs.id);
-      dom.oncontextmenu = () => false;
-
-      const corners = ["corner-top-left", "corner-top-right", "corner-bottom-left", "corner-bottom-right"];
-      corners.forEach((corner) => {
-        const cornerDiv = document.createElement("div");
-        cornerDiv.setAttribute("class", corner);
-        dom.append(cornerDiv);
-      });
-
-      const content = document.createElement("div");
-      content.classList.add("PageContent");
-      content.setAttribute("style", "min-height: " + options.bodyHeight + "px;padding:" + options.bodyPadding + "px");
-      dom.append(content);
-      return {
-        dom,
-        contentDOM: content
-      };
+    return (props: NodeViewRendererProps) => {
+      return new PageView(props, options);
     };
     //return this.options.design ? VueNodeViewRenderer(PageDesignComponet, {}) : VueNodeViewRenderer(PageComponet);
   }
 });
+export class PageView implements NodeView {
+  dom: Element;
+  contentDOM: Element | null;
+  constructor({ node }: NodeViewRendererProps, options: PageOptions) {
+    const dom = document.createElement("div");
+    dom.setAttribute("class", "Page text-editor relative");
+    dom.setAttribute("style", "max-width:" + options.bodyWidth + "px;width:" + options.bodyWidth + "px;");
+    dom.setAttribute("id", node.attrs.id);
+    dom.oncontextmenu = () => false;
+    this.dom = dom;
+    const corners = ["corner-top-left", "corner-top-right", "corner-bottom-left", "corner-bottom-right"];
+    corners.forEach((corner) => {
+      const cornerDiv = document.createElement("div");
+      cornerDiv.setAttribute("class", corner);
+      this.dom.append(cornerDiv);
+    });
+    const content = document.createElement("div");
+    content.classList.add("PageContent");
+    content.setAttribute("style", "min-height: " + options.bodyHeight + "px;padding:" + options.bodyPadding + "px");
+    this.dom.append(content);
+    this.contentDOM = content;
+  }
+}
