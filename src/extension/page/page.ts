@@ -1,4 +1,4 @@
-import { mergeAttributes, Node, NodeViewRendererProps } from "@tiptap/core";
+import { mergeAttributes, Node, NodeViewRenderer, NodeViewRendererProps } from "@tiptap/core";
 import { PAGE } from "../nodeNames";
 import { PageOptions } from "@/extension/page/types";
 
@@ -64,12 +64,21 @@ export const Page = Node.create<PageOptions>({
   },
   addNodeView() {
     const options = this.options;
-    return (props: NodeViewRendererProps) => {
-      return new PageView(props, options);
-    };
+    return defaultPageViewRenderer(options);
     //return this.options.design ? VueNodeViewRenderer(PageDesignComponet, {}) : VueNodeViewRenderer(PageComponet);
   }
 });
+
+export function defaultPageViewRenderer(options: PageOptions): NodeViewRenderer {
+  return (props: NodeViewRendererProps) => {
+    return new PageView(props, options);
+  };
+}
+
+/**
+ * 分页组件PageView默认实现
+ * 使用vue框架实现可以参考 VueNodeViewRenderer(PageComponet)
+ */
 export class PageView implements NodeView {
   dom: HTMLElement;
   contentDOM: HTMLElement;
@@ -103,7 +112,7 @@ export class PageView implements NodeView {
     });
   }
   buildContentDOM() {
-    this.contentDOM.classList.add("PageContent");
+    this.contentDOM.classList.add("PageContent"); //计算使用的也是这个class 不可随意更改
     this.contentDOM.setAttribute("style", "min-height: " + this.options.bodyHeight + "px;padding:" + this.options.bodyPadding + "px");
     this.dom.append(this.contentDOM);
   }
