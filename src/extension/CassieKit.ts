@@ -24,7 +24,7 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import { PageExtension } from "@/extension/PageExtension";
 import { FocusClasses, FocusOptions } from "@/extension/focus/focus";
 import { EmrHeading } from "@/extension/heading/heading";
-import { TableCellOptions, TableCell } from "@tiptap/extension-table-cell";
+import { TableCellOptions } from "@tiptap/extension-table-cell";
 import { TableHeader, TableHeaderOptions } from "@tiptap/extension-table-header";
 import { CassieTableRow } from "@/extension/table/TableRow";
 import { CassieTable } from "@/extension/table/Table";
@@ -45,6 +45,7 @@ import Image from "@tiptap/extension-image";
 import CassieBlock from "@/extension/node/CassieBlock";
 import { CassieBlockExt } from "@/extension/node/CassieBlockExt";
 import { EmrOrderedList } from "@/extension/bulletlist/orderlist";
+import { CassieTableCell } from "@/extension/table/TableCell";
 export interface CassieKitOptions {
   blockquote: Partial<BlockquoteOptions> | false;
   bold: Partial<BoldOptions> | false;
@@ -173,7 +174,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
       extensions.push(CassieTable.configure(this.options?.table));
       extensions.push(CassieTableRow);
       extensions.push(this.options?.tableHeader ? TableHeader.configure(this.options?.tableHeader) : TableHeader);
-      extensions.push(this.options?.tableCell ? TableCell.configure(this.options?.tableCell) : TableCell);
+      extensions.push(this.options?.tableCell ? CassieTableCell.configure(this.options?.tableCell) : CassieTableCell);
     }
     if (this.options.focus !== false) {
       extensions.push(FocusClasses.configure(this.options?.focus));

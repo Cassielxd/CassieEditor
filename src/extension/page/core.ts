@@ -2,8 +2,7 @@ import { Node } from "@tiptap/pm/model";
 import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
 import { SplitContext } from "@/extension/page/computed";
-import { CassieText } from "@/extension/text/CassieText";
-
+import { PARAGRAPH } from "@/extension/nodeNames";
 /**
  * 计算最后一行是否填满
  * @param cnode
@@ -329,10 +328,18 @@ export function getDomHeight(dom: HTMLElement) {
 
 export function getAbsentHtmlH(node: Node) {
   const html = generateHTML(getJsonFromDoc(node), getExtentions());
-  const computeddiv = document.getElementById("computeddiv");
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  computeddiv.innerHTML = html;
+  if (node.type.name == PARAGRAPH) {
+    const computeddiv = document.getElementById("computedspan");
+    if (computeddiv) {
+      computeddiv.innerHTML = html;
+    }
+  } else {
+    const computeddiv = document.getElementById("computeddiv");
+    if (computeddiv) {
+      computeddiv.innerHTML = html;
+    }
+  }
+
   const nodesom = document.getElementById(node.attrs.id);
   return nodesom;
 }

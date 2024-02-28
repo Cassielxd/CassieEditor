@@ -1,6 +1,6 @@
 import { Attrs, Node, NodeType, Schema } from "@tiptap/pm/model";
 import { SplitContext } from "@/extension/page/computed";
-import {Transaction } from "@tiptap/pm/state";
+import { Transaction } from "@tiptap/pm/state";
 /**
  * The computed function for the page extension a node.
  * @param splitContex 分割上下文.
@@ -62,4 +62,5 @@ export type PageOptions = {
 export type SplitInfo = {
   pos: number;
   depth: number;
+  attributes?: Record<string, any>;
 };

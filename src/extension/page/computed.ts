@@ -1,10 +1,10 @@
 // @ts-noCheck
-import { TABLE, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PAGE, PARAGRAPH, TABLE_ROW, ORDEREDLIST, BULLETLIST } from "@/extension/nodeNames";
+import { TABLE, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PAGE, PARAGRAPH, TABLE_ROW, ORDEREDLIST, BULLETLIST, TABLE_CELL } from "@/extension/nodeNames";
 import { ComputedFn, NodesComputed, PageState, SplitParams, SplitInfo } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
 import { getAbsentHtmlH, getBreakPos, getContentSpacing, getDefault, getDomHeight } from "@/extension/page/core";
-import { getNodeType } from "@tiptap/core";
+import { findParentNode, getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
 import { getId } from "@/utils/id";
@@ -36,6 +36,9 @@ export const sameListCalculation: ComputedFn = (splitContex, node, pos, parent, 
 export const sameItemCalculation: ComputedFn = (splitContex, node, pos, parent, dom) => {
   const pHeight = getDomHeight(dom);
   if (splitContex.isOverflow(pHeight)) {
+    if (parent?.firstChild == node && parent?.firstChild == node) {
+      return false;
+    }
     const chunks = splitContex.splitResolve(pos);
     //如果当前行是list的第一行并且已经超过分页高度 直接返回上一层级的切割点
     if (parent?.firstChild == node) {
@@ -57,7 +60,14 @@ export const defaultNodesComputed: NodesComputed = {
   [LISTITEM]: sameItemCalculation,
   [TABLE_ROW]: sameItemCalculation,
   [TABLE]: sameListCalculation,
-  /**
+  [TABLE_CELL]: (splitContex, node, pos, parent, dom) => {
+    const chunks = splitContex.splitResolve(pos);
+    debugger;
+    splitContex.setBoundary(pos, chunks.length - 1);
+    return false;
+  },
+  /*
+  、、*
    * h1-h6 分割算法 如果heading的高度超过分页高度 直接返回当前heading
    * @param splitContex 分割上下文
    * @param node 当前需要计算的节点
@@ -145,6 +155,7 @@ export class SplitContext {
   #pageBoundary: SplitInfo | null = null; //返回的切割点
   #height = 0; //分页的高度
   #paragraphDefaultHeight = 0; //p标签的默认高度
+  attributes: Record<string, any> = {};
   /**
    * 构造函数
    * @param doc 文档

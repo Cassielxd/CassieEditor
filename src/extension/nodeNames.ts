@@ -13,3 +13,4 @@ export const ORDEREDLIST = "orderedList";
 export const TABLE = "table";
 
 export const TABLE_ROW = "tableRow";
+export const TABLE_CELL = "tableCell";
