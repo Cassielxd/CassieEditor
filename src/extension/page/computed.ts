@@ -25,6 +25,7 @@ export const sameListCalculation: ComputedFn = (splitContex, node, pos, parent, 
   splitContex.addHeight(pHeight);
   return false;
 };
+let count = 1;
 /**
  * @description 默认 LISTITEM TABLE_ROW 段落类型的公共计算逻辑
  * @param splitContex 分割上下文
@@ -34,19 +35,31 @@ export const sameListCalculation: ComputedFn = (splitContex, node, pos, parent, 
  * @param dom 当前节点的dom
  */
 export const sameItemCalculation: ComputedFn = (splitContex, node, pos, parent, dom) => {
+  const chunks = splitContex.splitResolve(pos);
+  if (splitContex.isOverflow(0)) {
+    if (count > 1) {
+      count = 1;
+      splitContex.setBoundary(chunks[chunks.length - 2][2], chunks.length - 2);
+    } else {
+      splitContex.setBoundary(pos, chunks.length - 1);
+      count += 1;
+    }
+    return false;
+  }
   const pHeight = getDomHeight(dom);
   if (splitContex.isOverflow(pHeight)) {
-    if (parent?.firstChild == node && parent?.firstChild == node) {
+    if (pHeight > splitContex.getHeight()) {
+      splitContex.addHeight(pHeight);
       return false;
     }
-    const chunks = splitContex.splitResolve(pos);
+
     //如果当前行是list的第一行并且已经超过分页高度 直接返回上一层级的切割点
     if (parent?.firstChild == node) {
       splitContex.setBoundary(chunks[chunks.length - 2][2], chunks.length - 2);
-      return false;
+    } else {
+      //如果不是第一行 直接返回当前行的切割点
+      splitContex.setBoundary(pos, chunks.length - 1);
     }
-    //如果不是第一行 直接返回当前行的切割点
-    splitContex.setBoundary(pos, chunks.length - 1);
   } else {
     splitContex.addHeight(pHeight);
   }
@@ -60,12 +73,6 @@ export const defaultNodesComputed: NodesComputed = {
   [LISTITEM]: sameItemCalculation,
   [TABLE_ROW]: sameItemCalculation,
   [TABLE]: sameListCalculation,
-  [TABLE_CELL]: (splitContex, node, pos, parent, dom) => {
-    const chunks = splitContex.splitResolve(pos);
-    debugger;
-    splitContex.setBoundary(pos, chunks.length - 1);
-    return false;
-  },
   /*
   、、*
    * h1-h6 分割算法 如果heading的高度超过分页高度 直接返回当前heading
@@ -167,6 +174,9 @@ export class SplitContext {
     this.#height = height;
     this.#paragraphDefaultHeight = paragraphDefaultHeight;
   }
+  getHeight() {
+    return this.#height;
+  }
   /**
    * 获取默认高度
    * @returns 默认高度
@@ -230,7 +240,8 @@ export class SplitContext {
     return this.#doc.lastChild;
   }
 }
-
+let splitCount = 0;
+let splitCount1 = 0;
 /*
  * PageComputedContext 分页核心计算class
  * */
@@ -256,6 +267,7 @@ export class PageComputedContext {
     if (checkNode) return this.checkNodeAndFix();
     if (!inserting && deleting && selection.$head.node(1) === doc.lastChild) return this.tr;
     if (inserting || deleting) {
+      console.log("开始计算");
       this.computed();
       window.checkNode = true;
     }
@@ -269,6 +281,8 @@ export class PageComputedContext {
     if (tr.doc.childCount > 1 && tr.doc.content.childCount != curNunmber) {
       this.mergeDocument();
     }
+    splitCount1 = 0;
+    splitCount = 0;
     this.splitDocument();
     return this.tr;
   }
@@ -277,8 +291,12 @@ export class PageComputedContext {
    * 文档开始加载的时候进行初始化分页
    */
   initComputed() {
+    splitCount1 = 0;
+    splitCount = 0;
+    console.log("首次加载初始化分页");
     this.mergeDefaultDocument(1);
     this.splitDocument();
+    console.log("首次加载分页结束");
     return this.tr;
   }
 
@@ -287,10 +305,12 @@ export class PageComputedContext {
    */
   splitDocument() {
     const { schema } = this.state;
+    console.log("第:" + ++splitCount1 + "次计算分割点");
     /*获取最后一个page计算高度 如果返回值存在的话证明需要分割*/
     const splitInfo: SplitInfo | null = this.getNodeHeight();
     if (!splitInfo) return;
     const type = getNodeType(PAGE, schema);
+    console.log("第:" + ++splitCount + "次分割");
     this.splitPage({
       pos: splitInfo.pos,
       depth: splitInfo.depth,
@@ -338,6 +358,7 @@ export class PageComputedContext {
     const { selection } = this.state;
     const count = tr.doc.content.findIndex(selection.head).index + 1;
     //把所有的page 合并成一个 page
+    console.log("从第count页开始合并：", count);
     this.mergeDefaultDocument(count);
   }
 

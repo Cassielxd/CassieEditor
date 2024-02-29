@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 
 
+## [main](https://github.com/Cassielxd/CassieEditor) (2024-02-29)
+
+
+### Bug Fixes
+
+* 解决分页当一页里只有一个表格并且只有一行的分割问题 对标 windows 在线office docx 这一页不做分页处理
+
+
+
 ## [main](https://github.com/Cassielxd/CassieEditor) (2024-02-23)
 
 

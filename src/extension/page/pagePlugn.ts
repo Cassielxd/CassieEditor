@@ -6,6 +6,7 @@ import { findParentDomRefOfType } from "@/utils/index";
 import { defaultNodesComputed, PageComputedContext } from "@/extension/page/computed";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
 import { PageState, PageOptions } from "@/extension/page/types";
+import { findParentNode } from "@tiptap/core";
 
 class PageDetector {
   #editor: Editor;
@@ -37,6 +38,15 @@ class PageDetector {
     const pageBody = (pageDOM as HTMLElement).querySelector(this.#pageClass);
     if (pageBody) {
       const inserting = this.isOverflown(pageBody);
+      if (inserting) {
+        const curPage = findParentNode((n) => n.type.name == PAGE)(selection);
+        if (curPage) {
+          const { childCount, firstChild } = curPage.node;
+          if (childCount == 1 && firstChild?.type.name == "table" && firstChild.childCount == 1) {
+            return;
+          }
+        }
+      }
       if (inserting || deleting) {
         if (inserting) tr.setMeta("inserting", inserting);
         if (deleting) {
@@ -48,17 +58,18 @@ class PageDetector {
         }
         const state = view.state.apply(tr);
         view.updateState(state);
-      }
-      /*检验 node节点完整性*/
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      if (window.checkNode) {
+      } else {
+        /*检验 node节点完整性*/
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        window.checkNode = false;
-        tr.setMeta("checkNode", true);
-        const state = view.state.apply(tr);
-        view.updateState(state);
+        if (window.checkNode) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.checkNode = false;
+          tr.setMeta("checkNode", true);
+          const state = view.state.apply(tr);
+          view.updateState(state);
+        }
       }
     }
   }
