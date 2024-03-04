@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [main](https://github.com/Cassielxd/CassieEditor) (2024-03-04)
+
+* 升级tiptap版本到2.2.3
+* 添加pageView组件Vue3版本的实现PageViewVueComponent
+
+
 
 ## [main](https://github.com/Cassielxd/CassieEditor) (2024-02-29)
 

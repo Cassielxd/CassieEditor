@@ -4,6 +4,10 @@ import { PageOptions } from "@/extension/page/types";
 
 import { getId } from "@/utils/id";
 import { NodeView } from "@tiptap/pm/view";
+import { VueNodeViewRenderer } from "@tiptap/vue-3";
+import PageDesignComponet from "@/extension/page/PageDesignComponet.vue";
+import PageComponet from "@/extension/page/PageComponet.vue";
+import PageViewVueComponet from "@/extension/page/PageViewVueComponet.vue";
 export const Page = Node.create<PageOptions>({
   priority: 2,
   /* 标签名称 */
@@ -64,7 +68,8 @@ export const Page = Node.create<PageOptions>({
   },
   addNodeView() {
     const options = this.options;
-    return defaultPageViewRenderer(options);
+    return VueNodeViewRenderer(PageViewVueComponet, {});
+    //return defaultPageViewRenderer(options);
     //return this.options.design ? VueNodeViewRenderer(PageDesignComponet, {}) : VueNodeViewRenderer(PageComponet);
   }
 });
