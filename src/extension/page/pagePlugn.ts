@@ -108,7 +108,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     },
     props: {
       handleTextInput(view, form, to, text) {
-        view.focus();
+
         return false;
       },
       handleKeyDown(view, event) {

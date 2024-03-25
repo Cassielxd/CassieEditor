@@ -68,8 +68,8 @@ export const Page = Node.create<PageOptions>({
   },
   addNodeView() {
     const options = this.options;
-    return VueNodeViewRenderer(PageViewVueComponet, {});
-    //return defaultPageViewRenderer(options);
+    //return VueNodeViewRenderer(PageViewVueComponet, {});
+    return defaultPageViewRenderer(options);
     //return this.options.design ? VueNodeViewRenderer(PageDesignComponet, {}) : VueNodeViewRenderer(PageComponet);
   }
 });

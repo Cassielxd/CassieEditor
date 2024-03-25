@@ -20,6 +20,7 @@ export default {
   setup({ extension, node }: any, _ctx: any) {
     let { options } = extension;
     return {
+      node,
       options,
       extension
     };

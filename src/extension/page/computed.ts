@@ -305,19 +305,22 @@ export class PageComputedContext {
    */
   splitDocument() {
     const { schema } = this.state;
-    console.log("第:" + ++splitCount1 + "次计算分割点");
-    /*获取最后一个page计算高度 如果返回值存在的话证明需要分割*/
-    const splitInfo: SplitInfo | null = this.getNodeHeight();
-    if (!splitInfo) return;
-    const type = getNodeType(PAGE, schema);
-    console.log("第:" + ++splitCount + "次分割");
-    this.splitPage({
-      pos: splitInfo.pos,
-      depth: splitInfo.depth,
-      typesAfter: [{ type }],
-      schema: schema
-    });
-    this.splitDocument();
+    while (true) {
+      console.log("第:" + (++splitCount1) + "次计算分割点");
+      // 获取最后一个page计算高度，如果返回值存在的话证明需要分割
+      const splitInfo: SplitInfo | null = this.getNodeHeight();
+      if (!splitInfo) {
+        break; // 当不需要分割（即splitInfo为null）时，跳出循环
+      }
+      const type = getNodeType(PAGE, schema);
+      console.log("第:" + (++splitCount) + "次分割");
+      this.splitPage({
+        pos: splitInfo.pos,
+        depth: splitInfo.depth,
+        typesAfter: [{ type }],
+        schema: schema
+      });
+    }
   }
 
   /**
