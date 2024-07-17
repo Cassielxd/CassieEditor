@@ -3,7 +3,14 @@ import { TABLE, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PA
 import { ComputedFn, NodesComputed, PageState, SplitParams, SplitInfo } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
-import { getAbsentHtmlH, getBreakPos, getContentSpacing, getDefault, getDomHeight } from "@/extension/page/core";
+import {
+  getAbsentHtmlH,
+  getBreakPos,
+  getContentSpacing,
+  getDefault,
+  getDomHeight,
+  getDomPaddingAndMargin
+} from "@/extension/page/core";
 import { findParentNode, getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
@@ -49,10 +56,9 @@ export const sameItemCalculation: ComputedFn = (splitContex, node, pos, parent, 
   const pHeight = getDomHeight(dom);
   if (splitContex.isOverflow(pHeight)) {
     if (pHeight > splitContex.getHeight()) {
-      splitContex.addHeight(pHeight);
-      return false;
+      splitContex.addHeight(getDomPaddingAndMargin(dom));
+      return true;
     }
-
     //如果当前行是list的第一行并且已经超过分页高度 直接返回上一层级的切割点
     if (parent?.firstChild == node) {
       splitContex.setBoundary(chunks[chunks.length - 2][2], chunks.length - 2);
@@ -387,6 +393,9 @@ export class PageComputedContext {
       let na: Node | null = $pos.node(d).copy(after);
       if (schema.nodes[n.type.name + EXTEND]) {
         const attr = Object.assign({}, n.attrs, { id: getId() });
+        if(!attr.id){
+          console.log("id为空");
+        }
         na = schema.nodes[n.type.name + EXTEND].createAndFill(attr, after);
       } else {
         //处理id重复的问题
@@ -462,7 +471,11 @@ export class PageComputedContext {
     const { bodyOptions } = this.pageState;
     const splitContex = new SplitContext(doc, bodyOptions?.bodyHeight - bodyOptions?.bodyPadding * 2, getDefault());
     const nodesComputed = this.nodesComputed;
+    let lastNode = doc.lastChild;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
+      if(lastNode!= node && parentNode?.type.name=="doc"){
+        return false;
+      }
       if (!splitContex.pageBoundary()) {
         let dom = document.getElementById(node.attrs.id);
         if (!dom && node.type.name != PAGE) dom = getAbsentHtmlH(node);

@@ -101,12 +101,8 @@ export const splitListItem: RawCommands["splitListItem"] =
     const nextType = $to.pos === $from.end() ? grandParent.contentMatchAt(0).defaultType : null;
     const newTypeAttributes = getSplittedAttributes(extensionAttributes, grandParent.type.name, grandParent.attrs);
     const newNextTypeAttributes = getSplittedAttributes(extensionAttributes, $from.node().type.name, $from.node().attrs);
-    if (newTypeAttributes.id) {
-      newTypeAttributes.id = getId();
-    }
-    if (newNextTypeAttributes.id) {
-      newNextTypeAttributes.id = getId();
-    }
+    newTypeAttributes.id = getId();
+    newNextTypeAttributes.id = getId();
     tr.delete($from.pos, $to.pos);
 
     const types = nextType

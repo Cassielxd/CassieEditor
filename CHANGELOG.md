@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+
+## [main](https://github.com/Cassielxd/CassieEditor) (2024-07-17)
+* fix bug https://gitee.com/stringlxd/cool_emr/issues/IADD3V
+* 在最后一页的最后执行删除的情况下 删除最后一页的BUG
+
+
 ## [main](https://github.com/Cassielxd/CassieEditor) (2024-03-04)
 
 * 升级tiptap版本到2.2.3

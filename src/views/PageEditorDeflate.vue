@@ -23,8 +23,8 @@ export default {
     FileTools
   },
   setup() {
-    let bodyWidth = unitConversion.mmConversionPx(210);
-    let h = unitConversion.mmConversionPx(297);
+    let bodyWidth = unitConversion.mmConversionPx(180);
+    let h = unitConversion.mmConversionPx(180);
     const menulist = [
       { classify: "radio", label: "单选", value: "radio" },
       {

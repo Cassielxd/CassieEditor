@@ -1,5 +1,5 @@
 <template>
-  <CassieEditor :content="pageContentHtml" @onCreate="onCreate" @onUpdate="onUpdate" :is-paging="false" :bodyWidth="1000" output="json" :menu-list="menulist" />
+  <CassieEditor :content="''" @onCreate="onCreate" @onUpdate="onUpdate" :is-paging="false" :bodyWidth="1000" output="json" :menu-list="menulist" />
 </template>
 
 <script lang="ts">
@@ -26,12 +26,12 @@ export default {
     ];
     const onUpdate = (output: any, editor: any) => {
       console.log(output);
-      console.log(editor);
+      console.log(editor.getJSON());
     };
     const onCreate = (option: any) => {
       console.log(option);
     };
-    return { pageContentHtml, menulist, headerlist, footerlist, onUpdate, onCreate };
+    return {  menulist, headerlist, footerlist, onUpdate, onCreate };
   }
 };
 </script>

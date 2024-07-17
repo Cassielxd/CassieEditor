@@ -50,12 +50,14 @@ export const CoolKeyMap = Extension.create({
             //如果当前只有一页的情况不做处理
             if (doc.childCount == 1) return false;
             //如果是最后一页并且删除的点已经是 整个文档的 最后点位 证明最后一页啥都没了直接删除
-            if (Selection.atEnd(doc).from === pos) {
+            //fix bug https://gitee.com/stringlxd/cool_emr/issues/IADD3V
+            if (Selection.atEnd(doc).from === pos&&!$anchor.parentOffset) {
               return commands.deleteNode(PAGE);
             }
             //找到当钱的page
             const pageNode = findParentNode((node) => node.type.name === PAGE)(selection);
             if (pageNode) {
+
               const curBlock = findParentNode((node) => node.type.name.endsWith(EXTEND))(selection);
               //如果光标在在当前页面 的第一个位置
               const isAtStart = pageNode.start + Selection.atStart(pageNode.node).from === pos;
@@ -68,6 +70,7 @@ export const CoolKeyMap = Extension.create({
                   //EXTEND 是扩展类型 是可以删除并合并的
                   const selection1 = TextSelection.create(doc, pos1, pos1);
                   if (curBlock) {
+
                     const parent = selection1.$anchor.parent;
                     if (getFlag(parent)) {
                       tr.setSelection(selection1);

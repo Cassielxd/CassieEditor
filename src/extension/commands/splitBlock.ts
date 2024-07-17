@@ -37,9 +37,7 @@ export const splitBlock: RawCommands["splitBlock"] =
     const extensionAttributes = editor.extensionManager.attributes;
     const newAttributes = getSplittedAttributes(extensionAttributes, $from.node().type.name, $from.node().attrs);
     //值如果包含id 需要重新生成
-    if (newAttributes.id) {
-      newAttributes.id = getId();
-    }
+    newAttributes.id = getId();
 
     if (newAttributes.extend == "true") {
       newAttributes.extend = "false";

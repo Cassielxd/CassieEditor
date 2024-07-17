@@ -23,6 +23,8 @@
   "dependencies": {
     "@hocuspocus/provider": "^2.9.0",
     "@manuscripts/prosemirror-recreate-steps": "^0.1.4",
+    "@tiptap-pro/extension-details-content": "^2.8.9",
+    "@tiptap-pro/extension-unique-id": "^2.8.9",
     "@tiptap/extension-blockquote": "^2.2.3",
     "@tiptap/extension-bold": "^2.2.3",
     "@tiptap/extension-bubble-menu": "^2.2.3",

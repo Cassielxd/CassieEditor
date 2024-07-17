@@ -326,7 +326,18 @@ export function getDomHeight(dom: HTMLElement) {
   return padding + margin + dom?.offsetHeight + parseFloat(contentStyle.borderWidth);
 }
 
+export function getDomPaddingAndMargin(dom: HTMLElement) {
+  const contentStyle = window.getComputedStyle(dom);
+  const paddingTop = contentStyle.getPropertyValue("padding-top");
+  const paddingBottom = contentStyle.getPropertyValue("padding-bottom");
+  const marginTop = contentStyle.getPropertyValue("margin-top");
+  const marginBottom = contentStyle.getPropertyValue("margin-bottom");
+  const padding = parseFloat(paddingTop) + parseFloat(paddingBottom);
+  const margin = parseFloat(marginTop) + parseFloat(marginBottom);
+  return padding + margin + parseFloat(contentStyle.borderWidth);
+}
 export function getAbsentHtmlH(node: Node) {
+
   const html = generateHTML(getJsonFromDoc(node), getExtentions());
   if (node.type.name == PARAGRAPH) {
     const computeddiv = document.getElementById("computedspan");

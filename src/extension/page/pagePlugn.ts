@@ -4,7 +4,7 @@ import { PAGE } from "@/extension/nodeNames";
 import { removeAbsentHtmlH } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
 import { defaultNodesComputed, PageComputedContext } from "@/extension/page/computed";
-import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
+import { Editor } from "@tiptap/core";
 import { PageState, PageOptions } from "@/extension/page/types";
 import { findParentNode } from "@tiptap/core";
 
