@@ -24,7 +24,7 @@ export const Page = Node.create<PageOptions>({
       bodyWidth: 0,
       bodyPadding: 0,
       isPaging: false,
-      design: false,
+      mode: 1,
       SystemAttributes: {}
     };
   },
@@ -68,9 +68,21 @@ export const Page = Node.create<PageOptions>({
   },
   addNodeView() {
     const options = this.options;
-    //return VueNodeViewRenderer(PageViewVueComponet, {});
+    switch (options.mode){
+      case 1:{
+        //使用默认分页实现 不带页眉页脚
+        return defaultPageViewRenderer(options);
+      }
+      case 2:{
+        //使用默认分页实现带页眉页脚
+       return  VueNodeViewRenderer(PageComponet)
+      }
+      case 3:{
+        //设计模式
+        return VueNodeViewRenderer(PageDesignComponet, {});
+      }
+    }
     return defaultPageViewRenderer(options);
-    //return this.options.design ? VueNodeViewRenderer(PageDesignComponet, {}) : VueNodeViewRenderer(PageComponet);
   }
 });
 
@@ -82,7 +94,7 @@ export function defaultPageViewRenderer(options: PageOptions): NodeViewRenderer 
 
 /**
  * 分页组件PageView默认实现
- * 使用vue框架实现可以参考 VueNodeViewRenderer(PageComponet)
+ * 使用vue框架实现可以参考
  */
 export class PageView implements NodeView {
   dom: HTMLElement;

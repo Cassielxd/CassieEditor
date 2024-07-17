@@ -17,7 +17,7 @@ export const PageExtension = Extension.create<PageOptions>({
   /*添加分页插件*/
   addProseMirrorPlugins() {
     const plugins: any[] = [];
-    if (this.options.design) return plugins;
+    if (this.options.mode==3) return plugins;
     if (this.options.isPaging) {
       plugins.push(pagePlugin(this.editor, this.options));
     }

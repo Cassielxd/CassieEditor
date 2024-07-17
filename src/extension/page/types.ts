@@ -52,7 +52,7 @@ export type PageOptions = {
   bodyWidth: number;
   bodyPadding: number;
   isPaging?: boolean;
-  design?: boolean;
+  mode?: 1|2|3;
   headerData?: any[];
   footerData?: any[];
   NodesComputed?: NodesComputed;

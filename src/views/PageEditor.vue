@@ -22,12 +22,12 @@ export default {
     let headerlist = reactive([
       {
         id: 2,
-        x: 312,
+        x: 115,
         y: 24,
-        w: 180,
-        h: 26,
+        w: 480,
+        h: 36,
         focused: false,
-        value: "烟台市口腔医院病历",
+        value: "这是一个自定义header,右键选择组件,且组件可自定义",
         label: "文字",
         component: "custom-text",
         type: "text",

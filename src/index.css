@@ -26,6 +26,9 @@
       margin: 0;
     }
     max-width: 100%;
+    img {
+      margin: 0;
+    }
   }
   .Page {
     @apply  bg-white   transform my-2 text-editor relative;

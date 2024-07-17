@@ -48,6 +48,10 @@ export default defineComponent({
       type: Number,
       default: 1200
     },
+    mode:{
+      type: Number,
+      default: 1
+    },
     bodyPadding: {
       type: Number,
       default: 10

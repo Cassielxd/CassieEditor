@@ -68,7 +68,7 @@ export default {
               bodyWidth: bodyWidth,
               bodyPadding: 10,
               isPaging: true,
-              design: false,
+              design: 1,
               headerData: headerlist,
               footerData: footerlist
             },

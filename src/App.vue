@@ -14,6 +14,13 @@
           <router-link to="/">基础编辑器</router-link>
         </li>
         <li>
+          <router-link to="/page">设计模式</router-link>
+        </li>
+        <li>
+          <router-link to="/pageheaderandfooter">页眉页脚</router-link>
+        </li>
+
+        <li>
           <router-link to="/page1">分页演示</router-link>
         </li>
         <li>

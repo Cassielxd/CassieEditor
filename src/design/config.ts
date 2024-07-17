@@ -58,7 +58,7 @@ export const WIDGET_BASE_LIST = [
     default: {
       w: 100,
       h: 32,
-      value: ""
+      value: "Option1"
     },
     styles: {},
     styleForm: {}

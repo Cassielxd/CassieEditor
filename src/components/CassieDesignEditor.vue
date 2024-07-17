@@ -115,7 +115,7 @@ export default defineComponent({
     },
     bodyHeight: {
       type: Number,
-      default: 400
+      default: 700
     },
     bodyWidth: {
       type: Number,
@@ -185,7 +185,7 @@ export default defineComponent({
               clickSuggestion: BuildRender({})
             },
             page: {
-              design: true,
+              mode: 3,
               ...props
             },
             focus: false
