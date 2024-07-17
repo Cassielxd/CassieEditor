@@ -36,7 +36,7 @@
           <router-link to="/diff">版本比较</router-link>
         </li>
         <li>
-          <router-link to="/sign">电子签名</router-link>
+          <router-link to="/sign">初始化分页</router-link>
         </li>
         <li>
           <router-link to="/about">关于编辑器</router-link>
