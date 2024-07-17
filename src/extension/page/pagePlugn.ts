@@ -1,7 +1,7 @@
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 import { PAGE } from "@/extension/nodeNames";
-import { removeAbsentHtmlH } from "@/extension/page/core";
+import { getDefault, removeAbsentHtmlH } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
 import { defaultNodesComputed, PageComputedContext } from "@/extension/page/computed";
 import { Editor } from "@tiptap/core";
@@ -24,7 +24,9 @@ class PageDetector {
    * @param bodyOption 需要分页的条件
    */
   isOverflown(pageBody: Element) {
-    return pageBody.scrollHeight > this.#bodyOption.bodyHeight;
+    const dh = getDefault();
+    const cha = Math.abs(pageBody.scrollHeight - this.#bodyOption.bodyHeight);
+    return cha > dh;
   }
   update(view: EditorView, prevState: EditorState) {
     const { selection, schema, tr } = view.state;
@@ -108,7 +110,6 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     },
     props: {
       handleTextInput(view, form, to, text) {
-
         return false;
       },
       handleKeyDown(view, event) {

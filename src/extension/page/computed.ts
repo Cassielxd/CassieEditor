@@ -3,14 +3,7 @@ import { TABLE, CASSIE_BLOCK, CASSIE_BLOCK_EXTEND, EXTEND, HEADING, LISTITEM, PA
 import { ComputedFn, NodesComputed, PageState, SplitParams, SplitInfo } from "@/extension/page/types";
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
-import {
-  getAbsentHtmlH,
-  getBreakPos,
-  getContentSpacing,
-  getDefault,
-  getDomHeight,
-  getDomPaddingAndMargin
-} from "@/extension/page/core";
+import { getAbsentHtmlH, getBreakPos, getContentSpacing, getDefault, getDomHeight, getDomPaddingAndMargin } from "@/extension/page/core";
 import { findParentNode, getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
@@ -312,14 +305,15 @@ export class PageComputedContext {
   splitDocument() {
     const { schema } = this.state;
     while (true) {
-      console.log("第:" + (++splitCount1) + "次计算分割点");
+      console.log("第:" + ++splitCount1 + "次计算分割点");
+      debugger
       // 获取最后一个page计算高度，如果返回值存在的话证明需要分割
       const splitInfo: SplitInfo | null = this.getNodeHeight();
       if (!splitInfo) {
         break; // 当不需要分割（即splitInfo为null）时，跳出循环
       }
       const type = getNodeType(PAGE, schema);
-      console.log("第:" + (++splitCount) + "次分割");
+      console.log("第:" + ++splitCount + "次分割");
       this.splitPage({
         pos: splitInfo.pos,
         depth: splitInfo.depth,
@@ -393,7 +387,7 @@ export class PageComputedContext {
       let na: Node | null = $pos.node(d).copy(after);
       if (schema.nodes[n.type.name + EXTEND]) {
         const attr = Object.assign({}, n.attrs, { id: getId() });
-        if(!attr.id){
+        if (!attr.id) {
           console.log("id为空");
         }
         na = schema.nodes[n.type.name + EXTEND].createAndFill(attr, after);
@@ -471,9 +465,9 @@ export class PageComputedContext {
     const { bodyOptions } = this.pageState;
     const splitContex = new SplitContext(doc, bodyOptions?.bodyHeight - bodyOptions?.bodyPadding * 2, getDefault());
     const nodesComputed = this.nodesComputed;
-    let lastNode = doc.lastChild;
+    const lastNode = doc.lastChild;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
-      if(lastNode!= node && parentNode?.type.name=="doc"){
+      if (lastNode != node && parentNode?.type.name == "doc") {
         return false;
       }
       if (!splitContex.pageBoundary()) {
