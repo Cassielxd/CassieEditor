@@ -1,7 +1,7 @@
 <template>
   <node-view-wrapper class="node" :id="this.node.attrs.id" :title="this.node.attrs.title" :group="this.node.attrs.group">
     <span class="font-black title" contenteditable="false">{{ this.node.attrs.title }}</span>
-    <node-view-content class="content" />
+    <node-view-content class="content " />
   </node-view-wrapper>
 </template>
 
@@ -12,7 +12,6 @@ export default {
     NodeViewWrapper,
     NodeViewContent
   },
-
   props: nodeViewProps
 };
 </script>
