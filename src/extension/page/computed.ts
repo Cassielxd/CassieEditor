@@ -283,12 +283,12 @@ export class PageComputedContext {
     const { selection, doc } = this.state;
     const { inserting, deleting, checkNode, splitPage }: PageState = this.pageState;
     if (splitPage) return this.initComputed();
-    if (checkNode) return this.checkNodeAndFix();
+    //if (checkNode) return this.checkNodeAndFix();
     if (!inserting && deleting && selection.$head.node(1) === doc.lastChild) return this.tr;
     if (inserting || deleting) {
       console.log("开始计算");
       this.computed();
-      window.checkNode = true;
+      this.checkNodeAndFix();
     }
     return this.tr;
   }

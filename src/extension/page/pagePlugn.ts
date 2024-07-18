@@ -62,18 +62,6 @@ class PageDetector {
         }
         const state = view.state.apply(tr);
         view.updateState(state);
-      } else {
-        /*检验 node节点完整性*/
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        if (window.checkNode) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          window.checkNode = false;
-          tr.setMeta("checkNode", true);
-          const state = view.state.apply(tr);
-          view.updateState(state);
-        }
       }
     }
   }
@@ -87,7 +75,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     },
     state: {
       init: (): PageState => {
-        return new PageState(bodyOption, false, false, false, false);
+        return new PageState(bodyOption, false, false, false);
       },
       /*判断标志位是否存在  如果存在 则修改 state 值
        * Meta数据是一个事务级别的 一个事务结束 meta消失

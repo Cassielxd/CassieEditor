@@ -16,25 +16,21 @@ export class PageState {
   bodyOptions: PageOptions;
   deleting: boolean;
   inserting: boolean;
-  checkNode: boolean;
   splitPage: boolean;
-  constructor(bodyOptions: PageOptions, deleting: boolean, inserting: boolean, checkNode: boolean, splitPage: boolean) {
+  constructor(bodyOptions: PageOptions, deleting: boolean, inserting: boolean,splitPage: boolean) {
     this.bodyOptions = bodyOptions;
     this.deleting = deleting;
     this.inserting = inserting;
-    this.checkNode = checkNode;
     this.splitPage = splitPage;
   }
   transform(tr: Transaction) {
     const splitPage: boolean = tr.getMeta("splitPage");
-    const checkNode: boolean = tr.getMeta("checkNode");
     const deleting: boolean = tr.getMeta("deleting");
     const inserting: boolean = tr.getMeta("inserting");
     const splitPage1 = splitPage ? splitPage : false;
     const inserting2 = inserting ? inserting : false;
     const deleting3 = deleting ? deleting : false;
-    const checkNode4 = checkNode ? checkNode : false;
-    return new PageState(this.bodyOptions, deleting3, inserting2, checkNode4, splitPage1);
+    return new PageState(this.bodyOptions, deleting3, inserting2, splitPage1);
   }
 }
 
