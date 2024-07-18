@@ -7,6 +7,8 @@ import { defaultNodesComputed, PageComputedContext } from "@/extension/page/comp
 import { Editor } from "@tiptap/core";
 import { PageState, PageOptions } from "@/extension/page/types";
 import { findParentNode } from "@tiptap/core";
+import { DOMParser } from "prosemirror-model";
+import { getId } from "@/utils/id";
 
 class PageDetector {
   #editor: Editor;
@@ -109,6 +111,14 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       return page.run().scrollIntoView();
     },
     props: {
+      //复制粘贴的时候 把节点id 进行重置
+      transformPasted(slice,view){
+        slice.content.descendants((node)=>{
+          // @ts-ignore
+          node.attrs.id = getId()
+        })
+        return slice
+      },
       handleTextInput(view, form, to, text) {
         return false;
       },

@@ -102,7 +102,7 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
         }
         index = pos + 1;
       }else{
-        const html = generateHTML(getJsonFromDoc(nodeType.create(attrs,[node],marks).toJSON()), getExtentions());
+        const html = generateHTML(getJsonFromDoc(nodeType.create(attrs,[node],marks)), getExtentions());
         const { width: wordl, height } = computedWidth(html);
         if (strLength + wordl > width) {
           allHeight += (maxHeight>height?maxHeight:height);
