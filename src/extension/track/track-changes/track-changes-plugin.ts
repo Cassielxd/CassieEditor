@@ -76,7 +76,6 @@ export const trackChangesPlugin = () => {
       }
     },
     appendTransaction(trs, _oldState, newState) {
-      debugger;
       const rejectedChangeTr = trs.find((tr) => !Number.isNaN(tr.getMeta("reject-change")));
       const rejectedChangeIndex = Number(rejectedChangeTr?.getMeta("reject-change"));
       const trackState = trackChangesPluginKey.getState(newState);

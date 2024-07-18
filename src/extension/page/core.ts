@@ -3,6 +3,7 @@ import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
 import { SplitContext } from "@/extension/page/computed";
 import { PARAGRAPH } from "@/extension/nodeNames";
+import { el } from "date-fns/locale";
 /**
  * 计算最后一行是否填满
  * @param cnode
@@ -57,57 +58,66 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
   let maxHeight = 0;
   let index = 0;
   let isFlag = true;
+  //默认type
+  let nodeType=node.type,attrs=node.attrs,marks=node.marks;
+  let defaultNode =node.type.create(attrs,[splitContex.schema.text("1")],marks)
+  const htmlD = generateHTML(getJsonFromDoc(defaultNode), getExtentions());
+  const {height:heightd } = computedWidth(htmlD);
+  maxHeight = heightd;
   node.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
     if (!isFlag) {
       return isFlag;
     }
     //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
     if (node.isText) {
-      let isMarkd = false;
-      if (node.marks.length) isMarkd = true;
       const nodeText = node.text;
-
       if (nodeText) {
         for (let i = 0; i < nodeText.length; i++) {
           let resource = nodeText.charAt(i);
           //fix bug #1 修复空格计算宽度问题和文本有样式的情况计算问题 例如加粗
-          if (isMarkd && resource != " ") {
-            const nodeJson = node.toJSON();
-            nodeJson.text = resource;
-            resource = generateHTML(getJsonFromDocForJson(nodeJson), getExtentions());
+          if (resource == " ") {
+            resource = "&nbsp;"
           }
+          resource = generateHTML(getJsonFromDoc(nodeType.create(attrs,[splitContex.schema.text(resource,node.marks)],marks)), getExtentions());
           const { width: wl, height } = computedWidth(resource);
           if (strLength + wl > width) {
-            allHeight += maxHeight;
+            allHeight += height;
             if (splitContex.isOverflow(allHeight)) {
               isFlag = false;
               return isFlag;
             }
             index = pos + i + 1;
             strLength = wl;
-            maxHeight = 0;
           } else {
-            if (height > maxHeight) maxHeight = height;
             strLength += wl;
           }
         }
       }
     } else {
-      const html = generateHTML(getJsonFromDoc(node), getExtentions());
-      const { width: wordl, height } = computedWidth(html);
-      if (strLength + wordl > width) {
-        allHeight += maxHeight;
+      if(node.type.name=="hardBreak"){
+        allHeight += heightd;
         if (splitContex.isOverflow(allHeight)) {
           isFlag = false;
           return isFlag;
         }
         index = pos + 1;
-        strLength = wordl;
-        maxHeight = 0;
-      } else {
-        if (height > maxHeight) maxHeight = height;
-        strLength += wordl;
+      }else{
+        const html = generateHTML(getJsonFromDoc(nodeType.create(attrs,[node],marks).toJSON()), getExtentions());
+        const { width: wordl, height } = computedWidth(html);
+        if (strLength + wordl > width) {
+          allHeight += (maxHeight>height?maxHeight:height);
+          if (splitContex.isOverflow(allHeight)) {
+            isFlag = false;
+            return isFlag;
+          }
+          index = pos + 1;
+          strLength = wordl;
+        } else {
+          //if (height > maxHeight) maxHeight = height;
+          strLength += wordl;
+        }
       }
+
     }
   });
   return { strLength, index };

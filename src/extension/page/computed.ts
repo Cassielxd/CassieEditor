@@ -82,13 +82,24 @@ export const defaultNodesComputed: NodesComputed = {
    * @param dom 当前节点的dom
    */
   [HEADING]: (splitContex, node, pos, parent, dom) => {
+
     const pHeight = getDomHeight(dom);
-    if (splitContex.isOverflow(pHeight)) {
-      const chunks = splitContex.splitResolve(pos);
-      //直接返回当前段落
-      splitContex.setBoundary(pos, chunks.length - 1);
+    if (!splitContex.isOverflow(pHeight)) {
+      splitContex.addHeight(pHeight);
+      return false;
     }
-    splitContex.addHeight(pHeight);
+
+      const chunks = splitContex.splitResolve(pos);
+      if(pHeight>splitContex.getHeight()){
+        const point = getBreakPos(node, dom, splitContex);
+        if (point) {
+          splitContex.setBoundary(pos + point, chunks.length);
+          return false;
+        }
+      }else {
+        //直接返回当前段落
+        splitContex.setBoundary(pos, chunks.length - 1);
+      }
     return false;
   },
   /**
@@ -162,16 +173,25 @@ export class SplitContext {
   #height = 0; //分页的高度
   #paragraphDefaultHeight = 0; //p标签的默认高度
   attributes: Record<string, any> = {};
+  schema:Schema;
+  /**
+   * 获取文档
+   * @returns 文档
+   */
+  getDoc() {
+    return this.#doc;
+  }
   /**
    * 构造函数
    * @param doc 文档
    * @param height 分页高度
    * @param paragraphDefaultHeight p标签的默认高度
    */
-  constructor(doc: Node, height: number, paragraphDefaultHeight: number) {
+  constructor(schema: Schema,doc: Node, height: number, paragraphDefaultHeight: number) {
     this.#doc = doc;
     this.#height = height;
     this.#paragraphDefaultHeight = paragraphDefaultHeight;
+    this.schema = schema;
   }
   getHeight() {
     return this.#height;
@@ -306,7 +326,6 @@ export class PageComputedContext {
     const { schema } = this.state;
     while (true) {
       console.log("第:" + ++splitCount1 + "次计算分割点");
-      debugger
       // 获取最后一个page计算高度，如果返回值存在的话证明需要分割
       const splitInfo: SplitInfo | null = this.getNodeHeight();
       if (!splitInfo) {
@@ -463,7 +482,8 @@ export class PageComputedContext {
   getNodeHeight(): SplitInfo | null {
     const doc = this.tr.doc;
     const { bodyOptions } = this.pageState;
-    const splitContex = new SplitContext(doc, bodyOptions?.bodyHeight - bodyOptions?.bodyPadding * 2, getDefault());
+
+    const splitContex = new SplitContext(this.state.schema,doc, bodyOptions?.bodyHeight - bodyOptions?.bodyPadding * 2, getDefault());
     const nodesComputed = this.nodesComputed;
     const lastNode = doc.lastChild;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
