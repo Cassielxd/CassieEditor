@@ -1,8 +1,6 @@
-let gid = 1;
 
 export function getId() {
-  gid += 1;
-  return gid;
+  return Math.random().toString(36).substr(2, 9);
 }
 
 export const idAttributes: any = {
