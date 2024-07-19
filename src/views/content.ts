@@ -13,7 +13,7 @@ export const signContent={
           "attrs": {
             "textAlign": "start",
             "level": 3,
-            "extend": "false",
+            "extend": false,
             "group": null
           },
           "content": [
@@ -27,7 +27,7 @@ export const signContent={
           "type": "paragraph",
           "attrs": {
             "textAlign": "start",
-            "extend": "false",
+            "extend": false,
             "group": null
           },
           "content": [
@@ -49,7 +49,7 @@ export const signContent={
           "attrs": {
             "textAlign": "start",
             "level": 3,
-            "extend": "false",
+            "extend": false,
             "group": null
           },
           "content": [
@@ -63,7 +63,7 @@ export const signContent={
           "type": "paragraph",
           "attrs": {
             "textAlign": "start",
-            "extend": "false",
+            "extend": false,
             "group": null
           },
           "content": [
@@ -78,7 +78,7 @@ export const signContent={
           "attrs": {
             "textAlign": "start",
             "level": 3,
-            "extend": "false",
+            "extend": false,
             "group": null
           },
           "content": [
@@ -94,41 +94,41 @@ export const signContent={
 };
 
 export const pageContentHtml = `<page pagenumber="1">
-    <h1 style="text-align: center"  extend="false">文档标题</h1>
-    <p  extend="false" data-group="bb">这是一个使用prosemirror和tiptap构建的编辑器</p>
-    <table class="border-collapse border border-slate-400" id="25" extend="false">
+    <h1 style="text-align: center"  >文档标题</h1>
+    <p   data-group="bb">这是一个使用prosemirror和tiptap构建的编辑器</p>
+    <table class="border-collapse border border-slate-400" id="25" >
         <tbody>
-            <tr  extend="false">
+            <tr  >
                 <td class="border border-slate-300" colspan="1" rowspan="1">
-                    <p  extend="false"></p>
+                    <p ></p>
                 </td>
                 <td class="border border-slate-300" colspan="1" rowspan="1">
-                    <p  extend="false"></p>
+                    <p  ></p>
                 </td>
                 <td class="border border-slate-300" colspan="1" rowspan="1">
-                    <p  extend="false"></p>
-                </td>
-            </tr>
-            <tr  extend="false">
-                <td class="border border-slate-300" colspan="1" rowspan="1">
-                    <p  extend="false"></p>
-                </td>
-                <td class="border border-slate-300" colspan="1" rowspan="1">
-                    <p  extend="false"></p>
-                </td>
-                <td class="border border-slate-300" colspan="1" rowspan="1">
-                    <p  extend="false"></p>
+                    <p></p>
                 </td>
             </tr>
-            <tr  extend="false">
+            <tr  >
                 <td class="border border-slate-300" colspan="1" rowspan="1">
-                    <p  extend="false"></p>
+                    <p  ></p>
                 </td>
                 <td class="border border-slate-300" colspan="1" rowspan="1">
-                    <p  extend="false"></p>
+                    <p  ></p>
                 </td>
                 <td class="border border-slate-300" colspan="1" rowspan="1">
-                    <p  extend="false"></p>
+                    <p  ></p>
+                </td>
+            </tr>
+            <tr  >
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  ></p>
+                </td>
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  ></p>
+                </td>
+                <td class="border border-slate-300" colspan="1" rowspan="1">
+                    <p  ></p>
                 </td>
             </tr>
         </tbody>
@@ -149,7 +149,7 @@ export const pageContent = {
           type: "paragraph",
           attrs: {
             textAlign: "left",
-            extend: "false",
+            extend: false,
             group: "bb"
           },
           content: [
@@ -176,7 +176,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "0b4e04a4-51ea-47e7-ba20-a5042663c729",
-                extend: "false",
+                extend: false,
                 group: "p1"
               },
               content: [
@@ -201,7 +201,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "fea620f0-dd3c-4ab5-8c85-752b51996a98",
-                extend: "false",
+                extend: false,
                 group: "p2"
               },
               content: [
@@ -230,7 +230,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "bb1a5ec3-88ca-4a64-b69c-4a0361f5e434",
-                extend: "false",
+                extend: false,
                 group: "p3"
               },
               content: [
@@ -255,7 +255,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "c5ae0525-bcaf-4117-8208-804f46612574",
-                extend: "false",
+                extend: false,
                 group: "p4"
               },
               content: [
@@ -270,7 +270,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "c576357a-1eeb-49f3-8d12-ec214049ed83",
-                extend: "false",
+                extend: false,
                 group: "p5"
               },
               content: [
@@ -298,7 +298,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "04f2c624-b004-46ac-a5c0-4d3b02abc2e3",
-                extend: "false",
+                extend: false,
                 group: "p6"
               },
               content: [
@@ -313,7 +313,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "bed29b51-a49d-4ed4-866d-d35a42b472d8",
-                extend: "false",
+                extend: false,
                 group: "p7"
               },
               content: [
@@ -328,7 +328,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "20acbf06-1e2d-47c0-943b-262d5b33b3b0",
-                extend: "false",
+                extend: false,
                 group: "p8"
               },
               content: [
@@ -343,7 +343,7 @@ export const pageContent = {
               attrs: {
                 textAlign: "left",
                 id: "04d77859-c088-4c4f-af8b-17500c235e97",
-                extend: "false",
+                extend: false,
                 group: "p9"
               },
               content: [
@@ -359,7 +359,7 @@ export const pageContent = {
           type: "paragraph",
           attrs: {
             textAlign: "left",
-            extend: "false",
+            extend: false,
             group: "p21"
           },
           content: [
@@ -377,7 +377,7 @@ export const pageContent = {
           type: "paragraph",
           attrs: {
             textAlign: "left",
-            extend: "false",
+            extend: false,
             group: "aa"
           },
           content: [

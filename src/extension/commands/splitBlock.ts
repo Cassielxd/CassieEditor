@@ -39,8 +39,8 @@ export const splitBlock: RawCommands["splitBlock"] =
       //值如果包含id 需要重新生成
       newAttributes.id = getId();
 
-      if (newAttributes.extend == "true") {
-        newAttributes.extend = "false";
+      if (newAttributes.extend) {
+        newAttributes.extend = false;
       }
       if (selection instanceof NodeSelection && selection.node.isBlock) {
         if (!$from.parentOffset || !canSplit(doc, $from.pos)) {

@@ -1,7 +1,7 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import { Heading, HeadingOptions } from "@tiptap/extension-heading";
 import { Level } from "@tiptap/extension-heading/src/heading";
-import { getId } from "@/utils/id";
+import { getId, idAttributes } from "@/utils/id";
 
 export const EmrHeading = Heading.extend({
   group: "block",
@@ -9,32 +9,7 @@ export const EmrHeading = Heading.extend({
   addAttributes() {
     return {
       ...this.parent?.(),
-      id: {
-        parseHTML: (element) => element.getAttribute("id"),
-        renderHTML: (attributes) => {
-          if (!attributes.id) {
-            return { id: getId() };
-          }
-          return {
-            id: attributes.id
-          };
-        }
-      },
-      extend: {
-        default: "false"
-      },
-      group: {
-        default: null,
-        parseHTML: (element) => element.getAttribute("data-group"),
-        renderHTML: (attributes) => {
-          if (!attributes.group) {
-            return {};
-          }
-          return {
-            "data-group": attributes.group
-          };
-        }
-      }
+      ...idAttributes
     };
   },
   renderHTML({ node, HTMLAttributes }) {

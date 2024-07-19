@@ -16,7 +16,7 @@ export const idAttributes: any = {
     }
   },
   extend: {
-    default: "false"
+    default: false
   },
   group: {
     default: null,
