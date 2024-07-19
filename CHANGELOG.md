@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [main](https://github.com/Cassielxd/CassieEditor) (2024-07-19)
+* fix bug 修改分页合并异常(heading)
+
+
+
 ## [main](https://github.com/Cassielxd/CassieEditor) (2024-07-17)
 * 添加页眉页脚案例，设计器案例
 * fix bug https://gitee.com/stringlxd/cool_emr/issues/IADD3V
