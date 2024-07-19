@@ -36,16 +36,6 @@ let count = 1;
  */
 export const sameItemCalculation: ComputedFn = (splitContex, node, pos, parent, dom) => {
   const chunks = splitContex.splitResolve(pos);
-  if (splitContex.isOverflow(0)) {
-    if (count > 1) {
-      count = 1;
-      splitContex.setBoundary(chunks[chunks.length - 2][2], chunks.length - 2);
-    } else {
-      splitContex.setBoundary(pos, chunks.length - 1);
-      count += 1;
-    }
-    return false;
-  }
   const pHeight = getDomHeight(dom);
   if (splitContex.isOverflow(pHeight)) {
     if (pHeight > splitContex.getHeight()) {
@@ -70,8 +60,44 @@ export const defaultNodesComputed: NodesComputed = {
   [ORDEREDLIST]: sameListCalculation,
   [BULLETLIST]: sameListCalculation,
   [LISTITEM]: sameItemCalculation,
-  [TABLE_ROW]: sameItemCalculation,
-  [TABLE]: sameListCalculation,
+  [TABLE_ROW]: (splitContex, node, pos, parent, dom) => {
+    const chunks = splitContex.splitResolve(pos);
+    if (splitContex.isOverflow(0)) {
+      if (count > 1) {
+        count = 1;
+        splitContex.setBoundary(chunks[chunks.length - 2][2], chunks.length - 2);
+      } else {
+        splitContex.setBoundary(pos, chunks.length - 1);
+        count += 1;
+      }
+      return false;
+    }
+    const pHeight = getDomHeight(dom);
+    if (splitContex.isOverflow(pHeight)) {
+      if (pHeight > splitContex.getHeight()) {
+        splitContex.addHeight(getDomPaddingAndMargin(dom));
+        return true;
+      }
+      //如果当前行是list的第一行并且已经超过分页高度 直接返回上一层级的切割点
+      if (parent?.firstChild == node) {
+        splitContex.setBoundary(chunks[chunks.length - 2][2], chunks.length - 2);
+      } else {
+        //如果不是第一行 直接返回当前行的切割点
+        splitContex.setBoundary(pos, chunks.length - 1);
+      }
+    } else {
+      splitContex.addHeight(pHeight);
+    }
+    return false;
+  },
+  [TABLE]: (splitContex, node, pos, parent, dom) => {
+    const pHeight = getDomHeight(dom);
+    //如果列表的高度超过分页高度 直接返回继续循环 tr 或者li
+    if (splitContex.isOverflow(pHeight)) return true;
+    //没有超过分页高度 累加高度
+    splitContex.addHeight(pHeight);
+    return false;
+  },
   /*
   、、*
    * h1-h6 分割算法 如果heading的高度超过分页高度 直接返回当前heading
