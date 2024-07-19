@@ -1,5 +1,5 @@
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
-import { EditorView } from "@tiptap/pm/view";
+import { Decoration, DecorationSet, EditorView } from "@tiptap/pm/view";
 import { PAGE } from "@/extension/nodeNames";
 import { getDefault, removeAbsentHtmlH } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
@@ -9,6 +9,7 @@ import { PageState, PageOptions } from "@/extension/page/types";
 import { findParentNode } from "@tiptap/core";
 import { DOMParser } from "prosemirror-model";
 import { getId } from "@/utils/id";
+import { defaultCursorBuilder } from "@/extension";
 
 class PageDetector {
   #editor: Editor;

@@ -75,8 +75,8 @@ export const defaultNodesComputed: NodesComputed = {
     const pHeight = getDomHeight(dom);
     if (splitContex.isOverflow(pHeight)) {
       if (pHeight > splitContex.getHeight()) {
-        splitContex.addHeight(getDomPaddingAndMargin(dom));
-        return true;
+        splitContex.addHeight(pHeight);
+        return false;
       }
       //如果当前行是list的第一行并且已经超过分页高度 直接返回上一层级的切割点
       if (parent?.firstChild == node) {
