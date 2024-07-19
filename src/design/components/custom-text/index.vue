@@ -1,5 +1,9 @@
 <template>
-  <div ref="inputtext" :style="styles" @input="inputText" @blur="inputBlur" @focus="inputFocus">
+
+  <div ref="inputtext" :style="styles" v-if="!editor" @input="inputText" @blur="inputBlur" @focus="inputFocus">
+    {{ value }}
+  </div>
+  <div ref="inputtext" :style="styles" v-else>
     {{ value }}
   </div>
 </template>
