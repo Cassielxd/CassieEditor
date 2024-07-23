@@ -4,6 +4,7 @@ import { CassieKit } from "@/extension";
 import { SplitContext } from "@/extension/page/computed";
 import { PARAGRAPH } from "@/extension/nodeNames";
 import { el } from "date-fns/locale";
+
 /**
  * 计算最后一行是否填满
  * @param cnode
@@ -59,10 +60,10 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
   let index = 0;
   let isFlag = true;
   //默认type
-  let nodeType=node.type,attrs=node.attrs,marks=node.marks;
-  let defaultNode =node.type.create(attrs,[splitContex.schema.text("1")],marks)
+  let nodeType = node.type, attrs = node.attrs, marks = node.marks;
+  let defaultNode = node.type.create(attrs, [splitContex.schema.text("1")], marks);
   const htmlD = generateHTML(getJsonFromDoc(defaultNode), getExtentions());
-  const {height:heightd } = computedWidth(htmlD);
+  const { height: heightd } = computedWidth(htmlD);
   maxHeight = heightd;
   node.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
     if (!isFlag) {
@@ -76,9 +77,9 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
           let resource = nodeText.charAt(i);
           //fix bug #1 修复空格计算宽度问题和文本有样式的情况计算问题 例如加粗
           if (resource == " ") {
-            resource = "&nbsp;"
+            resource = "&nbsp;";
           }
-          resource = generateHTML(getJsonFromDoc(nodeType.create(attrs,[splitContex.schema.text(resource,node.marks)],marks)), getExtentions());
+          resource = generateHTML(getJsonFromDoc(nodeType.create(attrs, [splitContex.schema.text(resource, node.marks)], marks)), getExtentions());
           const { width: wl, height } = computedWidth(resource);
           if (strLength + wl > width) {
             allHeight += height;
@@ -94,18 +95,18 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
         }
       }
     } else {
-      if(node.type.name=="hardBreak"){
+      if (node.type.name == "hardBreak") {
         allHeight += heightd;
         if (splitContex.isOverflow(allHeight)) {
           isFlag = false;
           return isFlag;
         }
         index = pos + 1;
-      }else{
-        const html = generateHTML(getJsonFromDoc(nodeType.create(attrs,[node],marks)), getExtentions());
+      } else {
+        const html = generateHTML(getJsonFromDoc(nodeType.create(attrs, [node], marks)), getExtentions());
         const { width: wordl, height } = computedWidth(html);
         if (strLength + wordl > width) {
-          allHeight += (maxHeight>height?maxHeight:height);
+          allHeight += (maxHeight > height ? maxHeight : height);
           if (splitContex.isOverflow(allHeight)) {
             isFlag = false;
             return isFlag;
@@ -194,6 +195,9 @@ export function getExtentions() {
     })
   ];
 }
+
+let iframeComputed: any = null;
+var iframeDoc: any = null;
 
 /**
  * @description 获取节点高度 根据id获取dom高度
@@ -317,7 +321,7 @@ export function getDefault() {
   if (map.has("defaultheight")) {
     return map.get("defaultheight");
   }
-  const computedspan = document.getElementById("computedspan");
+  const computedspan = iframeDoc.getElementById("computedspan");
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const defaultheight = getDomHeight(computedspan);
@@ -326,7 +330,7 @@ export function getDefault() {
 }
 
 export function getDomPaddingAndMargin(dom: HTMLElement) {
-  const contentStyle = window.getComputedStyle(dom);
+  const contentStyle = window.getComputedStyle(dom) || iframeComputed.contentWindow.getComputedStyle(dom);
   const paddingTop = contentStyle.getPropertyValue("padding-top");
   const paddingBottom = contentStyle.getPropertyValue("padding-bottom");
   const marginTop = contentStyle.getPropertyValue("margin-top");
@@ -337,7 +341,7 @@ export function getDomPaddingAndMargin(dom: HTMLElement) {
 }
 
 export function getDomHeight(dom: HTMLElement) {
-  const contentStyle = window.getComputedStyle(dom);
+  const contentStyle = window.getComputedStyle(dom) || iframeComputed.contentWindow.getComputedStyle(dom);
   const paddingTop = contentStyle.getPropertyValue("padding-top");
   const paddingBottom = contentStyle.getPropertyValue("padding-bottom");
   const marginTop = contentStyle.getPropertyValue("margin-top");
@@ -346,52 +350,100 @@ export function getDomHeight(dom: HTMLElement) {
   const margin = parseFloat(marginTop) + parseFloat(marginBottom);
   return padding + margin + dom?.offsetHeight + parseFloat(contentStyle.borderWidth);
 }
-export function getAbsentHtmlH(node: Node) {
 
+export function getAbsentHtmlH(node: Node) {
   const html = generateHTML(getJsonFromDoc(node), getExtentions());
   if (node.type.name == PARAGRAPH) {
-    const computeddiv = document.getElementById("computedspan");
+    const computeddiv = iframeDoc.getElementById("computedspan");
     if (computeddiv) {
       computeddiv.innerHTML = html;
     }
   } else {
-    const computeddiv = document.getElementById("computeddiv");
+    const computeddiv = iframeDoc.getElementById("computeddiv");
     if (computeddiv) {
       computeddiv.innerHTML = html;
     }
   }
 
-  const nodesom = document.getElementById(node.attrs.id);
+  const nodesom = iframeDoc.getElementById(node.attrs.id);
   return nodesom;
 }
 
 export function removeAbsentHtmlH() {
-  const computeddiv = document.getElementById("computeddiv");
+  const computeddiv = iframeDoc.getElementById("computeddiv");
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   computeddiv.innerHTML = "";
 }
 
-export function buildComputedHtml(options: any) {
-  const computedspan = document.getElementById("computedspan");
+function iframeDocAddP() {
+  const computedspan = iframeDoc.getElementById("computedspan");
   if (!computedspan) {
-    const p = document.createElement("p");
+    const p = iframeDoc.createElement("p");
     p.classList.add("text-editor");
-    p.setAttribute("style", "opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
     p.setAttribute("id", "computedspan");
     p.innerHTML = "&nbsp;";
-    document.body.append(p);
+    iframeDoc.body.append(p);
   }
-  const computeddiv = document.getElementById("computeddiv");
+}
+
+function iframeDocAddDiv(options: any) {
+  const computeddiv = iframeDoc.getElementById("computeddiv");
   if (!computeddiv) {
-    const dom = document.createElement("div");
+    const dom = iframeDoc.createElement("div");
     dom.setAttribute("class", "Page text-editor relative");
-    dom.setAttribute("style", "opacity: 0;position: absolute;z-index: -9999;margin-left:-2003px;max-width:" + options.bodyWidth + "px;width:" + options.bodyWidth + "px;");
-    const content = document.createElement("div");
+    dom.setAttribute("style", "opacity: 0;position: absolute;max-width:" + options.bodyWidth + "px;width:" + options.bodyWidth + "px;");
+    const content = iframeDoc.createElement("div");
     content.classList.add("PageContent");
     content.setAttribute("style", "min-height: " + options.bodyHeight + "px;padding:" + options.bodyPadding + "px");
     content.setAttribute("id", "computeddiv");
     dom.append(content);
-    document.body.append(dom);
+    iframeDoc.body.append(dom);
   }
+}
+
+export function removeComputedHtml() {
+  const iframeComputed1 = document.getElementById("computediframe");
+  if (iframeComputed1) {
+    document.body.removeChild(iframeComputed1);
+    iframeComputed = null;
+    iframeDoc = null;
+  }
+}
+
+export function buildComputedHtml(options: any) {
+  iframeComputed = document.getElementById("computediframe");
+  if (!iframeComputed) {
+    iframeComputed = document.createElement("iframe");
+    document.body.appendChild(iframeComputed);
+    //获得文档对象
+    iframeDoc = iframeComputed.contentDocument || iframeComputed.contentWindow.document;
+    iframeComputed.setAttribute("id", "computediframe");
+    iframeComputed.setAttribute("style", "opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
+    copyStylesToIframe(iframeDoc);
+    iframeDocAddP();
+    iframeDocAddDiv(options);
+
+  }
+}
+
+// @ts-ignore
+function copyStylesToIframe(iframeContentDoc) {
+  // 获取当前页面的所有样式表
+  const styles = document.querySelectorAll("style");
+  styles.forEach(style => {
+    // 创建一个新的<style>标签
+    const newStyle = iframeContentDoc.createElement("style");
+    // 将样式内容复制到新标签中
+    newStyle.textContent = style.textContent;
+    // 将新标签插入到iframe的<head>中
+    iframeContentDoc.head.appendChild(newStyle);
+  });
+  const elementsWithInlineStyles = document.querySelectorAll("[style]");
+  elementsWithInlineStyles.forEach(element => {
+    const styleAttr = element.getAttribute("style");
+    const clonedElement = iframeContentDoc.createElement(element.tagName);
+    clonedElement.setAttribute("style", styleAttr);
+    // 这里只是创建了带有内联样式的元素，根据实际情况，你可能需要将它们添加到iframe的DOM树中
+  });
 }

@@ -1,6 +1,6 @@
 import { Extension } from "@tiptap/core";
 import { Page } from "@/extension/page/page";
-import { buildComputedHtml } from "@/extension/page/core";
+import { buildComputedHtml, removeComputedHtml } from "@/extension/page/core";
 import { PageOptions } from "@/extension/page/types";
 import { pagePlugin } from "@/extension/page/pagePlugn";
 import { CoolKeyMap } from "@/extension/keymap";
@@ -13,6 +13,10 @@ export const PageExtension = Extension.create<PageOptions>({
     if (this.options.isPaging) {
       buildComputedHtml(this.options);
     }
+  },
+  onDestroy(){
+    removeComputedHtml()
+
   },
   /*添加分页插件*/
   addProseMirrorPlugins() {
