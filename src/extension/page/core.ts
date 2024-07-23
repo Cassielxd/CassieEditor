@@ -3,14 +3,13 @@ import { generateHTML } from "@tiptap/html";
 import { CassieKit } from "@/extension";
 import { SplitContext } from "@/extension/page/computed";
 import { PARAGRAPH } from "@/extension/nodeNames";
-import { el } from "date-fns/locale";
 
 /**
  * 计算最后一行是否填满
  * @param cnode
  */
 export function getFlag(cnode: Node) {
-  const paragraphDOM = document.getElementById(cnode.attrs.id);
+  const paragraphDOM = document.getElementById(cnode.attrs.id)||iframeDoc.getElementById(cnode.attrs.id);
   if (!paragraphDOM) return null;
   const width = paragraphDOM.getBoundingClientRect().width;
   const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
@@ -266,7 +265,7 @@ export function computedWidth(html: string, cache = true) {
   if (map.has(html)) {
     return map.get(html);
   }
-  const computedspan = document.getElementById("computedspan");
+  const computedspan = iframeDoc.getElementById("computedspan");
   if (html == " ") {
     html = "&nbsp;";
   }
