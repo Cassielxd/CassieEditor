@@ -420,8 +420,7 @@ export function buildComputedHtml(options: any) {
     //获得文档对象
     iframeDoc = iframeComputed.contentDocument || iframeComputed.contentWindow.document;
     iframeComputed.setAttribute("id", "computediframe");
-    iframeComputed.setAttribute("style", "width: 100%;height: 100%;");
-    //iframeComputed.setAttribute("style", "opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
+    iframeComputed.setAttribute("style", "width: 100%;height: 100%;opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
     copyStylesToIframe(iframeDoc);
     iframeDocAddP();
     iframeDocAddDiv(options);
