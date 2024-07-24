@@ -9,7 +9,7 @@ import { PARAGRAPH } from "@/extension/nodeNames";
  * @param cnode
  */
 export function getFlag(cnode: Node) {
-  const paragraphDOM = document.getElementById(cnode.attrs.id)||iframeDoc.getElementById(cnode.attrs.id);
+  const paragraphDOM = document.getElementById(cnode.attrs.id) || iframeDoc.getElementById(cnode.attrs.id);
   if (!paragraphDOM) return null;
   const width = paragraphDOM.getBoundingClientRect().width;
   const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
@@ -59,8 +59,11 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
   let index = 0;
   let isFlag = true;
   //默认type
-  let nodeType = node.type, attrs = node.attrs, marks = node.marks;
-  let defaultNode = node.type.create(attrs, [splitContex.schema.text("1")], marks);
+  const nodeType = node.type,
+    attrs = node.attrs,
+    marks = node.marks;
+  debugger
+  const defaultNode = node.type.create(attrs, [splitContex.schema.text("1")], marks);
   const htmlD = generateHTML(getJsonFromDoc(defaultNode), getExtentions());
   const { height: heightd } = computedWidth(htmlD);
   maxHeight = heightd;
@@ -83,7 +86,6 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
           if (strLength + wl > width) {
             allHeight += height;
             if (splitContex.isOverflow(allHeight)) {
-              debugger
               isFlag = false;
               return isFlag;
             }
@@ -106,7 +108,7 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
         const html = generateHTML(getJsonFromDoc(nodeType.create(attrs, [node], marks)), getExtentions());
         const { width: wordl, height } = computedWidth(html);
         if (strLength + wordl > width) {
-          allHeight += (maxHeight > height ? maxHeight : height);
+          allHeight += maxHeight > height ? maxHeight : height;
           if (splitContex.isOverflow(allHeight)) {
             isFlag = false;
             return isFlag;
@@ -118,10 +120,21 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
           strLength += wordl;
         }
       }
-
     }
   });
   return { strLength, index };
+}
+//TODO 开发中
+function calculateNodeOverflowWidthAndPoint1(node: Node, width: number, splitContex: SplitContext) {
+  const html = generateHTML(getJsonFromDoc(node), getExtentions());
+  const height = computedWidthPage(html, node.attrs.id);
+  const nodeArray: any[] = [];
+  node.content.childCount
+  //获取最后一个节点 如果是字符类型 截取 到最后一个节点
+  //如果不是字符类型 那就直接截取
+  node.type.create(node.attrs, [], node.marks);
+
+  return {};
 }
 
 /**
@@ -197,7 +210,7 @@ export function getExtentions() {
 }
 
 let iframeComputed: any = null;
-var iframeDoc: any = null;
+let iframeDoc: any = null;
 
 /**
  * @description 获取节点高度 根据id获取dom高度
@@ -281,6 +294,21 @@ export function computedWidth(html: string, cache = true) {
     }
     computedspan.innerHTML = "&nbsp;";
     return { height, width };
+  }
+  return 0;
+}
+
+export function computedWidthPage(html: string, id: string) {
+  const computeddiv = iframeDoc.getElementById("computeddiv");
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (computeddiv) {
+    computeddiv.innerHTML = html;
+    const htmldoc = iframeDoc.getElementById(id);
+    if (htmldoc) {
+      const height = htmldoc.getBoundingClientRect().height;
+      return height;
+    }
   }
   return 0;
 }
@@ -425,15 +453,15 @@ export function buildComputedHtml(options: any) {
     copyStylesToIframe(iframeDoc);
     iframeDocAddP();
     iframeDocAddDiv(options);
-
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 function copyStylesToIframe(iframeContentDoc) {
   // 获取当前页面的所有样式表
   const styles = document.querySelectorAll("style");
-  styles.forEach(style => {
+  styles.forEach((style) => {
     // 创建一个新的<style>标签
     const newStyle = iframeContentDoc.createElement("style");
     // 将样式内容复制到新标签中
@@ -442,7 +470,7 @@ function copyStylesToIframe(iframeContentDoc) {
     iframeContentDoc.head.appendChild(newStyle);
   });
   const elementsWithInlineStyles = document.querySelectorAll("[style]");
-  elementsWithInlineStyles.forEach(element => {
+  elementsWithInlineStyles.forEach((element) => {
     const styleAttr = element.getAttribute("style");
     const clonedElement = iframeContentDoc.createElement(element.tagName);
     clonedElement.setAttribute("style", styleAttr);

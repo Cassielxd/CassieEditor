@@ -4,7 +4,7 @@ import PageEditor from "../views/PageEditor.vue";
 import PageEditorDeflate from "../views/PageEditorDeflate.vue";
 import SignEditor from "../views/SignEditor.vue";
 import DocxEditor from "../views/DocxEditor.vue";
-import CommentEditor from '../views/CommentEditor.vue';
+import CommentEditor from "../views/CommentEditor.vue";
 import ChangesetEditor from "../views/ChangesetEditor.vue";
 import CollaborativeEditor from "../views/CollaborativeEditor.vue";
 import PrintEditor from "../views/PrintEditor.vue";

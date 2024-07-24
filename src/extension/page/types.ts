@@ -17,7 +17,7 @@ export class PageState {
   deleting: boolean;
   inserting: boolean;
   splitPage: boolean;
-  constructor(bodyOptions: PageOptions, deleting: boolean, inserting: boolean,splitPage: boolean) {
+  constructor(bodyOptions: PageOptions, deleting: boolean, inserting: boolean, splitPage: boolean) {
     this.bodyOptions = bodyOptions;
     this.deleting = deleting;
     this.inserting = inserting;
@@ -48,7 +48,7 @@ export type PageOptions = {
   bodyWidth: number;
   bodyPadding: number;
   isPaging?: boolean;
-  mode?: 1|2|3;
+  mode?: 1 | 2 | 3;
   headerData?: any[];
   footerData?: any[];
   NodesComputed?: NodesComputed;

@@ -68,16 +68,16 @@ export const Page = Node.create<PageOptions>({
   },
   addNodeView() {
     const options = this.options;
-    switch (options.mode){
-      case 1:{
+    switch (options.mode) {
+      case 1: {
         //使用默认分页实现 不带页眉页脚
         return defaultPageViewRenderer(options);
       }
-      case 2:{
+      case 2: {
         //使用默认分页实现带页眉页脚
-       return  VueNodeViewRenderer(PageComponet)
+        return VueNodeViewRenderer(PageComponet);
       }
-      case 3:{
+      case 3: {
         //设计模式
         return VueNodeViewRenderer(PageDesignComponet, {});
       }

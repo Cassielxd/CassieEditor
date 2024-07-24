@@ -108,24 +108,23 @@ export const defaultNodesComputed: NodesComputed = {
    * @param dom 当前节点的dom
    */
   [HEADING]: (splitContex, node, pos, parent, dom) => {
-
     const pHeight = getDomHeight(dom);
     if (!splitContex.isOverflow(pHeight)) {
       splitContex.addHeight(pHeight);
       return false;
     }
 
-      const chunks = splitContex.splitResolve(pos);
-      if(pHeight>splitContex.getHeight()){
-        const point = getBreakPos(node, dom, splitContex);
-        if (point) {
-          splitContex.setBoundary(pos + point, chunks.length);
-          return false;
-        }
-      }else {
-        //直接返回当前段落
-        splitContex.setBoundary(pos, chunks.length - 1);
+    const chunks = splitContex.splitResolve(pos);
+    if (pHeight > splitContex.getHeight()) {
+      const point = getBreakPos(node, dom, splitContex);
+      if (point) {
+        splitContex.setBoundary(pos + point, chunks.length);
+        return false;
       }
+    } else {
+      //直接返回当前段落
+      splitContex.setBoundary(pos, chunks.length - 1);
+    }
     return false;
   },
   /**
@@ -199,7 +198,7 @@ export class SplitContext {
   #height = 0; //分页的高度
   #paragraphDefaultHeight = 0; //p标签的默认高度
   attributes: Record<string, any> = {};
-  schema:Schema;
+  schema: Schema;
   /**
    * 获取文档
    * @returns 文档
@@ -213,7 +212,7 @@ export class SplitContext {
    * @param height 分页高度
    * @param paragraphDefaultHeight p标签的默认高度
    */
-  constructor(schema: Schema,doc: Node, height: number, paragraphDefaultHeight: number) {
+  constructor(schema: Schema, doc: Node, height: number, paragraphDefaultHeight: number) {
     this.#doc = doc;
     this.#height = height;
     this.#paragraphDefaultHeight = paragraphDefaultHeight;
@@ -236,8 +235,8 @@ export class SplitContext {
    */
   isOverflow(height: number) {
     //优化高度差值的统一算法
-    let cha = this.#accumolatedHeight + height - this.#height;
-    return this.#accumolatedHeight + height > this.#height&&cha>this.#paragraphDefaultHeight;
+    const cha = this.#accumolatedHeight + height - this.#height;
+    return this.#accumolatedHeight + height > this.#height && cha > this.#paragraphDefaultHeight;
   }
   /**
    * 增加高度
@@ -511,7 +510,7 @@ export class PageComputedContext {
     const doc = this.tr.doc;
     const { bodyOptions } = this.pageState;
 
-    const splitContex = new SplitContext(this.state.schema,doc, bodyOptions?.bodyHeight - bodyOptions?.bodyPadding * 2, getDefault());
+    const splitContex = new SplitContext(this.state.schema, doc, bodyOptions?.bodyHeight - bodyOptions?.bodyPadding * 2, getDefault());
     const nodesComputed = this.nodesComputed;
     const lastNode = doc.lastChild;
     doc.descendants((node: Node, pos: number, parentNode: Node | null, i) => {
