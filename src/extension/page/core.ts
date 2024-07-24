@@ -60,9 +60,9 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
   let isFlag = true;
   //默认type
   let nodeType = node.type, attrs = node.attrs, marks = node.marks;
-  let defaultNode = node.type.create(attrs, [splitContex.schema.text("1")], marks);
+  let defaultNode = node.type.create(attrs, [splitContex.schema.text("d")], marks);
   const htmlD = generateHTML(getJsonFromDoc(defaultNode), getExtentions());
-  const { height: heightd } = computedWidth(htmlD);
+  const { height: heightd,width:dew } = computedWidth(htmlD);
   maxHeight = heightd;
   node.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
     if (!isFlag) {
@@ -82,8 +82,81 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
           const { width: wl, height } = computedWidth(resource);
           if (strLength + wl > width) {
             allHeight += height;
-            if (splitContex.isOverflow(allHeight)) {
-              debugger
+            if (splitContex.isOverflowTest(allHeight)) {
+              isFlag = false;
+              return isFlag;
+            }
+            index = pos + i + 1;
+            strLength = wl;
+          } else {
+            strLength += wl;
+          }
+        }
+      }
+    } else {
+      if (node.type.name == "hardBreak") {
+        allHeight += heightd;
+        if (splitContex.isOverflow(allHeight)) {
+          isFlag = false;
+          return isFlag;
+        }
+        index = pos + 1;
+      } else {
+        const html = generateHTML(getJsonFromDoc(nodeType.create(attrs, [node], marks)), getExtentions());
+        const { width: wordl, height } = computedWidth(html);
+        if (strLength + wordl > width) {
+          allHeight += (maxHeight > height ? maxHeight : height);
+          if (splitContex.isOverflow(allHeight)) {
+            isFlag = false;
+            return isFlag;
+          }
+          index = pos + 1;
+          strLength = wordl;
+        } else {
+          //if (height > maxHeight) maxHeight = height;
+          strLength += wordl;
+        }
+      }
+
+    }
+  });
+  return { strLength, index };
+}
+
+
+function calculateNodeOverflowWidthAndPoint1(node: Node, width: number, splitContex: SplitContext) {
+  let strLength = 0;
+  let allHeight = 0;
+  let maxHeight = 0;
+  let index = 0;
+  let isFlag = true;
+  //默认type
+  let nodeType = node.type, attrs = node.attrs, marks = node.marks;
+  let defaultNode = node.type.create(attrs, [splitContex.schema.text("d")], marks);
+  const htmlD = generateHTML(getJsonFromDoc(defaultNode), getExtentions());
+  const { height: heightd,width:dew } = computedWidth(htmlD);
+  maxHeight = heightd;
+  node.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
+    if (!isFlag) {
+      return isFlag;
+    }
+    //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
+    if (node.isText) {
+      const nodeText = node.text;
+
+      if (nodeText) {
+        let arr = [...nodeText];
+        for (let i = 0; i < arr.length; i++) {
+          let resource = arr[i];
+          //fix bug #1 修复空格计算宽度问题和文本有样式的情况计算问题 例如加粗
+          if (resource == " ") {
+            resource = "&nbsp;";
+          }
+          resource = generateHTML(getJsonFromDoc(nodeType.create(attrs, [splitContex.schema.text(resource, node.marks)], marks)), getExtentions());
+          const { width: wl, height } = computedWidth(resource);
+          if (strLength + wl > width) {
+            allHeight += height;
+            if (splitContex.isOverflowTest(allHeight)) {
               isFlag = false;
               return isFlag;
             }
@@ -420,11 +493,11 @@ export function buildComputedHtml(options: any) {
     //获得文档对象
     iframeDoc = iframeComputed.contentDocument || iframeComputed.contentWindow.document;
     iframeComputed.setAttribute("id", "computediframe");
-    iframeComputed.setAttribute("style", "width: 100%;height: 100%;opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
+    iframeComputed.setAttribute("style", "width: 100%;height: 100%;");
+    //iframeComputed.setAttribute("style", "width: 100%;height: 100%;opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
     copyStylesToIframe(iframeDoc);
     iframeDocAddP();
     iframeDocAddDiv(options);
-
   }
 }
 

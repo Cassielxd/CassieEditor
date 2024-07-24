@@ -3,9 +3,7 @@ import { Page } from "@/extension/page/page";
 import { buildComputedHtml, removeComputedHtml } from "@/extension/page/core";
 import { PageOptions } from "@/extension/page/types";
 import { pagePlugin } from "@/extension/page/pagePlugn";
-import { CoolKeyMap } from "@/extension/keymap";
-import { PasteRule } from "@tiptap/core/dist/packages/core/src/PasteRule";
-import { nodePasteRule } from "@tiptap/vue-3";
+import { CoolKeyMap } from "@/extension/keymap";;
 
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",

@@ -30,7 +30,7 @@ class PageDetector {
     const dh = getDefault();
     const cha = Math.abs(pageBody.scrollHeight - this.#bodyOption.bodyHeight);
     console.log(cha);
-    return cha > dh;
+    return cha >= dh;
   }
   update(view: EditorView, prevState: EditorState) {
     const { selection, schema, tr } = view.state;
