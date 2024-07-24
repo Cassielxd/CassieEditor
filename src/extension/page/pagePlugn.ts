@@ -29,6 +29,7 @@ class PageDetector {
   isOverflown(pageBody: Element) {
     const dh = getDefault();
     const cha = Math.abs(pageBody.scrollHeight - this.#bodyOption.bodyHeight);
+    console.log(cha);
     return cha > dh;
   }
   update(view: EditorView, prevState: EditorState) {

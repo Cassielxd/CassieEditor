@@ -83,6 +83,7 @@ function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitCont
           if (strLength + wl > width) {
             allHeight += height;
             if (splitContex.isOverflow(allHeight)) {
+              debugger
               isFlag = false;
               return isFlag;
             }
@@ -381,6 +382,7 @@ function iframeDocAddP() {
     const p = iframeDoc.createElement("p");
     p.classList.add("text-editor");
     p.setAttribute("id", "computedspan");
+    p.setAttribute("style", "display: inline-block");
     p.innerHTML = "&nbsp;";
     iframeDoc.body.append(p);
   }
@@ -418,7 +420,8 @@ export function buildComputedHtml(options: any) {
     //获得文档对象
     iframeDoc = iframeComputed.contentDocument || iframeComputed.contentWindow.document;
     iframeComputed.setAttribute("id", "computediframe");
-    iframeComputed.setAttribute("style", "opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
+    iframeComputed.setAttribute("style", "width: 100%;height: 100%;");
+    //iframeComputed.setAttribute("style", "opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
     copyStylesToIframe(iframeDoc);
     iframeDocAddP();
     iframeDocAddDiv(options);

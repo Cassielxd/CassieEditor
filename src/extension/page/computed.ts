@@ -235,7 +235,9 @@ export class SplitContext {
    * @returns 是否溢出
    */
   isOverflow(height: number) {
-    return this.#accumolatedHeight + height > this.#height;
+    //优化高度差值的统一算法
+    let cha = this.#accumolatedHeight + height - this.#height;
+    return this.#accumolatedHeight + height > this.#height&&cha>this.#paragraphDefaultHeight;
   }
   /**
    * 增加高度
