@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## [main](https://github.com/Cassielxd/CassieEditor) (2024-07-25)
+* fix bug 修改分页极端情况，display:inline-block 内容和宽度不匹配的情况
+
+
 ## [main](https://github.com/Cassielxd/CassieEditor) (2024-07-19)
 * fix bug 修改分页合并异常(heading)
 
