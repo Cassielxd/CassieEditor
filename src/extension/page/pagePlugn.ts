@@ -27,10 +27,7 @@ class PageDetector {
    * @param bodyOption 需要分页的条件
    */
   isOverflown(pageBody: Element) {
-    const dh = getDefault();
-    const cha = Math.abs(pageBody.scrollHeight - this.#bodyOption.bodyHeight);
-    console.log(cha);
-    return cha >= dh;
+    return pageBody.scrollHeight>this.#bodyOption.bodyHeight;
   }
   update(view: EditorView, prevState: EditorState) {
     const { selection, schema, tr } = view.state;

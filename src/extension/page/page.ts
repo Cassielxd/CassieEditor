@@ -5,9 +5,11 @@ import { PageOptions } from "@/extension/page/types";
 import { getId } from "@/utils/id";
 import { NodeView } from "@tiptap/pm/view";
 import { VueNodeViewRenderer } from "@tiptap/vue-3";
+// @ts-ignore
 import PageDesignComponet from "@/extension/page/PageDesignComponet.vue";
+// @ts-ignore
 import PageComponet from "@/extension/page/PageComponet.vue";
-import PageViewVueComponet from "@/extension/page/PageViewVueComponet.vue";
+
 export const Page = Node.create<PageOptions>({
   priority: 2,
   /* 标签名称 */
