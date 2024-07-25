@@ -7,10 +7,9 @@ import { defaultNodesComputed, PageComputedContext } from "@/extension/page/comp
 import { Editor } from "@tiptap/core";
 import { PageState, PageOptions } from "@/extension/page/types";
 import { findParentNode } from "@tiptap/core";
-import { DOMParser } from "prosemirror-model";
 import { getId } from "@/utils/id";
-import { defaultCursorBuilder } from "@/extension";
 
+let composition =false;
 class PageDetector {
   #editor: Editor;
   #bodyOption: PageOptions;
@@ -30,6 +29,7 @@ class PageDetector {
     return pageBody.scrollHeight>this.#bodyOption.bodyHeight;
   }
   update(view: EditorView, prevState: EditorState) {
+    if(composition)return;
     const { selection, schema, tr } = view.state;
     if (view.state.doc.eq(prevState.doc)) return;
     const domAtPos = view.domAtPos.bind(view);
@@ -67,6 +67,7 @@ class PageDetector {
 }
 export const paginationPluginKey = new PluginKey("pagination");
 export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
+
   const plugin: Plugin = new Plugin<PageState>({
     key: paginationPluginKey,
     view: () => {
@@ -98,6 +99,15 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       return page.run().scrollIntoView();
     },
     props: {
+      handleDOMEvents: {
+        compositionstart(view, event) {
+          composition=true;
+        },
+
+        compositionend(view, event) {
+          composition=false;
+        }
+      },
       //复制粘贴的时候 把节点id 进行重置
       transformPasted(slice, view) {
         slice.content.descendants((node) => {
@@ -105,9 +115,6 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
           node.attrs.id = getId();
         });
         return slice;
-      },
-      handleTextInput(view, form, to, text) {
-        return false;
       },
       handleKeyDown(view, event) {
         if (event.code == "Backspace") {
