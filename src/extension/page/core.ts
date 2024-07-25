@@ -395,18 +395,10 @@ export function getDomHeight(dom: HTMLElement) {
 
 export function getAbsentHtmlH(node: Node,schema: Schema) {
   const html = generateHTML(getJsonFromDoc(node),schema);
-  if (node.type.name == PARAGRAPH) {
-    const computeddiv = iframeDoc.getElementById("computedspan");
-    if (computeddiv) {
-      computeddiv.innerHTML = html;
-    }
-  } else {
-    const computeddiv = iframeDoc.getElementById("computeddiv");
-    if (computeddiv) {
-      computeddiv.innerHTML = html;
-    }
+  const computeddiv = iframeDoc.getElementById("computeddiv");
+  if (computeddiv) {
+    computeddiv.innerHTML = html;
   }
-
   const nodesom = iframeDoc.getElementById(node.attrs.id);
   return nodesom;
 }
@@ -421,7 +413,7 @@ export function removeAbsentHtmlH() {
 function iframeDocAddP() {
   const computedspan = iframeDoc.getElementById("computedspan");
   if (!computedspan) {
-    const p = iframeDoc.createElement("div");
+    const p = iframeDoc.createElement("p");
     p.classList.add("text-editor");
     p.setAttribute("id", "computedspan");
     p.setAttribute("style", "display: inline-block");
@@ -459,24 +451,32 @@ export function removeComputedHtml() {
  * @param options
  */
 export function buildComputedHtml(options: any) {
-  iframeComputed = document.getElementById("computediframe");
-  if (!iframeComputed) {
+     removeComputedHtml();
     iframeComputed = document.createElement("iframe");
     document.body.appendChild(iframeComputed);
     //获得文档对象
     iframeDoc = iframeComputed.contentDocument || iframeComputed.contentWindow.document;
     iframeComputed.setAttribute("id", "computediframe");
-    //iframeComputed.setAttribute("style", "width: 100%;height: 100%;");
-    iframeComputed.setAttribute("style", "width: 100%;height: 100%;opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
+    iframeComputed.setAttribute("style", "width: 100%;height: 100%;");
+    //iframeComputed.setAttribute("style", "width: 100%;height: 100%;opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
     copyStylesToIframe(iframeDoc);
     iframeDocAddP();
     iframeDocAddDiv(options);
-  }
 }
 
 // @ts-ignore
 function copyStylesToIframe(iframeContentDoc) {
   // 获取当前页面的所有样式表
+  const links = document.getElementsByTagName('link');
+  for (let i = 0; i < links.length; i++) {
+    if (links[i].rel === 'stylesheet') {
+      const newLink = iframeContentDoc.createElement('link');
+      newLink.rel = 'stylesheet';
+      newLink.type = 'text/css';
+      newLink.href = links[i].href;
+      iframeContentDoc.head.appendChild(newLink);
+    }
+  }
   const styles = document.querySelectorAll("style");
   styles.forEach(style => {
     // 创建一个新的<style>标签
