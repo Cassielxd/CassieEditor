@@ -42,7 +42,7 @@ export const CoolKeyMap = Extension.create({
 
         () => commands.selectNodeBackward(),
         () =>
-          commands.command(({ tr }) => {
+          commands.command(({ editor,tr }) => {
             //以上系统所有默认操作 都没有成功的时候会进入这个分支
             const { selection, doc } = tr;
             const { $anchor } = selection;
@@ -70,7 +70,7 @@ export const CoolKeyMap = Extension.create({
                   const selection1 = TextSelection.create(doc, pos1, pos1);
                   if (curBlock) {
                     const parent = selection1.$anchor.parent;
-                    if (getFlag(parent)) {
+                    if (getFlag(parent,editor.schema)) {
                       tr.setSelection(selection1);
                     } else {
                       tr.step(new ReplaceStep(pos1, pos, Slice.empty));

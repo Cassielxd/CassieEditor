@@ -48,7 +48,7 @@ export default defineComponent({
       type: Number,
       default: 1200
     },
-    mode:{
+    mode: {
       type: Number,
       default: 1
     },

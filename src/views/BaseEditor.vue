@@ -31,7 +31,7 @@ export default {
     const onCreate = (option: any) => {
       console.log(option);
     };
-    return {  menulist, headerlist, footerlist, onUpdate, onCreate };
+    return { menulist, headerlist, footerlist, onUpdate, onCreate };
   }
 };
 </script>

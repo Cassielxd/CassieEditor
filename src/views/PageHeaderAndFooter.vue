@@ -90,7 +90,7 @@ export default {
               headerData: headerlist,
               footerData: footerlist,
               isPaging: true,
-              mode:2
+              mode: 2
             },
             focus: false, //选中样式
             history: false //历史记录回退 协作模式禁止开启

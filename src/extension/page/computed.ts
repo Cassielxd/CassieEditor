@@ -524,7 +524,7 @@ export class PageComputedContext {
       }
       if (!splitContex.pageBoundary()) {
         let dom = document.getElementById(node.attrs.id);
-        if (!dom && node.type.name != PAGE) dom = getAbsentHtmlH(node);
+        if (!dom && node.type.name != PAGE) dom = getAbsentHtmlH(node,this.state.schema);
         return nodesComputed[node.type.name](splitContex, node, pos, parentNode, dom);
       }
       return false;

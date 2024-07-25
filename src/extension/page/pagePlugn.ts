@@ -102,12 +102,12 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
     },
     props: {
       //复制粘贴的时候 把节点id 进行重置
-      transformPasted(slice,view){
-        slice.content.descendants((node)=>{
+      transformPasted(slice, view) {
+        slice.content.descendants((node) => {
           // @ts-ignore
-          node.attrs.id = getId()
-        })
-        return slice
+          node.attrs.id = getId();
+        });
+        return slice;
       },
       handleTextInput(view, form, to, text) {
         return false;

@@ -1,90 +1,90 @@
-export const signContent={
-  "type": "doc",
-  "content": [
+export const signContent = {
+  type: "doc",
+  content: [
     {
-      "type": "page",
-      "attrs": {
-        "HTMLAttributes": null,
-        "pageNumber": 1,
+      type: "page",
+      attrs: {
+        HTMLAttributes: null,
+        pageNumber: 1
       },
-      "content": [
+      content: [
         {
-          "type": "heading",
-          "attrs": {
-            "textAlign": "start",
-            "level": 3,
-            "extend": false,
-            "group": null
+          type: "heading",
+          attrs: {
+            textAlign: "start",
+            level: 3,
+            extend: false,
+            group: null
           },
-          "content": [
+          content: [
             {
-              "type": "text",
-              "text": "What problem are you facing?"
+              type: "text",
+              text: "What problem are you facing?"
             }
           ]
         },
         {
-          "type": "paragraph",
-          "attrs": {
-            "textAlign": "start",
-            "extend": false,
-            "group": null
+          type: "paragraph",
+          attrs: {
+            textAlign: "start",
+            extend: false,
+            group: null
           },
-          "content": [
+          content: [
             {
-              "type": "text",
-              "text": "当我将内容复制到 tiptap 时，很多格式似乎都丢失了。例如，如果我从 intellij 等 IDE 复制代码块，大多数所见即所得的编辑器（如 ckeditor、tinymce 等）都能够保留格式，包括突出显示背景颜色等代码。但是，我无法使用 tiptap 完成。我浏览了所有文档，甚至 github 问题，但找不到任何解决方案。"
+              type: "text",
+              text: "当我将内容复制到 tiptap 时，很多格式似乎都丢失了。例如，如果我从 intellij 等 IDE 复制代码块，大多数所见即所得的编辑器（如 ckeditor、tinymce 等）都能够保留格式，包括突出显示背景颜色等代码。但是，我无法使用 tiptap 完成。我浏览了所有文档，甚至 github 问题，但找不到任何解决方案。"
             },
             {
-              "type": "hardBreak"
+              type: "hardBreak"
             },
             {
-              "type": "text",
-              "text": "我不太明白我是否在这里遗漏了什么，因为我希望这会起作用。我真的很想使用 TipTap，因为我发现 API 非常直观，但是在将内容复制到 tiptap 时，我非常依赖不丢失格式。"
+              type: "text",
+              text: "我不太明白我是否在这里遗漏了什么，因为我希望这会起作用。我真的很想使用 TipTap，因为我发现 API 非常直观，但是在将内容复制到 tiptap 时，我非常依赖不丢失格式。"
             }
           ]
         },
         {
-          "type": "heading",
-          "attrs": {
-            "textAlign": "start",
-            "level": 3,
-            "extend": false,
-            "group": null
+          type: "heading",
+          attrs: {
+            textAlign: "start",
+            level: 3,
+            extend: false,
+            group: null
           },
-          "content": [
+          content: [
             {
-              "type": "text",
-              "text": "What’s the solution you would like to see?"
+              type: "text",
+              text: "What’s the solution you would like to see?"
             }
           ]
         },
         {
-          "type": "paragraph",
-          "attrs": {
-            "textAlign": "start",
-            "extend": false,
-            "group": null
+          type: "paragraph",
+          attrs: {
+            textAlign: "start",
+            extend: false,
+            group: null
           },
-          "content": [
+          content: [
             {
-              "type": "text",
-              "text": "Easy way to be able to preserve content format when copying content into TipTap."
+              type: "text",
+              text: "Easy way to be able to preserve content format when copying content into TipTap."
             }
           ]
         },
         {
-          "type": "heading",
-          "attrs": {
-            "textAlign": "start",
-            "level": 3,
-            "extend": false,
-            "group": null
+          type: "heading",
+          attrs: {
+            textAlign: "start",
+            level: 3,
+            extend: false,
+            group: null
           },
-          "content": [
+          content: [
             {
-              "type": "text",
-              "text": "What alternatives did you consider?"
+              type: "text",
+              text: "What alternatives did you consider?"
             }
           ]
         }

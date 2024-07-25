@@ -1,18 +1,43 @@
-import { Node } from "@tiptap/pm/model";
-import { generateHTML } from "@tiptap/html";
+import { DOMSerializer, Node, Schema } from "@tiptap/pm/model";
 import { CassieKit } from "@/extension";
 import { SplitContext } from "@/extension/page/computed";
 import { PARAGRAPH } from "@/extension/nodeNames";
+import { JSONContent } from "@tiptap/core";
+import { createHTMLDocument, VHTMLDocument } from "zeed-dom";
+
+/**
+ * 根据schema doc生成html
+ * @param doc
+ * @param schema
+ * @param options
+ */
+export function getHTMLFromFragment(doc: Node, schema: Schema, options?: { document?: Document }): string {
+  if (options?.document) {
+    // The caller is relying on their own document implementation. Use this
+    // instead of the default zeed-dom.
+    const wrap = options.document.createElement('div')
+
+    DOMSerializer.fromSchema(schema).serializeFragment(doc.content, { document: options.document }, wrap)
+    return wrap.innerHTML
+  }
+
+  // Use zeed-dom for serialization.
+  const zeedDocument = DOMSerializer.fromSchema(schema).serializeFragment(doc.content, {
+    document: createHTMLDocument() as unknown as Document,
+  }) as unknown as VHTMLDocument
+
+  return zeedDocument.render()
+}
 
 /**
  * 计算最后一行是否填满
  * @param cnode
  */
-export function getFlag(cnode: Node) {
+export function getFlag(cnode: Node, schema:Schema) {
   const paragraphDOM = document.getElementById(cnode.attrs.id)||iframeDoc.getElementById(cnode.attrs.id);
   if (!paragraphDOM) return null;
   const width = paragraphDOM.getBoundingClientRect().width;
-  const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
+  const html = generateHTML(getJsonFromDoc(cnode), schema);
   const { width: wordl } = computedWidth(html, false);
   //证明一行都没填满 应当执行 合并
   if (width >= wordl) {
@@ -34,7 +59,7 @@ export function getFlag(cnode: Node) {
         }
       }
     } else {
-      const html = generateHTML(getJsonFromDoc(node), getExtentions());
+      const html = generateHTML(getJsonFromDoc(node), schema);
       const { width: wordl } = computedWidth(html);
       if (strLength + wordl > width) {
         strLength = wordl;
@@ -47,155 +72,84 @@ export function getFlag(cnode: Node) {
   return Math.abs(strLength - width) < space;
 }
 
+
+export function generateHTML(doc: JSONContent, schema:Schema): string {
+  const contentNode = Node.fromJSON(schema, doc)
+
+  return getHTMLFromFragment(contentNode, schema)
+}
+
+function createAndCalculateHeight(node:Node,content:Node[],splitContex: SplitContext){
+  //生成需要计算的节点
+  let calculateNode = node.type.create(node.attrs,content,node.marks);
+  //生成对应的html
+  const htmlNode = generateHTML(getJsonFromDoc(calculateNode), splitContex.schema);
+  //计算高度
+  let htmlNodeHeight = computedHeight(htmlNode,node.attrs.id);
+  return htmlNodeHeight;
+}
+
 /**
- * 计算节点的宽度和超出的位置
- * @param node
- * @param width
+ * 计算节点高度超出的位置
  */
-function calculateNodeOverflowWidthAndPoint(node: Node, width: number, splitContex: SplitContext) {
-  let strLength = 0;
-  let allHeight = 0;
-  let maxHeight = 0;
-  let index = 0;
+function calculateNodeOverflowHeightAndPoint (node: Node, dom: HTMLElement,splitContex: SplitContext){
+  //获得 dom现有高度
+  const height = dom.offsetHeight;
+  //拿到最后一个节点
+ let lastChild = node.lastChild;
+ //获取当前需要计算的节点有多少个
+ let childCount = node.childCount;
+ //最终计算的点有多少
+ let point:any={};
+ //获得到所有的节点 倒序遍历
+  // @ts-ignore
+const content:Node[] = node.content?.content;
+//倒序遍历content
+  for (let i = childCount-1; i >=0; i--) {
+    // @ts-ignore
+    lastChild = content[i];
+    //分割节点 永远保留最后一个节点用作计算
+    let calculateContent =  i?content.slice(i):[];
+    //节点如果是文本的处理方式
+    if(lastChild?.isText){
+      let text =lastChild.text;
+      // @ts-ignore
+      let calculateLength=text.length-1;
+      //计算每一个节点带来的影响
+      while (calculateLength){
+        // @ts-ignore
+        let calculatetext =text.slice(0,calculateLength)
+        //计算高度
+        let htmlNodeHeight = createAndCalculateHeight(node,[...calculateContent,splitContex.schema.text(calculatetext)],splitContex);
+        if(height>htmlNodeHeight){
+          point={i,calculateLength}
+          break;
+        }
+        calculateLength-=1;
+      }
+    }else {
+      let htmlNodeHeight = createAndCalculateHeight(node,calculateContent,splitContex);
+      if(height>htmlNodeHeight){
+        point={i,calculateLength:0}
+        break
+      }
+    }
+  }
   let isFlag = true;
-  //默认type
-  let nodeType = node.type, attrs = node.attrs, marks = node.marks;
-  let defaultNode = node.type.create(attrs, [splitContex.schema.text("d")], marks);
-  const htmlD = generateHTML(getJsonFromDoc(defaultNode), getExtentions());
-  const { height: heightd,width:dew } = computedWidth(htmlD);
-  maxHeight = heightd;
-  node.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
+  let index = 0;
+  node.descendants((node: Node, pos: number, _: Node | null, i: number) => {
     if (!isFlag) {
       return isFlag;
     }
-    //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
-    if (node.isText) {
-      const nodeText = node.text;
-      if (nodeText) {
-        for (let i = 0; i < nodeText.length; i++) {
-          let resource = nodeText.charAt(i);
-          //fix bug #1 修复空格计算宽度问题和文本有样式的情况计算问题 例如加粗
-          if (resource == " ") {
-            resource = "&nbsp;";
-          }
-          resource = generateHTML(getJsonFromDoc(nodeType.create(attrs, [splitContex.schema.text(resource, node.marks)], marks)), getExtentions());
-          const { width: wl, height } = computedWidth(resource);
-          if (strLength + wl > width) {
-            allHeight += height;
-            if (splitContex.isOverflowTest(allHeight)) {
-              isFlag = false;
-              return isFlag;
-            }
-            index = pos + i + 1;
-            strLength = wl;
-          } else {
-            strLength += wl;
-          }
-        }
-      }
-    } else {
-      if (node.type.name == "hardBreak") {
-        allHeight += heightd;
-        if (splitContex.isOverflow(allHeight)) {
-          isFlag = false;
-          return isFlag;
-        }
-        index = pos + 1;
-      } else {
-        const html = generateHTML(getJsonFromDoc(nodeType.create(attrs, [node], marks)), getExtentions());
-        const { width: wordl, height } = computedWidth(html);
-        if (strLength + wordl > width) {
-          allHeight += (maxHeight > height ? maxHeight : height);
-          if (splitContex.isOverflow(allHeight)) {
-            isFlag = false;
-            return isFlag;
-          }
-          index = pos + 1;
-          strLength = wordl;
-        } else {
-          //if (height > maxHeight) maxHeight = height;
-          strLength += wordl;
-        }
-      }
-
+    if(i==point.i){
+      index = pos+point.calculateLength+1
+      isFlag= false;
     }
-  });
-  return { strLength, index };
+  })
+  return index
+
 }
 
-
-function calculateNodeOverflowWidthAndPoint1(node: Node, width: number, splitContex: SplitContext) {
-  let strLength = 0;
-  let allHeight = 0;
-  let maxHeight = 0;
-  let index = 0;
-  let isFlag = true;
-  //默认type
-  let nodeType = node.type, attrs = node.attrs, marks = node.marks;
-  let defaultNode = node.type.create(attrs, [splitContex.schema.text("d")], marks);
-  const htmlD = generateHTML(getJsonFromDoc(defaultNode), getExtentions());
-  const { height: heightd,width:dew } = computedWidth(htmlD);
-  maxHeight = heightd;
-  node.descendants((node: Node, pos: number, _: Node | null, _i: number) => {
-    if (!isFlag) {
-      return isFlag;
-    }
-    //todo 文字计算的时候使用性能较低 需要使用二分查找提高性能
-    if (node.isText) {
-      const nodeText = node.text;
-
-      if (nodeText) {
-        let arr = [...nodeText];
-        for (let i = 0; i < arr.length; i++) {
-          let resource = arr[i];
-          //fix bug #1 修复空格计算宽度问题和文本有样式的情况计算问题 例如加粗
-          if (resource == " ") {
-            resource = "&nbsp;";
-          }
-          resource = generateHTML(getJsonFromDoc(nodeType.create(attrs, [splitContex.schema.text(resource, node.marks)], marks)), getExtentions());
-          const { width: wl, height } = computedWidth(resource);
-          if (strLength + wl > width) {
-            allHeight += height;
-            if (splitContex.isOverflowTest(allHeight)) {
-              isFlag = false;
-              return isFlag;
-            }
-            index = pos + i + 1;
-            strLength = wl;
-          } else {
-            strLength += wl;
-          }
-        }
-      }
-    } else {
-      if (node.type.name == "hardBreak") {
-        allHeight += heightd;
-        if (splitContex.isOverflow(allHeight)) {
-          isFlag = false;
-          return isFlag;
-        }
-        index = pos + 1;
-      } else {
-        const html = generateHTML(getJsonFromDoc(nodeType.create(attrs, [node], marks)), getExtentions());
-        const { width: wordl, height } = computedWidth(html);
-        if (strLength + wordl > width) {
-          allHeight += (maxHeight > height ? maxHeight : height);
-          if (splitContex.isOverflow(allHeight)) {
-            isFlag = false;
-            return isFlag;
-          }
-          index = pos + 1;
-          strLength = wordl;
-        } else {
-          //if (height > maxHeight) maxHeight = height;
-          strLength += wordl;
-        }
-      }
-
-    }
-  });
-  return { strLength, index };
-}
 
 /**
  *获取段落里最后一个需要分页的地方
@@ -212,13 +166,14 @@ export function getBreakPos(cnode: Node, dom: HTMLElement, splitContex: SplitCon
   if (!paragraphDOM) return null;
   const width = paragraphDOM.offsetWidth;
 
-  const html = generateHTML(getJsonFromDoc(cnode), getExtentions());
+  const html = generateHTML(getJsonFromDoc(cnode), splitContex.schema);
   const { width: wordl } = computedWidth(html, false);
   //如果高度超过默认了 但是宽度没有超过 证明 只有一行 只是里面有 行内元素 比如 图片
   if (width >= wordl) {
     return null;
   }
-  const { index } = calculateNodeOverflowWidthAndPoint(cnode, width, splitContex);
+
+  const index = calculateNodeOverflowHeightAndPoint(cnode,dom,splitContex);//calculateNodeOverflowWidthAndPoint(cnode, width, splitContex);
   return index ? index : null;
 }
 
@@ -335,6 +290,20 @@ export class UnitConversion {
 
 const map = new Map();
 
+export function computedHeight(html: string,id:string) {
+  const computeddiv = iframeDoc.getElementById("computeddiv");
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (computeddiv) {
+    computeddiv.innerHTML = html;
+    const htmldiv = iframeDoc.getElementById(id);
+    const height = htmldiv.getBoundingClientRect().height;
+    computeddiv.innerHTML = "&nbsp;";
+    return height;
+  }
+  return 0;
+}
+
 export function computedWidth(html: string, cache = true) {
   if (map.has(html)) {
     return map.get(html);
@@ -424,8 +393,8 @@ export function getDomHeight(dom: HTMLElement) {
   return padding + margin + dom?.offsetHeight + parseFloat(contentStyle.borderWidth);
 }
 
-export function getAbsentHtmlH(node: Node) {
-  const html = generateHTML(getJsonFromDoc(node), getExtentions());
+export function getAbsentHtmlH(node: Node,schema: Schema) {
+  const html = generateHTML(getJsonFromDoc(node),schema);
   if (node.type.name == PARAGRAPH) {
     const computeddiv = iframeDoc.getElementById("computedspan");
     if (computeddiv) {
@@ -452,7 +421,7 @@ export function removeAbsentHtmlH() {
 function iframeDocAddP() {
   const computedspan = iframeDoc.getElementById("computedspan");
   if (!computedspan) {
-    const p = iframeDoc.createElement("p");
+    const p = iframeDoc.createElement("div");
     p.classList.add("text-editor");
     p.setAttribute("id", "computedspan");
     p.setAttribute("style", "display: inline-block");
@@ -485,6 +454,10 @@ export function removeComputedHtml() {
   }
 }
 
+/**
+ * 构建计算html需要的辅助iframe 和打印html
+ * @param options
+ */
 export function buildComputedHtml(options: any) {
   iframeComputed = document.getElementById("computediframe");
   if (!iframeComputed) {
@@ -493,8 +466,8 @@ export function buildComputedHtml(options: any) {
     //获得文档对象
     iframeDoc = iframeComputed.contentDocument || iframeComputed.contentWindow.document;
     iframeComputed.setAttribute("id", "computediframe");
-    iframeComputed.setAttribute("style", "width: 100%;height: 100%;");
-    //iframeComputed.setAttribute("style", "width: 100%;height: 100%;opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
+    //iframeComputed.setAttribute("style", "width: 100%;height: 100%;");
+    iframeComputed.setAttribute("style", "width: 100%;height: 100%;opacity: 0;position: absolute;z-index: -89;margin-left:-2003px;");
     copyStylesToIframe(iframeDoc);
     iframeDocAddP();
     iframeDocAddDiv(options);

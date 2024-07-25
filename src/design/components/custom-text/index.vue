@@ -1,5 +1,5 @@
 <template>
-  <div ref="inputtext" :style="styles" >
+  <div ref="inputtext" :style="styles">
     {{ value }}
   </div>
 </template>

@@ -12,9 +12,8 @@ export const PageExtension = Extension.create<PageOptions>({
       buildComputedHtml(this.options);
     }
   },
-  onDestroy(){
-    removeComputedHtml()
-
+  onDestroy() {
+    removeComputedHtml();
   },
   /*添加分页插件*/
   addProseMirrorPlugins() {
