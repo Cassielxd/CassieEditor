@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-//import applyDevTools from "prosemirror-dev-tools";
+import applyDevTools from "prosemirror-dev-tools";
 import { EditorContent, Editor } from "@tiptap/vue-3";
 import { defineComponent, onBeforeUnmount, onMounted, PropType, ref, shallowRef, unref, watchEffect } from "vue";
 import { BuildRender, ContextMenuOptions } from "@/default";
@@ -210,7 +210,8 @@ export default defineComponent({
       setTimeout(() => {
         editor.value?.view.dispatch(editor.value?.state.tr.setMeta("splitPage", true));
       }, 1000);
-      //TODO 开发模式打开 applyDevTools(editor.value.view);
+      applyDevTools(editor.value.view);
+      //TODO 开发模式打开
     });
 
     onBeforeUnmount(() => {

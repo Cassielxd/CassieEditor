@@ -2,8 +2,21 @@ import { Extension } from "@tiptap/core";
 import { Page } from "@/extension/page/page";
 import { buildComputedHtml, removeComputedHtml } from "@/extension/page/core";
 import { PageOptions } from "@/extension/page/types";
-import { pagePlugin } from "@/extension/page/pagePlugn";
-import { CoolKeyMap } from "@/extension/keymap";;
+import { idPlugin, pagePlugin } from "@/extension/page/pagePlugn";
+import { CoolKeyMap } from "@/extension/keymap";
+import { idAttributes } from "@/utils/id";
+import {
+  BULLETLIST,
+  CASSIE_BLOCK,
+  HEADING,
+  LISTITEM,
+  ORDEREDLIST,
+  PARAGRAPH,
+  TABLE,
+  TABLE_ROW
+} from "@/extension/nodeNames";
+
+;
 
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
@@ -15,11 +28,27 @@ export const PageExtension = Extension.create<PageOptions>({
   onDestroy() {
     removeComputedHtml();
   },
+  addGlobalAttributes(){
+    return [
+      {
+        types:[HEADING,PARAGRAPH,BULLETLIST,LISTITEM,ORDEREDLIST,TABLE,TABLE_ROW,CASSIE_BLOCK],
+        attributes: {
+          id: {
+            default: null
+          },
+          extend: {
+            default: false
+          }
+        }
+      }
+    ];
+  },
   /*添加分页插件*/
   addProseMirrorPlugins() {
     const plugins: any[] = [];
     if (this.options.mode == 3) return plugins;
     if (this.options.isPaging) {
+      plugins.push(idPlugin());
       plugins.push(pagePlugin(this.editor, this.options));
     }
     return plugins;

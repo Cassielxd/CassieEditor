@@ -8,28 +8,28 @@ import { CodeBlock, CodeBlockOptions } from "@tiptap/extension-code-block";
 import { Dropcursor, DropcursorOptions } from "@tiptap/extension-dropcursor";
 import { Gapcursor } from "@tiptap/extension-gapcursor";
 import { HardBreak, HardBreakOptions } from "@tiptap/extension-hard-break";
-import { HeadingOptions } from "@tiptap/extension-heading";
+import { Heading,HeadingOptions } from "@tiptap/extension-heading";
 import { History, HistoryOptions } from "@tiptap/extension-history";
 import { HorizontalRule, HorizontalRuleOptions } from "@tiptap/extension-horizontal-rule";
 import { Italic, ItalicOptions } from "@tiptap/extension-italic";
 import { Highlight, HighlightOptions } from "@tiptap/extension-highlight";
-import { ListItemOptions } from "@tiptap/extension-list-item";
-import { EmrListItem } from "@/extension/bulletlist/listitem";
+import { ListItemOptions,ListItem } from "@tiptap/extension-list-item";
+
 import { OrderedList, OrderedListOptions } from "@tiptap/extension-ordered-list";
-import { EmrParagraph } from "@/extension/paragraph/paragraph";
+import { Paragraph } from "@tiptap/extension-paragraph";
 import { Strike, StrikeOptions } from "@tiptap/extension-strike";
 import { CassieText } from "@/extension/text/CassieText";
 
 import { TextStyle } from "@tiptap/extension-text-style";
 import { PageExtension } from "@/extension/PageExtension";
 import { FocusClasses, FocusOptions } from "@/extension/focus/focus";
-import { EmrHeading } from "@/extension/heading/heading";
-import { TableCellOptions } from "@tiptap/extension-table-cell";
+import { TableCellOptions,TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader, TableHeaderOptions } from "@tiptap/extension-table-header";
-import { CassieTableRow } from "@/extension/table/TableRow";
+
 import { CassieTable } from "@/extension/table/Table";
 import { cursorPlugin } from "@/extension/cursor/cursor";
 import { TableOptions } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
 import { Mention, MentionOptions } from "@/extension/suggestion/mention";
 import TextAlign, { TextAlignOptions } from "@tiptap/extension-text-align";
 import { PageOptions } from "@/extension/page/types";
@@ -45,7 +45,7 @@ import Image from "@tiptap/extension-image";
 import CassieBlock from "@/extension/node/CassieBlock";
 import { CassieBlockExt } from "@/extension/node/CassieBlockExt";
 import { EmrOrderedList } from "@/extension/bulletlist/orderlist";
-import { CassieTableCell } from "@/extension/table/TableCell";
+
 export interface CassieKitOptions {
   blockquote: Partial<BlockquoteOptions> | false;
   bold: Partial<BoldOptions> | false;
@@ -129,7 +129,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     }
 
     if (this.options.heading !== false) {
-      extensions.push(EmrHeading.configure(this.options?.heading));
+      extensions.push(Heading.configure(this.options?.heading));
     }
 
     if (this.options.history !== false) {
@@ -148,7 +148,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
       extensions.push(Highlight.configure(this.options?.highlight));
     }
     if (this.options.listItem !== false) {
-      extensions.push(EmrListItem.configure(this.options?.listItem));
+      extensions.push(ListItem.configure(this.options?.listItem));
     }
 
     if (this.options.orderedList !== false) {
@@ -156,7 +156,7 @@ export const CassieKit = Extension.create<CassieKitOptions>({
     }
 
     if (this.options.paragraph !== false) {
-      extensions.push(EmrParagraph.configure(this.options?.paragraph));
+      extensions.push(Paragraph.configure(this.options?.paragraph));
     }
     if (this.options.strike !== false) {
       extensions.push(Strike.configure(this.options?.strike));
@@ -172,9 +172,9 @@ export const CassieKit = Extension.create<CassieKitOptions>({
 
     if (this.options.table !== false) {
       extensions.push(CassieTable.configure(this.options?.table));
-      extensions.push(CassieTableRow);
+      extensions.push(TableRow);
       extensions.push(this.options?.tableHeader ? TableHeader.configure(this.options?.tableHeader) : TableHeader);
-      extensions.push(this.options?.tableCell ? CassieTableCell.configure(this.options?.tableCell) : CassieTableCell);
+      extensions.push(this.options?.tableCell ? TableCell.configure(this.options?.tableCell) : TableCell);
     }
     if (this.options.focus !== false) {
       extensions.push(FocusClasses.configure(this.options?.focus));

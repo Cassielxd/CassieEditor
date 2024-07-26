@@ -4,6 +4,7 @@ import { SplitContext } from "@/extension/page/computed";
 import { PARAGRAPH } from "@/extension/nodeNames";
 import { JSONContent } from "@tiptap/core";
 import { createHTMLDocument, VHTMLDocument } from "zeed-dom";
+import { getId } from "@/utils/id";
 
 /**
  * 根据schema doc生成html
@@ -394,6 +395,10 @@ export function getDomHeight(dom: HTMLElement) {
 }
 
 export function getAbsentHtmlH(node: Node,schema: Schema) {
+  if(!node.attrs.id){
+    // @ts-ignore
+    node.attrs.id = getId();
+  }
   const html = generateHTML(getJsonFromDoc(node),schema);
   const computeddiv = iframeDoc.getElementById("computeddiv");
   if (computeddiv) {

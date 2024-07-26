@@ -5,6 +5,7 @@ import { getDefault, removeAbsentHtmlH } from "@/extension/page/core";
 import { findParentDomRefOfType } from "@/utils/index";
 import { defaultNodesComputed, PageComputedContext } from "@/extension/page/computed";
 import { Editor } from "@tiptap/core";
+// @ts-ignore
 import { PageState, PageOptions } from "@/extension/page/types";
 import { findParentNode } from "@tiptap/core";
 import { getId } from "@/utils/id";
@@ -132,3 +133,36 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
   });
   return plugin;
 };
+export const idPluginKey = new PluginKey("attrkey");
+export const idPlugin = () => {
+  const plugin: Plugin = new Plugin({
+    key:idPluginKey,
+    state:{
+      init: (): boolean => {
+        return false;
+      },
+
+      apply: (tr, prevState): any => {
+        let data = tr.getMeta("splitPage")
+        return data!!;
+      }
+    },
+    appendTransaction(transactions, _prevState, nextState) {
+      const tr = nextState.tr;
+      let modified = false;
+      let init =idPluginKey.getState(nextState)
+      if (init||transactions.some((transaction) => transaction.docChanged)) {
+        nextState.doc.descendants((node, pos) => {
+          const {paragraph} = nextState.schema.nodes;
+          const attrs = node.attrs;
+          if(!node.isText&&!attrs.id){
+            tr.setNodeMarkup(pos, undefined, {...attrs, "id": getId()});
+            modified = true;
+          }
+        });
+      }
+      return modified ? tr : null;
+    },
+  })
+  return plugin;
+}
