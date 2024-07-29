@@ -53,6 +53,7 @@ export type PageOptions = {
   footerData?: any[];
   NodesComputed?: NodesComputed;
   SystemAttributes?: Record<string, any>;
+  types?: string[];
 };
 
 export type SplitInfo = {

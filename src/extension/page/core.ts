@@ -395,6 +395,7 @@ export function getDomHeight(dom: HTMLElement) {
 }
 
 export function getAbsentHtmlH(node: Node,schema: Schema) {
+  console.log("创建新的dom");
   if(!node.attrs.id){
     // @ts-ignore
     node.attrs.id = getId();

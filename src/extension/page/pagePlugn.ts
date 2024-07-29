@@ -52,6 +52,7 @@ class PageDetector {
         }
       }
       if (inserting || deleting) {
+        debugger
         if (inserting) tr.setMeta("inserting", inserting);
         if (deleting) {
           tr.setMeta("deleting", true);
@@ -119,6 +120,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       },
       handleKeyDown(view, event) {
         if (event.code == "Backspace") {
+          debugger
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           window.stepStatus = true;
@@ -134,7 +136,7 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
   return plugin;
 };
 export const idPluginKey = new PluginKey("attrkey");
-export const idPlugin = () => {
+export const idPlugin = (types:string[]) => {
   const plugin: Plugin = new Plugin({
     key:idPluginKey,
     state:{
@@ -153,9 +155,8 @@ export const idPlugin = () => {
       let init =idPluginKey.getState(nextState)
       if (init||transactions.some((transaction) => transaction.docChanged)) {
         nextState.doc.descendants((node, pos) => {
-          const {paragraph} = nextState.schema.nodes;
           const attrs = node.attrs;
-          if(!node.isText&&!attrs.id){
+          if(types.includes(node.type.name)&&!attrs.id){
             tr.setNodeMarkup(pos, undefined, {...attrs, "id": getId()});
             modified = true;
           }

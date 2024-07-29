@@ -19,6 +19,7 @@ export const CoolKeyMap = Extension.create({
     const handleBackspace = () =>
       this.editor.commands.first(({ commands }) => [
         () => {
+        debugger
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           window.stepStatus = true;

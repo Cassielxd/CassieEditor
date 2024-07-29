@@ -4,7 +4,6 @@ import { buildComputedHtml, removeComputedHtml } from "@/extension/page/core";
 import { PageOptions } from "@/extension/page/types";
 import { idPlugin, pagePlugin } from "@/extension/page/pagePlugn";
 import { CoolKeyMap } from "@/extension/keymap";
-import { idAttributes } from "@/utils/id";
 import {
   BULLETLIST,
   CASSIE_BLOCK,
@@ -15,9 +14,7 @@ import {
   TABLE,
   TABLE_ROW
 } from "@/extension/nodeNames";
-
-;
-
+const types = [HEADING,PARAGRAPH,BULLETLIST,LISTITEM,ORDEREDLIST,TABLE,TABLE_ROW,CASSIE_BLOCK]
 export const PageExtension = Extension.create<PageOptions>({
   name: "PageExtension",
   onBeforeCreate() {
@@ -28,10 +25,24 @@ export const PageExtension = Extension.create<PageOptions>({
   onDestroy() {
     removeComputedHtml();
   },
+  addOptions(){
+    return {
+      footerHeight: 100,
+      headerHeight: 100,
+      bodyHeight: 0,
+      bodyWidth: 0,
+      bodyPadding: 0,
+      isPaging: false,
+      mode: 1,
+      SystemAttributes: {},
+      types:[]
+    };
+  },
   addGlobalAttributes(){
+
     return [
       {
-        types:[HEADING,PARAGRAPH,BULLETLIST,LISTITEM,ORDEREDLIST,TABLE,TABLE_ROW,CASSIE_BLOCK],
+        types:types.concat(this.options.types||[]),
         attributes: {
           id: {
             default: null
@@ -48,7 +59,7 @@ export const PageExtension = Extension.create<PageOptions>({
     const plugins: any[] = [];
     if (this.options.mode == 3) return plugins;
     if (this.options.isPaging) {
-      plugins.push(idPlugin());
+      plugins.push(idPlugin(types.concat(this.options.types||[])));
       plugins.push(pagePlugin(this.editor, this.options));
     }
     return plugins;

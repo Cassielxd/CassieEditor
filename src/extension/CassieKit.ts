@@ -21,7 +21,7 @@ import { Strike, StrikeOptions } from "@tiptap/extension-strike";
 import { CassieText } from "@/extension/text/CassieText";
 
 import { TextStyle } from "@tiptap/extension-text-style";
-import { PageExtension } from "@/extension/PageExtension";
+import { PageExtension } from "@/extension/page/PageExtension";
 import { FocusClasses, FocusOptions } from "@/extension/focus/focus";
 import { TableCellOptions,TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader, TableHeaderOptions } from "@tiptap/extension-table-header";
