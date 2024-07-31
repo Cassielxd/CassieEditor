@@ -207,26 +207,16 @@ export default defineComponent({
         injectCSS: false,
         extensions
       });
-      setTimeout(() => {
+      /*setTimeout(() => {
         editor.value?.view.dispatch(editor.value?.state.tr.setMeta("splitPage", true));
-      }, 1000);
-      applyDevTools(editor.value.view);
-      //TODO 开发模式打开
+      }, 1000);*/
+
+      //TODO 开发模式打开 applyDevTools(editor.value.view);
     });
 
     onBeforeUnmount(() => {
       editor.value?.destroy();
       provider.value?.destroy();
-    });
-
-    watchEffect(() => {
-      unref(editor)?.setOptions({
-        editorProps: {
-          attributes: {
-            spellcheck: String(props.spellcheck)
-          }
-        }
-      });
     });
     return { editor };
   }

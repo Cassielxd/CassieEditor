@@ -1,4 +1,4 @@
-import { Extension } from "@tiptap/core";
+import { Extension, getNodeType } from "@tiptap/core";
 import { Page } from "@/extension/page/page";
 import { buildComputedHtml, removeComputedHtml } from "@/extension/page/core";
 import { PageOptions } from "@/extension/page/types";
@@ -9,7 +9,7 @@ import {
   CASSIE_BLOCK,
   HEADING,
   LISTITEM,
-  ORDEREDLIST,
+  ORDEREDLIST, PAGE,
   PARAGRAPH,
   TABLE,
   TABLE_ROW

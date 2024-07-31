@@ -7,7 +7,7 @@ import { defaultNodesComputed, PageComputedContext } from "@/extension/page/comp
 import { Editor } from "@tiptap/core";
 // @ts-ignore
 import { PageState, PageOptions } from "@/extension/page/types";
-import { findParentNode } from "@tiptap/core";
+import { findParentNode,getNodeType } from "@tiptap/core";
 import { getId } from "@/utils/id";
 
 let composition =false;
@@ -52,7 +52,6 @@ class PageDetector {
         }
       }
       if (inserting || deleting) {
-        debugger
         if (inserting) tr.setMeta("inserting", inserting);
         if (deleting) {
           tr.setMeta("deleting", true);
@@ -61,8 +60,7 @@ class PageDetector {
           // @ts-ignore
           window.stepStatus = false;
         }
-        const state = view.state.apply(tr);
-        view.updateState(state);
+        view.dispatch(tr);
       }
     }
   }
@@ -97,8 +95,19 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
      */
     appendTransaction([newTr], _prevState, state) {
       removeAbsentHtmlH();
+/*      let tr =state.tr;
+      let selection = state.selection;
+      let ok =false ;
+      if(state.doc.child(0).childCount>10){
+        debugger
+        const type = getNodeType(PAGE, state.schema);
+        tr = tr.split(selection.$from.pos,2,[{type}])
+        ok= true;
+      }
+      return ok?tr:null;*/
       const page = new PageComputedContext(editor, defaultNodesComputed, this.getState(state), state);
-      return page.run().scrollIntoView();
+      let tr =page.run();
+      return tr.docChanged?tr:null;
     },
     props: {
       handleDOMEvents: {
@@ -120,7 +129,6 @@ export const pagePlugin = (editor: Editor, bodyOption: PageOptions) => {
       },
       handleKeyDown(view, event) {
         if (event.code == "Backspace") {
-          debugger
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           window.stepStatus = true;

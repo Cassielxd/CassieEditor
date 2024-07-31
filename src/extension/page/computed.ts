@@ -344,10 +344,9 @@ export class PageComputedContext {
   initComputed() {
     splitCount1 = 0;
     splitCount = 0;
-    console.log("首次加载初始化分页");
+
     this.mergeDefaultDocument(1);
     this.splitDocument();
-    console.log("首次加载分页结束");
     return this.tr;
   }
 
@@ -355,9 +354,9 @@ export class PageComputedContext {
    * @description 递归分割page
    */
   splitDocument() {
-    const { schema } = this.state;
+    const { schema,selection } = this.state;
     while (true) {
-      console.log("第:" + ++splitCount1 + "次计算分割点");
+
       // 获取最后一个page计算高度，如果返回值存在的话证明需要分割
       const splitInfo: SplitInfo | null = this.getNodeHeight();
       if (!splitInfo) {
