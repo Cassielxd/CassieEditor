@@ -393,17 +393,33 @@ export function getDomHeight(dom: HTMLElement) {
   const margin = parseFloat(marginTop) + parseFloat(marginBottom);
   return padding + margin + dom?.offsetHeight + parseFloat(contentStyle.borderWidth);
 }
+function findTextblockHacksIds(node: Node) {
+  let ids: any[] =[];
+  node.descendants((node)=>{
+    if(node.isTextblock&&node.childCount==0){
+      ids.push(node.attrs.id)
+    }
 
+  })
+  return ids;
+}
 export function getAbsentHtmlH(node: Node,schema: Schema) {
   console.log("创建新的dom");
   if(!node.attrs.id){
     // @ts-ignore
     node.attrs.id = getId();
   }
+  let ids =findTextblockHacksIds(node);
   const html = generateHTML(getJsonFromDoc(node),schema);
   const computeddiv = iframeDoc.getElementById("computeddiv");
   if (computeddiv) {
     computeddiv.innerHTML = html;
+    ids.forEach((id)=>{
+      const nodeHtml = iframeDoc.getElementById(id);
+      if(nodeHtml){
+        nodeHtml.innerHTML="<br class='ProseMirror-trailingBreak'>";
+      }
+    })
   }
   const nodesom = iframeDoc.getElementById(node.attrs.id);
   return nodesom;
