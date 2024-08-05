@@ -4,7 +4,7 @@ import { ComputedFn, NodesComputed, PageState, SplitParams, SplitInfo } from "@/
 import { Fragment, Node, Slice } from "@tiptap/pm/model";
 import { EditorState, Transaction } from "@tiptap/pm/state";
 import { getAbsentHtmlH, getBreakPos, getContentSpacing, getDefault, getDomHeight, getDomPaddingAndMargin } from "@/extension/page/core";
-import { findParentNode, getNodeType } from "@tiptap/core";
+import { getNodeType } from "@tiptap/core";
 import { ReplaceStep } from "@tiptap/pm/transform";
 import { Editor } from "@tiptap/core/dist/packages/core/src/Editor";
 import { getId } from "@/utils/id";
@@ -355,16 +355,12 @@ export class PageComputedContext {
    */
   splitDocument() {
     const { schema,selection } = this.state;
-    while (true) {
-
+    for (;;) {
       // 获取最后一个page计算高度，如果返回值存在的话证明需要分割
       const splitInfo: SplitInfo | null = this.getNodeHeight();
-      if (!splitInfo) {
-        break; // 当不需要分割（即splitInfo为null）时，跳出循环
-      }
+      if (!splitInfo) return;
       const type = getNodeType(PAGE, schema);
-      console.log("第:" + ++splitCount + "次分割");
-      this.splitPage({
+      this.lift({
         pos: splitInfo.pos,
         depth: splitInfo.depth,
         typesAfter: [{ type }],
@@ -418,13 +414,13 @@ export class PageComputedContext {
   /**
    * @description 分页主要逻辑 修改系统tr split方法 添加默认 extend判断 默认id重新生成
    * @author Cassie
-   * @method splitPage 分割页面
+   * @method lift 分割页面
    * @param pos
    * @param depth
    * @param typesAfter
    * @param schema
    */
-  splitPage({ pos, depth = 1, typesAfter, schema }: SplitParams) {
+  lift({ pos, depth = 1, typesAfter, schema }: SplitParams) {
     const tr = this.tr;
     const $pos = tr.doc.resolve(pos);
     let before = Fragment.empty;
