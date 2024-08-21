@@ -50,6 +50,9 @@ FileTools icon library: https://marella.me/material-icons/demo/
 The core logic of the source code is well-documented with comments.
 For insights into the pagination implementation, refer to the PAGE.md file.
 
+#### Application case
+https://github.com/Cassielxd/umo-enhance
+
 #### Contributing
 Contact: String <348040933@qq.com>
 QQ Group: 621846253
