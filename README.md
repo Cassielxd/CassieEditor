@@ -58,4 +58,7 @@ FileTools icon图标库  https://marella.me/material-icons/demo/
 String <348040933@qq.com>
 交流群qq 621846253
 
+#### 应用案例
+https://github.com/Cassielxd/umo-enhance
+
 #### 开源不易，如果对你有帮助,请点个star吧
